@@ -17,7 +17,7 @@ public class GPClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (OPEN_GUILD_MENU.isPressed()) {
+            while (OPEN_GUILD_MENU.wasPressed()) {
                 GuildedParties.LOGGER.info("Open guild menu");
             }
         });

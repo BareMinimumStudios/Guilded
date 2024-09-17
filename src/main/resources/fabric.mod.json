@@ -14,9 +14,14 @@
 	"license": "MIT",
 	"icon": "assets/guilded_parties/icon.png",
 	"environment": "*",
+	"custom": {
+	},
 	"entrypoints": {
 		"main": [
 			"keno.net.guilded_parties.GuildedParties"
+		],
+		"server": [
+			"keno.net.guilded_parties.server.GPServer"
 		],
 		"client": [
 			"keno.net.guilded_parties.client.GPClient"

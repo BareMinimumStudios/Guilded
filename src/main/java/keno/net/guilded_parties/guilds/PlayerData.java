@@ -1,5 +1,9 @@
 package keno.net.guilded_parties.guilds;
 
-public class PlayerData {
+import java.util.UUID;
 
+public class PlayerData {
+    public PlayerData(UUID uuid, Guild guild) {
+
+    }
 }

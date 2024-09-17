@@ -1,0 +1,8 @@
+{
+  "guild_id": "guilded_parties:test_guild",
+  "ranks": {
+    "leader": 0,
+    "member": 1,
+    "recruit": 2
+  }
+}
