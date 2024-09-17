@@ -18,6 +18,9 @@
 		"main": [
 			"keno.net.guilded_parties.GuildedParties"
 		],
+		"client": [
+			"keno.net.guilded_parties.client.GPClient"
+		],
 		"fabric-datagen": [
 			"keno.net.guilded_parties.GuildedPartiesDataGenerator"
 		]
