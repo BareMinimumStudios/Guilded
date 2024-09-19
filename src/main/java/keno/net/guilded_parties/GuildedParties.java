@@ -1,6 +1,6 @@
 package keno.net.guilded_parties;
 
-import keno.net.guilded_parties.guilds.Guild;
+import keno.net.guilded_parties.guilds.data.Guild;
 import keno.net.guilded_parties.server.persistant_state.GuildSaverAndLoader;
 import net.fabricmc.api.ModInitializer;
 

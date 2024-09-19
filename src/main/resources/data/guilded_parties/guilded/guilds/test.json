@@ -1,8 +1,17 @@
 {
   "guild_id": "guilded_parties:test_guild",
-  "ranks": {
-    "leader": 0,
-    "member": 1,
-    "recruit": 2
-  }
+  "ranks": [
+    {
+      "rank_name": "Leader",
+      "rank_priority": 0
+    },
+    {
+      "rank_name": "Member",
+      "rank_priority": 1
+    },
+    {
+      "rank_name": "Recruit",
+      "rank_priority": 2
+    }
+  ]
 }

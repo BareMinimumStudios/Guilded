@@ -2,7 +2,7 @@ package keno.net.guilded_parties.server.persistant_state;
 
 import com.mojang.serialization.DataResult;
 import keno.net.guilded_parties.GuildedParties;
-import keno.net.guilded_parties.guilds.Guild;
+import keno.net.guilded_parties.guilds.data.Guild;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
