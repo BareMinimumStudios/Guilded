@@ -29,7 +29,7 @@ public record Guild(Identifier id, List<Rank> ranks, List<Member> members) {
     ).apply(instance, Guild::new));
 
     public boolean isPlayerInGuild(UUID playerUUID) {
-        return this.members.stream().anyMatch(member -> member.player_id().compareTo(playerUUID) == 0);
+        return this.members.stream().anyMatch(member -> member.playerId().compareTo(playerUUID) == 0);
     }
 
     public boolean isPlayerInGuild(ServerPlayerEntity player) {
@@ -54,8 +54,8 @@ public record Guild(Identifier id, List<Rank> ranks, List<Member> members) {
 
     public String getPlayerRank(UUID uuid) {
         Stream<Member> member_stream = this.members.stream();
-        Member player_data = member_stream.filter(member -> member.player_id().compareTo(uuid) == 0).findFirst().orElseThrow();
-        return player_data.rank_name();
+        Member player_data = member_stream.filter(member -> member.playerId().compareTo(uuid) == 0).findFirst().orElseThrow();
+        return player_data.rankName();
     }
 
     public boolean isLeader(UUID uuid) {

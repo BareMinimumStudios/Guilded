@@ -2,15 +2,20 @@ package keno.net.guilded_parties;
 
 import keno.net.guilded_parties.guilds.data.Guild;
 import keno.net.guilded_parties.server.persistant_state.GuildSaverAndLoader;
+import keno.net.guilded_parties.utils.PacketIds;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.stream.Stream;
 
 public class GuildedParties implements ModInitializer {
 	public static final String MOD_ID = "guilded_parties";
@@ -32,8 +37,26 @@ public class GuildedParties implements ModInitializer {
 		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
 			GuildSaverAndLoader state = GuildSaverAndLoader.getServerState(server);
 			Registry<Guild> registry = server.getRegistryManager().get(GUILD_REGISTRY);
-			registry.stream().distinct().filter(guild -> !state.guilds.contains(guild)).forEach(state.guilds::add);
+			Stream<Guild> registryStream = registry.stream();
+			registryStream = registryStream.filter(registeredGuild ->
+					(state.guilds.stream().noneMatch(savedGuild -> savedGuild.id().compareTo(registeredGuild.id()) == 0)));
+			registryStream.forEach(guild -> state.guilds.add(guild));
 			state.guilds.stream().distinct().forEach(guild -> LOGGER.info(guild.toString()));
+		});
+
+		ServerPlayNetworking.registerGlobalReceiver(PacketIds.VIEW_GUILDS, (server, player, handler, buf, responseSender) -> {
+			LOGGER.info("Received Packet!");
+			Identifier guildId = buf.readIdentifier();
+			LOGGER.info(guildId.toString());
+			Guild guild = server.getRegistryManager().get(GUILD_REGISTRY).get(guildId);
+			if (guild != null) {
+				LOGGER.info("Found guild!");
+				String numberOfRanks = Integer.toString(guild.ranks().size());
+				String numberOfMembers = Integer.toString(guild.members().size());
+				String message = guildId.toString() +
+						" found! Number of ranks: " + numberOfRanks + " Number of Members: " + numberOfMembers;
+				player.sendMessage(Text.of(message));
+			}
 		});
 	}
 }

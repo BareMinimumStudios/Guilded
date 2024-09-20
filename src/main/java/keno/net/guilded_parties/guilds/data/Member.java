@@ -8,16 +8,16 @@ import net.minecraft.util.Uuids;
 
 import java.util.UUID;
 
-public record Member(UUID player_id, String rank_name) {
+public record Member(UUID playerId, String rankName) {
     public static final Codec<Member> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Uuids.CODEC.fieldOf("uuid").forGetter(Member::player_id),
-            Codec.STRING.fieldOf("rank").forGetter(Member::rank_name)
+            Uuids.CODEC.fieldOf("uuid").forGetter(Member::playerId),
+            Codec.STRING.fieldOf("rank").forGetter(Member::rankName)
     ).apply(instance, Member::new));
 
     public PacketByteBuf memberToPacket() {
         PacketByteBuf packet = PacketByteBufs.create();
-        packet.writeUuid(this.player_id());
-        packet.writeString(this.rank_name);
+        packet.writeUuid(this.playerId());
+        packet.writeString(this.rankName);
         return packet;
     }
 
