@@ -1,42 +1,34 @@
 {
 	"schemaVersion": 1,
-	"id": "guilded_parties",
+	"id": "guildedparties",
 	"version": "${version}",
 	"name": "GuildedParties",
-	"description": "A multiplayer-focused mod allowing for the creation of guilds! Designed to be treated as both a library and party mod",
+	"description": "This is an example description! Tell everyone what your mod is about!",
 	"authors": [
-		"KenopsicManiac"
+		"Me!"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
 		"sources": "https://github.com/FabricMC/fabric-example-mod"
 	},
-	"license": "MIT",
-	"icon": "assets/guilded_parties/icon.png",
+	"license": "CC0-1.0",
+	"icon": "assets/guildedparties/icon.png",
 	"environment": "*",
-	"custom": {
-	},
 	"entrypoints": {
 		"main": [
-			"keno.net.guilded_parties.GuildedParties"
-		],
-		"server": [
-			"keno.net.guilded_parties.server.GPServer"
-		],
-		"client": [
-			"keno.net.guilded_parties.client.GPClient"
+			"keno.guildedparties.GuildedParties"
 		],
 		"fabric-datagen": [
-			"keno.net.guilded_parties.GuildedPartiesDataGenerator"
+			"keno.guildedparties.GuildedPartiesDataGenerator"
 		]
 	},
 	"mixins": [
-		"guilded_parties.mixins.json"
+		"guildedparties.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.16.5",
-		"minecraft": "~1.20.4",
-		"java": ">=17",
+		"fabricloader": ">=0.16.9",
+		"minecraft": "~1.21.3",
+		"java": ">=21",
 		"fabric-api": "*"
 	},
 	"suggests": {
