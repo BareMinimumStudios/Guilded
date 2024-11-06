@@ -27,6 +27,8 @@ public class LeaveGuildCommand implements Command<ServerCommandSource>{
             player.removeAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
             player.sendMessageToClient(Text.of("Successfully left guild!"), true);
             return 1;
+        } else {
+            player.sendMessageToClient(Text.of("There is no guild to leave..."), true);
         }
         return 0;
     }

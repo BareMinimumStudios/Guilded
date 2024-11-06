@@ -19,12 +19,9 @@ public class GuildSuggestionProvider implements SuggestionProvider<ServerCommand
         if (state.guilds.isEmpty()) {
             return Suggestions.empty();
         }
-
-        String input = commandContext.getArgument("guild_key", String.class);
+        
         for (String guild_name : state.guilds.keySet()) {
-            if (!input.isEmpty() && guild_name.contains(input)) {
-                builder.suggest(guild_name);
-            }
+            builder.suggest(guild_name);
         }
         return builder.buildFuture();
     }

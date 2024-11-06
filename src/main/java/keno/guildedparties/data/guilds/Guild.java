@@ -31,6 +31,10 @@ public class Guild {
             this.players.put(id, rank);
         }
         this.ranks.addAll(ranks);
+        Rank recruit = new Rank("Recruit", 50);
+        if (!this.ranks.contains(recruit)) {
+            this.ranks.add(recruit);
+        }
     }
 
     public List<Rank> getRanks() {
