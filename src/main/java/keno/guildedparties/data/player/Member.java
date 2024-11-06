@@ -9,4 +9,9 @@ public record Member(String guild_key, Rank rank) {
        Codec.STRING.stable().fieldOf("guild_key").forGetter(Member::guild_key),
        Rank.codec.fieldOf("rank").forGetter(Member::rank)
     ).apply(instance, Member::new));
+
+    @Override
+    public String toString() {
+        return "GuildKey: " + this.guild_key() + " Rank: " + this.rank().name();
+    }
 }

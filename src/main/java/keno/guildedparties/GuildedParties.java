@@ -4,6 +4,7 @@ import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.guilds.Guild;
 import keno.guildedparties.data.player.Member;
 import keno.guildedparties.server.StateSaverAndLoader;
+import keno.guildedparties.server.commands.GPCommandRegistry;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -34,13 +35,13 @@ public class GuildedParties implements ModInitializer {
 	public void onInitialize() {
 		DynamicRegistries.registerSynced(GUILD_REGISTRY, Guild.codec, Guild.codec);
 		GPAttachmentTypes.init();
+		GPCommandRegistry.init();
 
-
-		ServerLifecycleEvents.SERVER_STARTED.register(this::fillPersistentState);
-		ServerPlayConnectionEvents.JOIN.register(this::syncAndInitializePlayerData);
+		ServerLifecycleEvents.SERVER_STARTED.register(GuildedParties::fillPersistentState);
+		ServerPlayConnectionEvents.JOIN.register(GuildedParties::syncAndInitializePlayerData);
 	}
 
-	public void fillPersistentState(MinecraftServer server) {
+	public static void fillPersistentState(MinecraftServer server) {
 		// Add any data-registered guilds to the state
 		StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
 		Registry<Guild> registry = server.getRegistryManager().getOrThrow(GUILD_REGISTRY);
@@ -52,7 +53,7 @@ public class GuildedParties implements ModInitializer {
 	}
 
 	@SuppressWarnings("UnstableApiUsage")
-	public void syncAndInitializePlayerData(ServerPlayNetworkHandler handler, PacketSender packetSender, MinecraftServer server) {
+	public static void syncAndInitializePlayerData(ServerPlayNetworkHandler handler, PacketSender packetSender, MinecraftServer server) {
 		// Sync guild data to player attachment
 		StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
 		ServerPlayerEntity player = handler.getPlayer();
