@@ -11,6 +11,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
+//TODO Add a alternate method to see another player's guild
 @SuppressWarnings("UnstableApiUsage")
 public class ViewPlayerGuildCommand {
     public static int viewCallerGuild(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
