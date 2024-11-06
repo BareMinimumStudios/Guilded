@@ -5,11 +5,10 @@ import keno.guildedparties.data.player.Member;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 
-@SuppressWarnings("UnstableApiUsage")
+@SuppressWarnings({"UnstableApiUsage", "deprecation"})
 public class GPAttachmentTypes {
-    public static final AttachmentType<Member> MEMBER_ATTACHMENT = AttachmentRegistry.create(GuildedParties.GPLoc("member_attachment"),
-            memberBuilder -> {
-        memberBuilder.copyOnDeath();
-        memberBuilder.persistent(Member.codec);
-    });
+    public static final AttachmentType<Member> MEMBER_ATTACHMENT = AttachmentRegistry.<Member>builder()
+            .copyOnDeath().persistent(Member.codec).buildAndRegister(GuildedParties.GPLoc("member_attachment"));
+
+    public static void init() {}
 }
