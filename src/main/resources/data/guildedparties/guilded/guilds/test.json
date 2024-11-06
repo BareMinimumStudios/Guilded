@@ -1,0 +1,18 @@
+{
+  "guild_name": "Test name",
+  "players": [
+    {
+      "uuid": "252ad919-a134-411b-8852-52700655b887",
+      "rank": {
+        "rank_name": "Leader",
+        "rank_priority": 0
+      }
+    }
+  ],
+  "ranks": [
+    {
+      "rank_name": "Leader",
+      "rank_priority": 0
+    }
+  ]
+}

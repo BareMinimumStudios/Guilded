@@ -4,21 +4,22 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import keno.guildedparties.data.GPAttachmentTypes;
+import keno.guildedparties.data.player.Member;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Uuids;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class Guild {
     public static final Codec<Guild> codec = RecordCodecBuilder.create(instance -> instance.group(
             Codec.STRING.stable().fieldOf("guild_name").forGetter(Guild::getName),
-            Codec.pair(Uuids.CODEC, Rank.codec).listOf().fieldOf("players").forGetter(Guild::encryptPlayerHashmap),
+            Codec.pair(Uuids.CODEC.fieldOf("uuid").codec(),
+                    Rank.codec.fieldOf("rank").codec()).listOf().fieldOf("players").forGetter(Guild::encryptPlayerHashmap),
             Rank.codec.stable().listOf().fieldOf("ranks").forGetter(Guild::getRanks)
     ).apply(instance, Guild::new));
 
-    public String name;
+    private String name;
     public HashMap<UUID, Rank> players = new HashMap<>();
     public List<Rank> ranks = new ArrayList<>();
 
@@ -50,5 +51,20 @@ public class Guild {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    public void addPlayerToGuild(ServerPlayerEntity player, String rank_name) {
+        if (!players.containsKey(player.getUuid())) {
+            if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
+                Rank player_rank = ranks.stream().filter(rank -> rank.name().equals(rank_name)).findFirst().get();
+                players.put(player.getUuid(), player_rank);
+                player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, new Member(this.name, player_rank));
+            }
+        }
     }
 }

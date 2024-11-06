@@ -31,7 +31,8 @@ public class StateSaverAndLoader extends PersistentState {
                 keySet.append(",");
             }
         }
-        nbt.putString("keySet", "" + keySet);
+        GuildedParties.LOGGER.info(String.valueOf(keySet));
+        nbt.putString("keySet", String.valueOf(keySet));
         return nbt;
     }
 
@@ -39,9 +40,11 @@ public class StateSaverAndLoader extends PersistentState {
         StateSaverAndLoader saverAndLoader = new StateSaverAndLoader();
         String keySet = tag.getString("keySet");
         String[] keys = keySet.split(",");
-        for (String key : keys) {
-            Guild guild = Guild.codec.parse(NbtOps.INSTANCE, tag.get(key)).resultOrPartial(GuildedParties.LOGGER::error).orElseThrow();
-            saverAndLoader.guilds.put(key, guild);
+        if (!keySet.isBlank()) {
+            for (String key : keys) {
+                Guild guild = Guild.codec.parse(NbtOps.INSTANCE, tag.get(key)).resultOrPartial(GuildedParties.LOGGER::error).orElseThrow();
+                saverAndLoader.guilds.put(key, guild);
+            }
         }
         return saverAndLoader;
     }

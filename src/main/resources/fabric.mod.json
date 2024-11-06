@@ -20,6 +20,9 @@
 		],
 		"fabric-datagen": [
 			"keno.guildedparties.GuildedPartiesDataGenerator"
+		],
+		"server": [
+			"keno.guildedparties.server.GPServer"
 		]
 	},
 	"mixins": [
