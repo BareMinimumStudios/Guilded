@@ -26,12 +26,11 @@ public class StateSaverAndLoader extends PersistentState {
             NbtElement guild = Guild.codec.encodeStart(NbtOps.INSTANCE, guilds.get(key)).resultOrPartial(GuildedParties.LOGGER::error).orElseThrow();
 
             nbt.put(key, guild);
+            keySet.append(key);
             if (!key.equals(keys.getLast())) {
-                keySet.append(key);
                 keySet.append(",");
             }
         }
-        GuildedParties.LOGGER.info(String.valueOf(keySet));
         nbt.putString("keySet", String.valueOf(keySet));
         return nbt;
     }

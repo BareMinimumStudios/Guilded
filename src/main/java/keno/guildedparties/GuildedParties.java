@@ -1,6 +1,8 @@
 package keno.guildedparties;
 
+import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.guilds.Guild;
+import keno.guildedparties.data.player.Member;
 import keno.guildedparties.server.StateSaverAndLoader;
 import net.fabricmc.api.ModInitializer;
 
@@ -13,6 +15,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.UUID;
 
 public class GuildedParties implements ModInitializer {
 	public static final String MOD_ID = "guildedparties";
@@ -28,19 +32,31 @@ public class GuildedParties implements ModInitializer {
 		DynamicRegistries.registerSynced(GUILD_REGISTRY, Guild.codec, Guild.codec);
 
 		ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+			// Add any data-registered guilds to the state
 			StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
 			Registry<Guild> registry = server.getRegistryManager().getOrThrow(GUILD_REGISTRY);
 			registry.stream().iterator().forEachRemaining(guild -> {
-				LOGGER.info("Guild name {}", guild.getName());
 				if (!state.guilds.containsKey(guild.getName())) {
 					state.guilds.put(guild.getName(), guild);
-					LOGGER.info("guild name {}", state.guilds.get(guild.getName()).getName());
 				}
 			});
 		});
 
-		ServerPlayConnectionEvents.JOIN.register((serverPlayNetworkHandler, packetSender, minecraftServer)
-				-> LOGGER.info(serverPlayNetworkHandler.player.getUuid().toString()));
+		ServerPlayConnectionEvents.JOIN.register((serverPlayNetworkHandler, packetSender, minecraftServer) -> {
+			// Sync guild data to player attachment
+			StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(minecraftServer);
+			ServerPlayerEntity player = serverPlayNetworkHandler.getPlayer();
+			UUID playerId = player.getUuid();
+			if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
+				for (Guild guild : state.guilds.values()) {
+					if (guild.players.containsKey(playerId)) {
+						player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT,
+								new Member(guild.getName(), guild.players.get(playerId)));
+						break;
+					}
+				}
+			}
+		});
 	}
 
 	public static Identifier GPLoc(String path) {
