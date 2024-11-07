@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import keno.guildedparties.server.commands.suggestions.GuildSuggestionProvider;
+import keno.guildedparties.server.commands.suggestions.GuildmateSuggestionProvider;
 import keno.guildedparties.server.commands.suggestions.PlayerSuggestionProvider;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.CommandManager;
@@ -18,7 +19,6 @@ public class GPCommandRegistry {
             LiteralCommandNode<ServerCommandSource> guildRootNode = CommandManager
                     .literal("guilded")
                     .build();
-
 
             LiteralCommandNode<ServerCommandSource> leaveGuildNode = CommandManager
                     .literal("leave")
@@ -40,7 +40,13 @@ public class GPCommandRegistry {
                     .literal("join")
                     .build();
 
+            LiteralCommandNode<ServerCommandSource> demotePlayerNode = CommandManager
+                    .literal("demote")
+                    .build();
 
+            LiteralCommandNode<ServerCommandSource> createRankNode = CommandManager
+                    .literal("createRank")
+                            .build();
 
             // Root command, all other commands are children of this one
             commandDispatcher.getRoot().addChild(guildRootNode);
@@ -48,20 +54,24 @@ public class GPCommandRegistry {
             // Leave command
             guildRootNode.addChild(leaveGuildNode);
 
-            // View command, with it's sub-branches
+            // View command, with it's sub-branch
             guildRootNode.addChild(viewNode);
             viewNode.addChild(viewPlayerNode);
 
             // Join command
             guildRootNode.addChild(joinGuildNode);
             joinGuildNode.addChild(getGuildSuggestionNode(new JoinGuildCommand()));
+
+            // Demote command
+            guildRootNode.addChild(demotePlayerNode);
+            demotePlayerNode.addChild(getGuildmateSuggestionNode(ChangeRankCommand::demotePlayerCommand));
         });
     }
 
     private static CommandNode<ServerCommandSource> getGuildSuggestionNode(Command<ServerCommandSource> command) {
         // Creates a guild argument node that suggests guilds, then executes a command
         return CommandManager
-                .argument("guild_name", StringArgumentType.string())
+                .argument("guildName", StringArgumentType.string())
                 .suggests(new GuildSuggestionProvider())
                 .executes(command)
                 .build();
@@ -70,11 +80,39 @@ public class GPCommandRegistry {
     private static CommandNode<ServerCommandSource> getGuildSuggestionNode(Command<ServerCommandSource> command,
                                                                               Consumer<CommandNode<ServerCommandSource>> nodeChain) {
         // Use this method overload if you want to chain nodes after the suggestion node
-        CommandNode<ServerCommandSource> node = CommandManager
-                .argument("guild_name", StringArgumentType.string())
-                .suggests(new GuildSuggestionProvider())
-                .executes(command).build();
+        CommandNode<ServerCommandSource> node = getGuildSuggestionNode(command);
         nodeChain.accept(node);
         return node;
     }
+
+    private static CommandNode<ServerCommandSource> getPlayerSuggestionNode(Command<ServerCommandSource> command) {
+        return CommandManager
+                .argument("player", StringArgumentType.string())
+                .suggests(new PlayerSuggestionProvider())
+                .executes(command)
+                .build();
+    }
+
+    private static CommandNode<ServerCommandSource> getPlayerSuggestionNode(Command<ServerCommandSource> command,
+                                                                            Consumer<CommandNode<ServerCommandSource>> nodeChain) {
+        CommandNode<ServerCommandSource> node = getPlayerSuggestionNode(command);
+        nodeChain.accept(node);
+        return node;
+    }
+
+    private static CommandNode<ServerCommandSource> getGuildmateSuggestionNode(Command<ServerCommandSource> command) {
+        return CommandManager.argument("player", StringArgumentType.string())
+                .suggests(new GuildmateSuggestionProvider())
+                .executes(command)
+                .build();
+    }
+
+    private static CommandNode<ServerCommandSource> getGuildmateSuggestionNode(Command<ServerCommandSource> command,
+                                                                               Consumer<CommandNode<ServerCommandSource>> nodeChain) {
+        CommandNode<ServerCommandSource> node = getGuildmateSuggestionNode(command);
+        nodeChain.accept(node);
+        return node;
+    }
+
+
 }

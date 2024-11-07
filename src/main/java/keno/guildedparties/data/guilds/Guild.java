@@ -62,9 +62,10 @@ public class Guild {
     }
 
     @SuppressWarnings("UnstableApiUsage")
-    public void demoteMember(ServerPlayerEntity player) {
+    public int demoteMember(ServerPlayerEntity player) {
         UUID memberId = player.getUuid();
-        if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) return;
+        if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) return 0;
+
         if (this.players.containsKey(memberId)) {
             Rank originalRank = this.players.get(memberId);
             Rank demotionRank = null;
@@ -76,11 +77,13 @@ public class Guild {
                 }
             }
 
-            if (demotionRank == null) return;
+            if (demotionRank == null) return 0;
             final Rank rank = demotionRank;
             player.modifyAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, member -> new Member(member.guildKey(), rank));
             this.players.put(memberId, rank);
+            return 1;
         }
+        return 0;
     }
 
     @SuppressWarnings("UnstableApiUsage")
@@ -92,5 +95,23 @@ public class Guild {
                 player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, new Member(this.name, player_rank));
             }
         }
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    public void removePlayerFromGuild(ServerPlayerEntity player) {
+        if (players.containsKey(player.getUuid())) {
+            if (player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
+                players.remove(player.getUuid());
+                player.removeAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
+            }
+        }
+    }
+
+    public int addRank(Rank rank) {
+        if (!this.ranks.contains(rank)) {
+            this.ranks.add(rank);
+            return 1;
+        }
+        return 0;
     }
 }

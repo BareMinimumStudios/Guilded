@@ -35,7 +35,9 @@ public class GuildmateSuggestionProvider implements SuggestionProvider<ServerCom
 
         for (UUID uuid : guild.players.keySet()) {
             ServerPlayerEntity player = server.getPlayerManager().getPlayer(uuid);
-            builder.suggest(player.getGameProfile().getName());
+            if (player != null) {
+                builder.suggest(player.getGameProfile().getName());
+            }
         }
 
         return builder.buildFuture();

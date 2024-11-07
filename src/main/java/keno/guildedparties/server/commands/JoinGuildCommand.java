@@ -5,8 +5,6 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import keno.guildedparties.data.GPAttachmentTypes;
-import keno.guildedparties.data.guilds.Rank;
-import keno.guildedparties.data.player.Member;
 import keno.guildedparties.server.StateSaverAndLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
@@ -17,7 +15,7 @@ import net.minecraft.text.Text;
 public class JoinGuildCommand implements Command<ServerCommandSource> {
     @Override
     public int run(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
-        String guild_name = StringArgumentType.getString(context, "guild_name");
+        String guild_name = StringArgumentType.getString(context, "guildName");
         ServerCommandSource source = context.getSource();
         ServerPlayerEntity player = source.getPlayer();
 
@@ -26,9 +24,7 @@ public class JoinGuildCommand implements Command<ServerCommandSource> {
             StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
             if (state.guilds.containsKey(guild_name)) {
                 if (!state.guilds.get(guild_name).players.containsKey(player.getUuid())) {
-                    Rank recruit = new Rank("Recruit", 50);
-                    state.guilds.get(guild_name).players.put(player.getUuid(), recruit);
-                    player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, new Member(guild_name, recruit));
+                    state.guilds.get(guild_name).addPlayerToGuild(player, "Recruit");
                     player.sendMessageToClient(Text.of("Successfully joined guild!"), true);
                 }
             } else {
