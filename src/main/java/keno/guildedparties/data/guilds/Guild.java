@@ -62,6 +62,28 @@ public class Guild {
     }
 
     @SuppressWarnings("UnstableApiUsage")
+    public void demoteMember(ServerPlayerEntity player) {
+        UUID memberId = player.getUuid();
+        if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) return;
+        if (this.players.containsKey(memberId)) {
+            Rank originalRank = this.players.get(memberId);
+            Rank demotionRank = null;
+            for (Rank rank : this.ranks) {
+                if (rank.priority() > originalRank.priority()) {
+                    if (demotionRank == null || rank.priority() < demotionRank.priority()) {
+                        demotionRank = rank;
+                    }
+                }
+            }
+
+            if (demotionRank == null) return;
+            final Rank rank = demotionRank;
+            player.modifyAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, member -> new Member(member.guildKey(), rank));
+            this.players.put(memberId, rank);
+        }
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
     public void addPlayerToGuild(ServerPlayerEntity player, String rank_name) {
         if (!players.containsKey(player.getUuid())) {
             if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {

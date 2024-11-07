@@ -40,6 +40,8 @@ public class GPCommandRegistry {
                     .literal("join")
                     .build();
 
+
+
             // Root command, all other commands are children of this one
             commandDispatcher.getRoot().addChild(guildRootNode);
 
