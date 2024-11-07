@@ -1,5 +1,6 @@
 package keno.guildedparties.server.commands;
 
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
@@ -8,38 +9,62 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 
+import java.util.function.Consumer;
+
 public class GPCommandRegistry {
     public static void init() {
         CommandRegistrationCallback.EVENT.register((commandDispatcher, commandRegistryAccess, registrationEnvironment) -> {
+            LiteralCommandNode<ServerCommandSource> guildRootNode = CommandManager
+                    .literal("guilded")
+                    .build();
+
+
             LiteralCommandNode<ServerCommandSource> leaveGuildNode = CommandManager
-                    .literal("leave_guild")
+                    .literal("leave")
                     .executes(new LeaveGuildCommand())
                     .build();
 
-            LiteralCommandNode<ServerCommandSource> viewPlayerGuildNode = CommandManager
-                    .literal("view_player_guild")
-                    .executes(ViewPlayerGuildCommand::viewCallerGuild)
+            LiteralCommandNode<ServerCommandSource> view = CommandManager
+                    .literal("view")
+                    .executes(ViewPlayerGuildCommand::viewCallerData)
                     .build();
 
             LiteralCommandNode<ServerCommandSource> joinGuildNode = CommandManager
-                    .literal("join_guild")
+                    .literal("join")
                     .build();
 
-            CommandNode<ServerCommandSource> guildNameNode = CommandManager
-                    .argument("guild_name", StringArgumentType.string())
-                    .suggests(new GuildSuggestionProvider())
-                    .executes(new JoinGuildCommand())
-                    .build();
+            // Root command, all other commands are children of this one
+            commandDispatcher.getRoot().addChild(guildRootNode);
 
-            // "/leave_guild" command
-            commandDispatcher.getRoot().addChild(leaveGuildNode);
+            // Leave command
+            guildRootNode.addChild(leaveGuildNode);
 
-            // "/view_player_guild" command
-            commandDispatcher.getRoot().addChild(viewPlayerGuildNode);
+            // View command, with it's sub-branches
+            guildRootNode.addChild(view);
 
-            // "/join_guild" command
-            commandDispatcher.getRoot().addChild(joinGuildNode);
-            joinGuildNode.addChild(guildNameNode);
+            // Join command
+            guildRootNode.addChild(joinGuildNode);
+            joinGuildNode.addChild(getGuildSuggestionNode(new JoinGuildCommand()));
         });
+    }
+
+    private static CommandNode<ServerCommandSource> getGuildSuggestionNode(Command<ServerCommandSource> command) {
+        // Creates a guild argument node that suggests guilds, then executes a command
+        return CommandManager
+                .argument("guild_name", StringArgumentType.string())
+                .suggests(new GuildSuggestionProvider())
+                .executes(command)
+                .build();
+    }
+
+    private static CommandNode<ServerCommandSource> getGuildSuggestionNode(Command<ServerCommandSource> command,
+                                                                              Consumer<CommandNode<ServerCommandSource>> nodeChain) {
+        // Use this method overload if you want to chain nodes after the suggestion node
+        CommandNode<ServerCommandSource> node = CommandManager
+                .argument("guild_name", StringArgumentType.string())
+                .suggests(new GuildSuggestionProvider())
+                .executes(command).build();
+        nodeChain.accept(node);
+        return node;
     }
 }

@@ -23,7 +23,7 @@ public class LeaveGuildCommand implements Command<ServerCommandSource>{
 
             // Get the attached data and remove it
             Member playerData = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
-            state.guilds.get(playerData.guild_key()).players.remove(player.getUuid());
+            state.guilds.get(playerData.guildKey()).players.remove(player.getUuid());
             player.removeAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
             player.sendMessageToClient(Text.of("Successfully left guild!"), true);
             return 1;

@@ -1,5 +1,6 @@
 package keno.guildedparties.server.commands;
 
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import keno.guildedparties.data.GPAttachmentTypes;
@@ -14,9 +15,19 @@ import net.minecraft.text.Text;
 //TODO Add a alternate method to see another player's guild
 @SuppressWarnings("UnstableApiUsage")
 public class ViewPlayerGuildCommand {
-    public static int viewCallerGuild(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    public static int viewCallerData(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         ServerCommandSource source = context.getSource();
         ServerPlayerEntity player = source.getPlayer();
+        return viewGuild(source, player);
+    }
+
+    public static int viewPlayerData(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        ServerCommandSource source = context.getSource();
+        ServerPlayerEntity player = source.getServer().getPlayerManager().getPlayer(StringArgumentType.getString(context, "player"));
+        return viewGuild(source, player);
+    }
+
+    private static int viewGuild(ServerCommandSource source, ServerPlayerEntity player) {
         if (player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
             MinecraftServer server = source.getServer();
             StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
@@ -26,7 +37,7 @@ public class ViewPlayerGuildCommand {
             Rank rank = playerData.rank();
 
             // Get variables for message
-            String guild_name = playerData.guild_key();
+            String guild_name = playerData.guildKey();
             String rank_name = rank.name();
             int members = state.guilds.get(guild_name).players.size();
             boolean isCoLeader = rank.isCoLeader();
