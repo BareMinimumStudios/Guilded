@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import keno.guildedparties.server.commands.suggestions.GuildSuggestionProvider;
+import keno.guildedparties.server.commands.suggestions.PlayerSuggestionProvider;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -24,9 +25,15 @@ public class GPCommandRegistry {
                     .executes(new LeaveGuildCommand())
                     .build();
 
-            LiteralCommandNode<ServerCommandSource> view = CommandManager
+            LiteralCommandNode<ServerCommandSource> viewNode = CommandManager
                     .literal("view")
                     .executes(ViewPlayerGuildCommand::viewCallerData)
+                    .build();
+
+            CommandNode<ServerCommandSource> viewPlayerNode = CommandManager
+                    .argument("player", StringArgumentType.string())
+                    .suggests(new PlayerSuggestionProvider())
+                    .executes(ViewPlayerGuildCommand::viewPlayerData)
                     .build();
 
             LiteralCommandNode<ServerCommandSource> joinGuildNode = CommandManager
@@ -40,7 +47,8 @@ public class GPCommandRegistry {
             guildRootNode.addChild(leaveGuildNode);
 
             // View command, with it's sub-branches
-            guildRootNode.addChild(view);
+            guildRootNode.addChild(viewNode);
+            viewNode.addChild(viewPlayerNode);
 
             // Join command
             guildRootNode.addChild(joinGuildNode);
