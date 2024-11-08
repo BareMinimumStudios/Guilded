@@ -41,6 +41,10 @@ public class Guild {
         return ranks;
     }
 
+    public Rank getRank(String name) {
+        return ranks.stream().filter(rank -> rank.name().equals(name)).findFirst().get();
+    }
+
     public ImmutableList<Pair<UUID, Rank>> encryptPlayerHashmap() {
         List<Pair<UUID, Rank>> list = new ArrayList<>();
         for (UUID key : this.players.keySet()) {
@@ -87,12 +91,12 @@ public class Guild {
     }
 
     @SuppressWarnings("UnstableApiUsage")
-    public void addPlayerToGuild(ServerPlayerEntity player, String rank_name) {
+    public void addPlayerToGuild(ServerPlayerEntity player, String rankName) {
         if (!players.containsKey(player.getUuid())) {
             if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
-                Rank player_rank = ranks.stream().filter(rank -> rank.name().equals(rank_name)).findFirst().get();
-                players.put(player.getUuid(), player_rank);
-                player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, new Member(this.name, player_rank));
+                Rank playerRank = ranks.stream().filter(rank -> rank.name().equals(rankName)).findFirst().get();
+                players.put(player.getUuid(), playerRank);
+                player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, new Member(this.name, playerRank));
             }
         }
     }

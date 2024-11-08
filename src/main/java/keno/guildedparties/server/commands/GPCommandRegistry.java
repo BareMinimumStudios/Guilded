@@ -1,6 +1,7 @@
 package keno.guildedparties.server.commands;
 
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
@@ -20,6 +21,7 @@ public class GPCommandRegistry {
                     .literal("guilded")
                     .build();
 
+            // General commands
             LiteralCommandNode<ServerCommandSource> leaveGuildNode = CommandManager
                     .literal("leave")
                     .executes(new LeaveGuildCommand())
@@ -40,13 +42,21 @@ public class GPCommandRegistry {
                     .literal("join")
                     .build();
 
+            // Guild management nodes
             LiteralCommandNode<ServerCommandSource> demotePlayerNode = CommandManager
                     .literal("demote")
                     .build();
 
+            // Guild Creation nodes
             LiteralCommandNode<ServerCommandSource> createRankNode = CommandManager
-                    .literal("createRank")
-                            .build();
+                    .literal("createRank").build();
+
+            CommandNode<ServerCommandSource> rankNameNode = CommandManager
+                    .argument("rankName", StringArgumentType.string()).build();
+
+            CommandNode<ServerCommandSource> rankPriorityNode = CommandManager
+                    .argument("rankPriority", IntegerArgumentType.integer())
+                            .executes(GuildCreationCommands::createGuildRankCommand).build();
 
             // Root command, all other commands are children of this one
             commandDispatcher.getRoot().addChild(guildRootNode);
@@ -62,9 +72,16 @@ public class GPCommandRegistry {
             guildRootNode.addChild(joinGuildNode);
             joinGuildNode.addChild(getGuildSuggestionNode(new JoinGuildCommand()));
 
+            // Guild managements commands
             // Demote command
             guildRootNode.addChild(demotePlayerNode);
-            demotePlayerNode.addChild(getGuildmateSuggestionNode(ChangeRankCommand::demotePlayerCommand));
+            demotePlayerNode.addChild(getGuildmateSuggestionNode(ChangePlayerRankCommand::demotePlayerCommand));
+
+            // Guild creation and removal commands
+            // Rank creation command
+            guildRootNode.addChild(createRankNode);
+            createRankNode.addChild(rankNameNode);
+            rankNameNode.addChild(rankPriorityNode);
         });
     }
 

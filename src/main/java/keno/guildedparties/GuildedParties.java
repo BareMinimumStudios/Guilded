@@ -58,17 +58,26 @@ public class GuildedParties implements ModInitializer {
 		StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
 		ServerPlayerEntity player = handler.getPlayer();
 		UUID playerId = player.getUuid();
+		boolean isInGuild = false;
 		for (Guild guild : state.guilds.values()) {
 			if (guild.players.containsKey(playerId)) {
+				isInGuild = true;
 				if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
 					player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, new Member(guild.getName(), guild.players.get(playerId)));
 					break;
 				}
 				Member data = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
 				if (!data.guildKey.equals(guild.getName())) {
-					player.modifyAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, member -> new Member(guild.getName(), member.rank()));
+					if (!guild.getRanks().contains(data.rank())) {
+						guild.demoteMember(player);
+					} else {
+						player.modifyAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, member -> new Member(guild.getName(), member.rank()));
+					}
 				}
 			}
+		}
+		if (!isInGuild) {
+			player.removeAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
 		}
 	}
 
