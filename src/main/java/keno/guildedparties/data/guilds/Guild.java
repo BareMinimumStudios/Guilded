@@ -90,6 +90,30 @@ public class Guild {
         return 0;
     }
 
+    public int promoteMember(ServerPlayerEntity player) {
+        UUID memberId = player.getUuid();
+
+        if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) return 0;
+        if (this.players.containsKey(memberId)) {
+            Rank originalRank = this.players.get(memberId);
+            Rank promotionRank = null;
+            for (Rank rank : this.ranks) {
+                if (rank.priority() < originalRank.priority()) {
+                    if (promotionRank == null || rank.priority() > promotionRank.priority()) {
+                        promotionRank = rank;
+                    }
+                }
+            }
+
+            if (promotionRank == null) return 0;
+            final Rank rank = promotionRank;
+            player.modifyAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, member -> new Member(member.guildKey(), rank));
+            this.players.put(memberId, rank);
+            return 1;
+        }
+        return 0;
+    }
+
     @SuppressWarnings("UnstableApiUsage")
     public void addPlayerToGuild(ServerPlayerEntity player, String rankName) {
         if (!players.containsKey(player.getUuid())) {
