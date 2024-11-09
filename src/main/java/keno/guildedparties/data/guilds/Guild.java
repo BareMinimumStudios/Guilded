@@ -90,6 +90,8 @@ public class Guild {
         return 0;
     }
 
+
+
     public int promoteMember(ServerPlayerEntity player) {
         UUID memberId = player.getUuid();
 
@@ -135,10 +137,38 @@ public class Guild {
         }
     }
 
+    private void sortRanks() {
+        // To ensure ranks are ordered correctly, this is to be executed whenever a rank is added or removed
+        // Uses pseudocode for the insertion sort, since we aren't working with massive amounts of data.
+        // We do this so finding a guild's ranks later is quicker, since we use a list to store them
+        for (int i = 1; i < this.ranks.size(); i++) {
+            Rank rank = ranks.get(i);
+            int key = rank.priority();
+            int j = i - 1;
+            while (j >= 0 && this.ranks.get(j).priority() > key) {
+                this.ranks.add(j + 1, this.ranks.get(j));
+                j = j - 1;
+            }
+            this.ranks.add(j + 1, rank);
+        }
+    }
+
     public int addRank(Rank rank) {
         if (!this.ranks.contains(rank)) {
             this.ranks.add(rank);
+            sortRanks();
             return 1;
+        }
+        return 0;
+    }
+
+    public int removeRank(String rankName) {
+        for (Rank rank : getRanks()) {
+            if (rank.name().equals(rankName)) {
+                this.ranks.remove(rank);
+                sortRanks();
+                return 1;
+            }
         }
         return 0;
     }
