@@ -3,6 +3,7 @@ package keno.guildedparties.server;
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.data.guilds.Guild;
 import keno.guildedparties.data.guilds.GuildBanList;
+import keno.guildedparties.data.guilds.GuildSettings;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
@@ -20,6 +21,7 @@ public class StateSaverAndLoader extends PersistentState {
     public final HashMap<String, Guild> guilds = new HashMap<>();
     // Use the guild's internal name to get its banlist
     public final HashMap<String, GuildBanList> banLists = new HashMap<>();
+    public final HashMap<String, GuildSettings> guildSettingsMap = new HashMap<>();
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
@@ -28,14 +30,24 @@ public class StateSaverAndLoader extends PersistentState {
         for (String key : keys) {
             NbtElement guild = Guild.codec.encodeStart(NbtOps.INSTANCE, guilds.get(key)).resultOrPartial(GuildedParties.LOGGER::error).orElseThrow();
             NbtElement banList;
+            NbtElement settings;
             if (banLists.containsKey(key)) {
                 banList = GuildBanList.codec.encodeStart(NbtOps.INSTANCE, banLists.get(key)).resultOrPartial(GuildedParties.LOGGER::error).orElseThrow();
             } else {
                 GuildBanList list = new GuildBanList(new ArrayList<>());
                 banList = GuildBanList.codec.encodeStart(NbtOps.INSTANCE, list).resultOrPartial(GuildedParties.LOGGER::error).orElseThrow();
             }
+
+            if (guildSettingsMap.containsKey(key)) {
+                settings = GuildSettings.codec.encodeStart(NbtOps.INSTANCE,
+                        guildSettingsMap.get(key)).resultOrPartial(GuildedParties.LOGGER::error).orElseThrow();
+            } else {
+                GuildSettings guildSettings = new GuildSettings(false, 5, 3, 3);
+                settings = GuildSettings.codec.encodeStart(NbtOps.INSTANCE, guildSettings).resultOrPartial(GuildedParties.LOGGER::error).orElseThrow();
+            }
             nbt.put(key, guild);
             nbt.put(key + "_banlist", banList);
+            nbt.put(key + "_settings", settings);
             keySet.append(key);
             if (!key.equals(keys.getLast())) {
                 keySet.append(",");

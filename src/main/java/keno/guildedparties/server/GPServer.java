@@ -2,6 +2,7 @@ package keno.guildedparties.server;
 
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.data.guilds.Guild;
+import keno.guildedparties.data.guilds.GuildSettings;
 import keno.guildedparties.server.commands.GPCommandRegistry;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -12,6 +13,7 @@ public class GPServer implements DedicatedServerModInitializer {
     @Override
     public void onInitializeServer() {
         DynamicRegistries.registerSynced(GuildedParties.GUILD_REGISTRY, Guild.codec, Guild.codec);
+        DynamicRegistries.registerSynced(GuildedParties.SETTINGS_REGISTRY, GuildSettings.codec, GuildSettings.codec);
 
         ServerLifecycleEvents.SERVER_STARTED.register(GuildedParties::fillPersistentState);
         ServerPlayConnectionEvents.JOIN.register(GuildedParties::syncAndInitializePlayerData);
