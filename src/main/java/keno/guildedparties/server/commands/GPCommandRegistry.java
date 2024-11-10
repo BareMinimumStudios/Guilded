@@ -5,6 +5,9 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import keno.guildedparties.server.commands.general.JoinGuildCommand;
+import keno.guildedparties.server.commands.general.LeaveGuildCommand;
+import keno.guildedparties.server.commands.general.ViewPlayerGuildCommand;
 import keno.guildedparties.server.commands.suggestions.GuildSuggestionProvider;
 import keno.guildedparties.server.commands.suggestions.GuildmateSuggestionProvider;
 import keno.guildedparties.server.commands.suggestions.PlayerSuggestionProvider;
@@ -101,6 +104,8 @@ public class GPCommandRegistry {
 
             // Guildmate management commands
             guildRootNode.addChild(guildmateRootNode);
+
+            // Invite command
 
             // Demote command
             guildmateRootNode.addChild(demotePlayerNode);

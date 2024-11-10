@@ -1,4 +1,4 @@
-package keno.guildedparties.server.commands;
+package keno.guildedparties.server.commands.general;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;

@@ -1,4 +1,4 @@
-package keno.guildedparties.server.commands;
+package keno.guildedparties.server.commands.general;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -26,11 +26,16 @@ public class JoinGuildCommand implements Command<ServerCommandSource> {
                 player.sendMessageToClient(Text.of("You are banned from this guild"), true);
                 return 0;
             }
+
             if (state.guilds.containsKey(guild_name)) {
-                if (!state.guilds.get(guild_name).getPlayers().containsKey(player.getUuid())) {
-                    state.guilds.get(guild_name).addPlayerToGuild(player, "Recruit");
-                    player.sendMessageToClient(Text.of("Successfully joined guild!"), true);
-                    return 1;
+                if (!state.guildSettingsMap.get(guild_name).isPrivate()) {
+                    if (!state.guilds.get(guild_name).getPlayers().containsKey(player.getUuid())) {
+                        state.guilds.get(guild_name).addPlayerToGuild(player, "Recruit");
+                        player.sendMessageToClient(Text.of("Successfully joined guild!"), true);
+                        return 1;
+                    }
+                } else {
+                    player.sendMessageToClient(Text.of("This guild is private, you must be invited"), true);
                 }
             } else {
                 player.sendMessageToClient(Text.of("This guild does not exist..."), true);

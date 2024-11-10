@@ -59,7 +59,7 @@ public class GuildedParties implements ModInitializer {
 				if (settingsRegistry.contains(RegistryKey.of(SETTINGS_REGISTRY, GPLoc(guild.getName())))) {
 					settings = settingsRegistry.getEntry(GPLoc(guild.getName())).orElseThrow().value();
 				} else {
-					settings = new GuildSettings(false, 5, 3, 3);
+					settings = new GuildSettings(false, 5, 3, 3, 5);
 				}
 				state.guildSettingsMap.put(guild.getName(), settings);
 			}

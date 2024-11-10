@@ -1,4 +1,4 @@
-package keno.guildedparties.server.commands;
+package keno.guildedparties.server.commands.general;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
@@ -12,7 +12,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
 @SuppressWarnings("UnstableApiUsage")
-public class LeaveGuildCommand implements Command<ServerCommandSource>{
+public class LeaveGuildCommand implements Command<ServerCommandSource> {
     @Override
     public int run(CommandContext<ServerCommandSource> commandContext) throws CommandSyntaxException {
         ServerCommandSource source = commandContext.getSource();
