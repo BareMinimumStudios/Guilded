@@ -91,11 +91,12 @@ public class Guild {
     }
 
 
-
+    @SuppressWarnings("UnstableApiUsage")
     public int promoteMember(ServerPlayerEntity player) {
         UUID memberId = player.getUuid();
 
         if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) return 0;
+
         if (this.players.containsKey(memberId)) {
             Rank originalRank = this.players.get(memberId);
             Rank promotionRank = null;

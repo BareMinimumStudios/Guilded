@@ -16,12 +16,14 @@ import net.minecraft.text.Text;
 import java.util.UUID;
 
 @SuppressWarnings({"UnstableApiUsage"})
-public class GuildCreationCommands {
+public class GuildManagementCommands {
     public static int removeGuildRankCommand(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         ServerCommandSource source = context.getSource();
         MinecraftServer server = source.getServer();
         ServerPlayerEntity sender = source.getPlayer();
         StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
+        if (sender == null) return 0;
+
         if (!sender.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
             sender.sendMessageToClient(Text.of("You aren't in a guild"), true);
             return 0;
@@ -52,6 +54,8 @@ public class GuildCreationCommands {
         MinecraftServer server = source.getServer();
         ServerPlayerEntity sender = source.getPlayer();
         StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
+        if (sender == null) return 0;
+
         if (!sender.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
             sender.sendMessageToClient(Text.of("You aren't in a guild"), true);
             return 0;

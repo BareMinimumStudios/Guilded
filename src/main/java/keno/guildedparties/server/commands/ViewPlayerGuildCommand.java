@@ -17,13 +17,19 @@ public class ViewPlayerGuildCommand {
     public static int viewCallerData(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         ServerCommandSource source = context.getSource();
         ServerPlayerEntity player = source.getPlayer();
-        return viewGuild(source, player);
+        if (player != null) {
+            return viewGuild(source, player);
+        }
+        return 0;
     }
 
     public static int viewPlayerData(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         ServerCommandSource source = context.getSource();
         ServerPlayerEntity player = source.getServer().getPlayerManager().getPlayer(StringArgumentType.getString(context, "player"));
-        return viewGuild(source, player);
+        if (player != null) {
+            return viewGuild(source, player);
+        }
+        return 0;
     }
 
     private static int viewGuild(ServerCommandSource source, ServerPlayerEntity player) {

@@ -8,6 +8,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import keno.guildedparties.server.commands.suggestions.GuildSuggestionProvider;
 import keno.guildedparties.server.commands.suggestions.GuildmateSuggestionProvider;
 import keno.guildedparties.server.commands.suggestions.PlayerSuggestionProvider;
+import keno.guildedparties.server.commands.suggestions.RankSuggestionProvider;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -42,12 +43,18 @@ public class GPCommandRegistry {
                     .literal("join")
                     .build();
 
-            // Guild management nodes
+            // Guildmate management nodes
+            // Demote command
             LiteralCommandNode<ServerCommandSource> demotePlayerNode = CommandManager
                     .literal("demote")
                     .build();
 
-            // Guild Creation nodes
+            // Promote command
+            LiteralCommandNode<ServerCommandSource> promotePlayerNode = CommandManager
+                    .literal("promote")
+                    .build();
+
+            // Guild management nodes
             LiteralCommandNode<ServerCommandSource> createRankNode = CommandManager
                     .literal("createRank").build();
 
@@ -56,8 +63,16 @@ public class GPCommandRegistry {
 
             CommandNode<ServerCommandSource> rankPriorityNode = CommandManager
                     .argument("rankPriority", IntegerArgumentType.integer())
-                            .executes(GuildCreationCommands::createGuildRankCommand).build();
+                            .executes(GuildManagementCommands::createGuildRankCommand).build();
 
+            LiteralCommandNode<ServerCommandSource> removeRankNode = CommandManager.literal("removeRank").build();
+            CommandNode<ServerCommandSource> rankNode = CommandManager
+                    .argument("rank", StringArgumentType.string())
+                    .suggests(new RankSuggestionProvider())
+                    .executes(GuildManagementCommands::removeGuildRankCommand)
+                    .build();
+
+            // Command registry
             // Root command, all other commands are children of this one
             commandDispatcher.getRoot().addChild(guildRootNode);
 
@@ -72,16 +87,24 @@ public class GPCommandRegistry {
             guildRootNode.addChild(joinGuildNode);
             joinGuildNode.addChild(getGuildSuggestionNode(new JoinGuildCommand()));
 
-            // Guild managements commands
+            // Guildmate management commands
             // Demote command
             guildRootNode.addChild(demotePlayerNode);
-            demotePlayerNode.addChild(getGuildmateSuggestionNode(ChangePlayerRankCommand::demotePlayerCommand));
+            demotePlayerNode.addChild(getGuildmateSuggestionNode(GuildmateManagementCommands::demotePlayerCommand));
 
-            // Guild creation and removal commands
+            // Promote command
+            guildRootNode.addChild(promotePlayerNode);
+            promotePlayerNode.addChild(getGuildmateSuggestionNode(GuildmateManagementCommands::promotePlayerCommand));
+
+            // Guild management commands
             // Rank creation command
             guildRootNode.addChild(createRankNode);
             createRankNode.addChild(rankNameNode);
             rankNameNode.addChild(rankPriorityNode);
+
+            // Rank removal command
+            guildRootNode.addChild(removeRankNode);
+            removeRankNode.addChild(rankNode);
         });
     }
 
@@ -130,6 +153,4 @@ public class GPCommandRegistry {
         nodeChain.accept(node);
         return node;
     }
-
-
 }
