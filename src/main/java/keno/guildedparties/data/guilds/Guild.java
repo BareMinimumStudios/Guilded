@@ -146,10 +146,10 @@ public class Guild {
             int key = rank.priority();
             int j = i - 1;
             while (j >= 0 && this.ranks.get(j).priority() > key) {
-                this.ranks.add(j + 1, this.ranks.get(j));
+                this.ranks.set(j + 1, this.ranks.get(j));
                 j = j - 1;
             }
-            this.ranks.add(j + 1, rank);
+            this.ranks.set(j + 1, rank);
         }
     }
 

@@ -74,6 +74,7 @@ public class GuildedParties implements ModInitializer {
 						player.modifyAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, member -> new Member(guild.getName(), member.rank()));
 					}
 				}
+				break;
 			}
 		}
 		if (!isInGuild) {
