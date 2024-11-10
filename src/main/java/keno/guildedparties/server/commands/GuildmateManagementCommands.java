@@ -14,6 +14,34 @@ import net.minecraft.text.Text;
 
 @SuppressWarnings("UnstableApiUsage")
 public class GuildmateManagementCommands {
+    public static int banPlayerCommand(CommandContext<ServerCommandSource> context) {
+        ServerCommandSource source = context.getSource();
+        MinecraftServer server = source.getServer();
+        ServerPlayerEntity sender = source.getPlayer();
+        ServerPlayerEntity player = server.getPlayerManager().getPlayer(StringArgumentType.getString(context, "player"));
+
+        if (sender != null && player != null) {
+            if (player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
+                if (sender.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
+                    Member playerData = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
+                    Member senderData = sender.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
+                    if (playerData.guildKey().equals(senderData.guildKey())) {
+                        Rank playerRank = playerData.rank();
+                        Rank senderRank = senderData.rank();
+
+                        if (playerRank.priority() > senderRank.priority() && senderRank.priority() <= 3) {
+                            StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
+                            state.guilds.get(playerData.guildKey()).removePlayerFromGuild(player);
+                            state.banLists.get(playerData.guildKey()).banPlayer(player.getUuid());
+                            return 1;
+                        }
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+
     public static int kickPlayerCommand(CommandContext<ServerCommandSource> context) {
         ServerCommandSource source = context.getSource();
         MinecraftServer server = source.getServer();

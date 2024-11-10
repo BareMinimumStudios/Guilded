@@ -59,6 +59,8 @@ public class GPCommandRegistry {
             // Kick command
             LiteralCommandNode<ServerCommandSource> kickPlayerNode = CommandManager.literal("kick").build();
 
+            // Ban command
+            LiteralCommandNode<ServerCommandSource> banPlayerNode = CommandManager.literal("ban").build();
 
             // Guild management nodes
             LiteralCommandNode<ServerCommandSource> managementRootNode = CommandManager.literal("management").build();
@@ -111,6 +113,10 @@ public class GPCommandRegistry {
             // Kick command
             guildmateRootNode.addChild(kickPlayerNode);
             kickPlayerNode.addChild(getGuildmateSuggestionNode(GuildmateManagementCommands::kickPlayerCommand));
+
+            // Ban command
+            guildmateRootNode.addChild(banPlayerNode);
+            banPlayerNode.addChild(getGuildmateSuggestionNode(GuildmateManagementCommands::banPlayerCommand));
 
             // Guild management commands
             guildRootNode.addChild(managementRootNode);

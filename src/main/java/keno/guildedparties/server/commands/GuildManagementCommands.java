@@ -33,7 +33,7 @@ public class GuildManagementCommands {
         if (senderData.rank().priority() <= 3) {
             String rankName = StringArgumentType.getString(context, "rank");
             Rank rank = state.guilds.get(senderData.guildKey()).getRank(rankName);
-            for (UUID id : state.guilds.get(senderData.guildKey()).players.keySet()) {
+            for (UUID id : state.guilds.get(senderData.guildKey()).getPlayers().keySet()) {
                 ServerPlayerEntity player = server.getPlayerManager().getPlayer(id);
                 if (player != null) {
                     if (player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT).rank().equals(rank)) {
@@ -41,8 +41,7 @@ public class GuildManagementCommands {
                     }
                 }
             }
-            state.guilds.get(senderData.guildKey()).ranks.remove(rank);
-            return 1;
+            return state.guilds.get(senderData.guildKey()).removeRank(rankName);
         } else {
             sender.sendMessageToClient(Text.of("Your rank is too low priority"), true);
         }

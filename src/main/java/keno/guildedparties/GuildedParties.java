@@ -60,12 +60,15 @@ public class GuildedParties implements ModInitializer {
 		UUID playerId = player.getUuid();
 		boolean isInGuild = false;
 		for (Guild guild : state.guilds.values()) {
-			if (guild.players.containsKey(playerId)) {
+			if (state.banLists.get(guild.getName()).isPlayerBanned(playerId)) continue;
+
+			if (guild.getPlayers().containsKey(playerId)) {
 				isInGuild = true;
 				if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
-					player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, new Member(guild.getName(), guild.players.get(playerId)));
+					player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, new Member(guild.getName(), guild.getPlayers().get(playerId)));
 					break;
 				}
+
 				Member data = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
 				if (!data.guildKey.equals(guild.getName())) {
 					if (!guild.getRanks().contains(data.rank())) {

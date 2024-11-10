@@ -23,7 +23,7 @@ public class Guild {
 
     private String name;
     public HashMap<UUID, Rank> players = new HashMap<>();
-    public List<Rank> ranks = new ArrayList<>();
+    private final List<Rank> ranks = new ArrayList<>();
 
     public Guild(String name, List<Pair<UUID, Rank>> players_list, List<Rank> ranks) {
         this.name = name;
@@ -65,6 +65,10 @@ public class Guild {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public HashMap<UUID, Rank> getPlayers() {
+        return players;
     }
 
     public int demoteMember(ServerPlayerEntity player) {

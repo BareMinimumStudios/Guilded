@@ -44,7 +44,7 @@ public class ViewPlayerGuildCommand {
             // Get variables for message
             String guild_name = playerData.guildKey();
             String rank_name = rank.name();
-            int members = state.guilds.get(guild_name).players.size();
+            int members = state.guilds.get(guild_name).getPlayers().size();
             boolean isCoLeader = rank.isCoLeader();
 
             String response = "Guild: %s, Members: %d, Rank: %s, CoLeader: %b".formatted(guild_name, members, rank_name, isCoLeader);

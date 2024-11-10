@@ -2,6 +2,7 @@ package keno.guildedparties.server;
 
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.data.guilds.Guild;
+import keno.guildedparties.data.guilds.GuildBanList;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
@@ -16,7 +17,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public class StateSaverAndLoader extends PersistentState {
-    public HashMap<String, Guild> guilds = new HashMap<>();
+    public final HashMap<String, Guild> guilds = new HashMap<>();
+    // Use the guild's internal name to get its banlist
+    public final HashMap<String, GuildBanList> banLists = new HashMap<>();
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
@@ -24,8 +27,15 @@ public class StateSaverAndLoader extends PersistentState {
         List<String> keys = new ArrayList<>(guilds.keySet());
         for (String key : keys) {
             NbtElement guild = Guild.codec.encodeStart(NbtOps.INSTANCE, guilds.get(key)).resultOrPartial(GuildedParties.LOGGER::error).orElseThrow();
-
+            NbtElement banList;
+            if (banLists.containsKey(key)) {
+                banList = GuildBanList.codec.encodeStart(NbtOps.INSTANCE, banLists.get(key)).resultOrPartial(GuildedParties.LOGGER::error).orElseThrow();
+            } else {
+                GuildBanList list = new GuildBanList(new ArrayList<>());
+                banList = GuildBanList.codec.encodeStart(NbtOps.INSTANCE, list).resultOrPartial(GuildedParties.LOGGER::error).orElseThrow();
+            }
             nbt.put(key, guild);
+            nbt.put(key + "_banlist", banList);
             keySet.append(key);
             if (!key.equals(keys.getLast())) {
                 keySet.append(",");
@@ -42,7 +52,9 @@ public class StateSaverAndLoader extends PersistentState {
         if (!keySet.isBlank()) {
             for (String key : keys) {
                 Guild guild = Guild.codec.parse(NbtOps.INSTANCE, tag.get(key)).resultOrPartial(GuildedParties.LOGGER::error).orElseThrow();
+                GuildBanList list = GuildBanList.codec.parse(NbtOps.INSTANCE, tag.get(key + "_banlist")).resultOrPartial(GuildedParties.LOGGER::error).orElseThrow();
                 saverAndLoader.guilds.put(key, guild);
+                saverAndLoader.banLists.put(key, list);
             }
         }
         return saverAndLoader;
