@@ -6,11 +6,13 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.player.Member;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Uuids;
 
 import java.util.*;
 
+@SuppressWarnings("UnstableApiUsage")
 public class Guild {
     public static final Codec<Guild> codec = RecordCodecBuilder.create(instance -> instance.group(
             Codec.STRING.stable().fieldOf("guild_name").forGetter(Guild::getName),
@@ -65,7 +67,6 @@ public class Guild {
         this.name = name;
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     public int demoteMember(ServerPlayerEntity player) {
         UUID memberId = player.getUuid();
         if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) return 0;
@@ -90,8 +91,6 @@ public class Guild {
         return 0;
     }
 
-
-    @SuppressWarnings("UnstableApiUsage")
     public int promoteMember(ServerPlayerEntity player) {
         UUID memberId = player.getUuid();
 
@@ -117,7 +116,6 @@ public class Guild {
         return 0;
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     public void addPlayerToGuild(ServerPlayerEntity player, String rankName) {
         if (!players.containsKey(player.getUuid())) {
             if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
@@ -128,12 +126,23 @@ public class Guild {
         }
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     public void removePlayerFromGuild(ServerPlayerEntity player) {
         if (players.containsKey(player.getUuid())) {
             if (player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
                 players.remove(player.getUuid());
                 player.removeAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
+            }
+        }
+    }
+
+    public void removePlayerFromGuild(MinecraftServer server, UUID playerId) {
+        if (players.containsKey(playerId)) {
+            ServerPlayerEntity player = server.getPlayerManager().getPlayer(playerId);
+            players.remove(playerId);
+            if (player != null) {
+                if (player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
+                    player.removeAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
+                }
             }
         }
     }

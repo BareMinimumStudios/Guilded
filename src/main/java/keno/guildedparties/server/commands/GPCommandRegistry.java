@@ -44,6 +44,8 @@ public class GPCommandRegistry {
                     .build();
 
             // Guildmate management nodes
+            LiteralCommandNode<ServerCommandSource> guildmateRootNode = CommandManager.literal("guildmates").build();
+
             // Demote command
             LiteralCommandNode<ServerCommandSource> demotePlayerNode = CommandManager
                     .literal("demote")
@@ -54,7 +56,14 @@ public class GPCommandRegistry {
                     .literal("promote")
                     .build();
 
+            // Kick command
+            LiteralCommandNode<ServerCommandSource> kickPlayerNode = CommandManager.literal("kick").build();
+
+
             // Guild management nodes
+            LiteralCommandNode<ServerCommandSource> managementRootNode = CommandManager.literal("management").build();
+
+            // Rank Creation
             LiteralCommandNode<ServerCommandSource> createRankNode = CommandManager
                     .literal("createRank").build();
 
@@ -65,6 +74,7 @@ public class GPCommandRegistry {
                     .argument("rankPriority", IntegerArgumentType.integer())
                             .executes(GuildManagementCommands::createGuildRankCommand).build();
 
+            // Rank removal
             LiteralCommandNode<ServerCommandSource> removeRankNode = CommandManager.literal("removeRank").build();
             CommandNode<ServerCommandSource> rankNode = CommandManager
                     .argument("rank", StringArgumentType.string())
@@ -88,22 +98,30 @@ public class GPCommandRegistry {
             joinGuildNode.addChild(getGuildSuggestionNode(new JoinGuildCommand()));
 
             // Guildmate management commands
+            guildRootNode.addChild(guildmateRootNode);
+
             // Demote command
-            guildRootNode.addChild(demotePlayerNode);
+            guildmateRootNode.addChild(demotePlayerNode);
             demotePlayerNode.addChild(getGuildmateSuggestionNode(GuildmateManagementCommands::demotePlayerCommand));
 
             // Promote command
-            guildRootNode.addChild(promotePlayerNode);
+            guildmateRootNode.addChild(promotePlayerNode);
             promotePlayerNode.addChild(getGuildmateSuggestionNode(GuildmateManagementCommands::promotePlayerCommand));
 
+            // Kick command
+            guildmateRootNode.addChild(kickPlayerNode);
+            kickPlayerNode.addChild(getGuildmateSuggestionNode(GuildmateManagementCommands::kickPlayerCommand));
+
             // Guild management commands
+            guildRootNode.addChild(managementRootNode);
+
             // Rank creation command
-            guildRootNode.addChild(createRankNode);
+            managementRootNode.addChild(createRankNode);
             createRankNode.addChild(rankNameNode);
             rankNameNode.addChild(rankPriorityNode);
 
             // Rank removal command
-            guildRootNode.addChild(removeRankNode);
+            managementRootNode.addChild(removeRankNode);
             removeRankNode.addChild(rankNode);
         });
     }
