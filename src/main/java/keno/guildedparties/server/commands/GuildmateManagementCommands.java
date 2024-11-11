@@ -14,6 +14,41 @@ import net.minecraft.text.Text;
 
 @SuppressWarnings("UnstableApiUsage")
 public class GuildmateManagementCommands {
+    public static int standDownCommand(CommandContext<ServerCommandSource> context) {
+        ServerCommandSource source = context.getSource();
+        MinecraftServer server = source.getServer();
+        ServerPlayerEntity oldLeader = source.getPlayer();
+        ServerPlayerEntity newLeader = server.getPlayerManager().getPlayer(context.getArgument("newLeader", String.class));
+        if (oldLeader != null) {
+            if (newLeader != null) {
+                if (oldLeader.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
+                    Member oldLeaderData = oldLeader.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
+                    if (newLeader.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)
+                            && newLeader.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT).guildKey().equals(oldLeaderData.guildKey())) {
+                        if (oldLeaderData.rank().priority() <= 1) {
+                            Text message = Text.of(oldLeader.getName().getLiteralString()
+                                    + " has resigned leadership of " + oldLeaderData.guildKey() + " to " + newLeader.getName().getLiteralString());
+                            server.getPlayerManager().broadcast(Text.of(message), false);
+
+                            StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
+                            state.guilds.get(oldLeaderData.guildKey()).demoteMember(oldLeader);
+                            return state.guilds.get(oldLeaderData.guildKey()).changeMemberRank(newLeader, oldLeaderData.rank());
+                        } else {
+                            oldLeader.sendMessageToClient(Text.of("You aren't the leader of this guild"), true);
+                        }
+                    } else {
+                        oldLeader.sendMessageToClient(Text.of("This player isn't in your guild"), true);
+                    }
+                } else {
+                    oldLeader.sendMessageToClient(Text.of("You aren't in a guild"), true);
+                }
+            } else {
+                oldLeader.sendMessageToClient(Text.of("This player doesn't exist"), true);
+            }
+        }
+        return 0;
+    }
+
     public static int banPlayerCommand(CommandContext<ServerCommandSource> context) {
         ServerCommandSource source = context.getSource();
         MinecraftServer server = source.getServer();

@@ -63,6 +63,20 @@ public class GPCommandRegistry {
                     .executes(InviteResponseCommands::acceptInviteCommand)
                     .build();
 
+            // Guild creation
+            LiteralCommandNode<ServerCommandSource> createGuildNode = CommandManager
+                    .literal("createGuild")
+                    .build();
+
+            CommandNode<ServerCommandSource> guildNameNode = CommandManager
+                    .argument("guildName", StringArgumentType.string())
+                    .build();
+
+            CommandNode<ServerCommandSource> leaderRankNameNode = CommandManager
+                    .argument("leaderRankName", StringArgumentType.string())
+                    .executes(GuildManagementCommands::createGuildCommand)
+                    .build();
+
             // Guildmate management nodes
             LiteralCommandNode<ServerCommandSource> guildmateRootNode = CommandManager.literal("guildmates").build();
 
@@ -119,6 +133,11 @@ public class GPCommandRegistry {
             // Join command
             guildRootNode.addChild(joinGuildNode);
             joinGuildNode.addChild(getGuildSuggestionNode(new JoinGuildCommand()));
+
+            // Guild creation command
+            guildRootNode.addChild(createGuildNode);
+            createGuildNode.addChild(guildNameNode);
+            guildNameNode.addChild(leaderRankNameNode);
 
             // Invites
             guildRootNode.addChild(inviteRootNode);

@@ -17,12 +17,18 @@ public class LeaveGuildCommand implements Command<ServerCommandSource> {
     public int run(CommandContext<ServerCommandSource> commandContext) throws CommandSyntaxException {
         ServerCommandSource source = commandContext.getSource();
         ServerPlayerEntity player = source.getPlayer();
+        if (player == null) return 0;
+
         if (player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
             MinecraftServer server = source.getServer();
             StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
 
             // Get the attached data and remove it
             Member playerData = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
+            if (playerData.rank().priority() <= 1) {
+                player.sendMessageToClient(Text.of("You can't leave since you're the leader"), true);
+                return 0;
+            }
             state.guilds.get(playerData.guildKey()).removePlayerFromGuild(player);
             player.sendMessageToClient(Text.of("Successfully left guild!"), true);
             return 1;

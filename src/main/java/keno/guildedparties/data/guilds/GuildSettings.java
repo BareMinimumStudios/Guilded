@@ -16,4 +16,8 @@ public record GuildSettings(boolean isPrivate,
             Codec.INT.stable().optionalFieldOf("manageGuild", 3).forGetter(GuildSettings::manageGuildPriority),
             Codec.INT.stable().optionalFieldOf("invitePlayers", 5).forGetter(GuildSettings::invitePlayersPriority)
     ).apply(instance, GuildSettings::new));
+
+    public static GuildSettings getDefaultSettings() {
+        return new GuildSettings(false, 5, 3, 3, 5);
+    }
 }

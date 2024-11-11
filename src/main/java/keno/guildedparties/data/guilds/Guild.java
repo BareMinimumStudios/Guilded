@@ -120,6 +120,19 @@ public class Guild {
         return 0;
     }
 
+    public int changeMemberRank(ServerPlayerEntity player, Rank rank) {
+        UUID memberId = player.getUuid();
+
+        if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) return 0;
+
+        if (this.players.containsKey(memberId)) {
+            this.players.put(memberId, rank);
+            player.modifyAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, member -> new Member(member.guildKey(), rank));
+            return 1;
+        }
+        return 0;
+    }
+
     public void addPlayerToGuild(ServerPlayerEntity player, String rankName) {
         if (!players.containsKey(player.getUuid())) {
             if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
