@@ -56,6 +56,38 @@ public class GuildManagementCommands {
         return 0;
     }
 
+    public static int disbandGuildCommand(CommandContext<ServerCommandSource> context) {
+        ServerCommandSource source = context.getSource();
+        ServerPlayerEntity leader = source.getPlayer();
+        MinecraftServer server = source.getServer();
+        StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
+
+        if (leader == null) return 0;
+
+        if (leader.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
+            Member member = leader.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
+            if (member.rank().isCoLeader()) {
+                Guild guild = state.guilds.get(member.guildKey());
+                for (UUID id : guild.getPlayers().keySet()) {
+                    ServerPlayerEntity player = server.getPlayerManager().getPlayer(id);
+                    if (player != null) {
+                        guild.removePlayerFromGuild(player);
+                    }
+                }
+                state.guildSettingsMap.remove(member.guildKey());
+                state.guilds.remove(member.guildKey());
+                state.banLists.remove(member.guildKey());
+                server.getPlayerManager().broadcast(Text.of("The guild, " + guild.getName() + ", has been disbanded"), false);
+                return 1;
+            } else {
+                leader.sendMessageToClient(Text.of("You must be the Leader to disband the guild"), true);
+            }
+        } else {
+            leader.sendMessageToClient(Text.of("You aren't in a guild"), true);
+        }
+        return 0;
+    }
+
     public static int removeGuildRankCommand(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         ServerCommandSource source = context.getSource();
         MinecraftServer server = source.getServer();
@@ -69,7 +101,8 @@ public class GuildManagementCommands {
         }
 
         Member senderData = sender.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
-        if (senderData.rank().priority() <= 3) {
+        GuildSettings settings = state.guildSettingsMap.get(senderData.guildKey());
+        if (senderData.rank().priority() <= settings.manageGuildPriority()) {
             String rankName = StringArgumentType.getString(context, "rank");
             if (rankName.equals("Recruit")) {
                 sender.sendMessageToClient(Text.of("The Recruit rank can't be removed"), true);
@@ -103,7 +136,8 @@ public class GuildManagementCommands {
             return 0;
         }
         Member senderData = sender.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
-        if (senderData.rank().priority() <= 3) {
+        GuildSettings settings = state.guildSettingsMap.get(senderData.guildKey());
+        if (senderData.rank().priority() <= settings.manageGuildPriority()) {
             String rankName = StringArgumentType.getString(context, "rankName");
             int rankPriority = IntegerArgumentType.getInteger(context, "rankPriority");
             if (rankPriority > senderData.rank.priority()) {

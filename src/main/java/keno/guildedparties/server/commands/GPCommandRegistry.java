@@ -63,19 +63,6 @@ public class GPCommandRegistry {
                     .executes(InviteResponseCommands::acceptInviteCommand)
                     .build();
 
-            // Guild creation
-            LiteralCommandNode<ServerCommandSource> createGuildNode = CommandManager
-                    .literal("createGuild")
-                    .build();
-
-            CommandNode<ServerCommandSource> guildNameNode = CommandManager
-                    .argument("guildName", StringArgumentType.string())
-                    .build();
-
-            CommandNode<ServerCommandSource> leaderRankNameNode = CommandManager
-                    .argument("leaderRankName", StringArgumentType.string())
-                    .executes(GuildManagementCommands::createGuildCommand)
-                    .build();
 
             // Guildmate management nodes
             LiteralCommandNode<ServerCommandSource> guildmateRootNode = CommandManager.literal("guildmates").build();
@@ -118,6 +105,27 @@ public class GPCommandRegistry {
                     .executes(GuildManagementCommands::removeGuildRankCommand)
                     .build();
 
+            // Guild creation
+            LiteralCommandNode<ServerCommandSource> createGuildNode = CommandManager
+                    .literal("createGuild")
+                    .build();
+
+            CommandNode<ServerCommandSource> guildNameNode = CommandManager
+                    .argument("guildName", StringArgumentType.string())
+                    .build();
+
+            CommandNode<ServerCommandSource> leaderRankNameNode = CommandManager
+                    .argument("leaderRankName", StringArgumentType.string())
+                    .executes(GuildManagementCommands::createGuildCommand)
+                    .build();
+
+            // Guild disbanding
+            LiteralCommandNode<ServerCommandSource> disbandGuildNode = CommandManager.literal("disband").build();
+
+            LiteralCommandNode<ServerCommandSource> confirmDisbandNode = CommandManager
+                    .literal("confirm")
+                    .executes(GuildManagementCommands::disbandGuildCommand)
+                    .build();
 
             // Command registry
             // Root command, all other commands are children of this one
@@ -134,10 +142,6 @@ public class GPCommandRegistry {
             guildRootNode.addChild(joinGuildNode);
             joinGuildNode.addChild(getGuildSuggestionNode(new JoinGuildCommand()));
 
-            // Guild creation command
-            guildRootNode.addChild(createGuildNode);
-            createGuildNode.addChild(guildNameNode);
-            guildNameNode.addChild(leaderRankNameNode);
 
             // Invites
             guildRootNode.addChild(inviteRootNode);
@@ -167,6 +171,15 @@ public class GPCommandRegistry {
 
             // Guild management commands
             guildRootNode.addChild(managementRootNode);
+
+            // Guild disbanding command
+            managementRootNode.addChild(disbandGuildNode);
+            disbandGuildNode.addChild(confirmDisbandNode);
+
+            // Guild creation command
+            managementRootNode.addChild(createGuildNode);
+            createGuildNode.addChild(guildNameNode);
+            guildNameNode.addChild(leaderRankNameNode);
 
             // Rank creation command
             managementRootNode.addChild(createRankNode);

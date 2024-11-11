@@ -4,6 +4,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import keno.guildedparties.data.GPAttachmentTypes;
+import keno.guildedparties.data.guilds.GuildSettings;
 import keno.guildedparties.data.guilds.Rank;
 import keno.guildedparties.data.player.Member;
 import keno.guildedparties.server.StateSaverAndLoader;
@@ -25,7 +26,7 @@ public class GuildmateManagementCommands {
                     Member oldLeaderData = oldLeader.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
                     if (newLeader.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)
                             && newLeader.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT).guildKey().equals(oldLeaderData.guildKey())) {
-                        if (oldLeaderData.rank().priority() <= 1) {
+                        if (oldLeaderData.rank().isCoLeader()) {
                             Text message = Text.of(oldLeader.getName().getLiteralString()
                                     + " has resigned leadership of " + oldLeaderData.guildKey() + " to " + newLeader.getName().getLiteralString());
                             server.getPlayerManager().broadcast(Text.of(message), false);
@@ -64,8 +65,9 @@ public class GuildmateManagementCommands {
                         Rank playerRank = playerData.rank();
                         Rank senderRank = senderData.rank();
 
-                        if (playerRank.priority() > senderRank.priority() && senderRank.priority() <= 3) {
-                            StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
+                        StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
+                        GuildSettings settings = state.guildSettingsMap.get(playerData.guildKey());
+                        if (playerRank.priority() > senderRank.priority() && senderRank.priority() <= settings.managePlayerPriority()) {
                             state.guilds.get(playerData.guildKey()).removePlayerFromGuild(player);
                             state.banLists.get(playerData.guildKey()).banPlayer(player.getUuid());
                             return 1;
@@ -92,8 +94,9 @@ public class GuildmateManagementCommands {
                         Rank playerRank = playerData.rank();
                         Rank senderRank = senderData.rank();
 
-                        if (playerRank.priority() > senderRank.priority() && senderRank.priority() <= 3) {
-                            StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
+                        StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
+                        GuildSettings settings = state.guildSettingsMap.get(playerData.guildKey());
+                        if (playerRank.priority() > senderRank.priority() && senderRank.priority() <= settings.managePlayerPriority()) {
                             state.guilds.get(playerData.guildKey()).removePlayerFromGuild(player);
                             return 1;
                         }
@@ -119,8 +122,9 @@ public class GuildmateManagementCommands {
                         Rank playerRank = playerData.rank();
                         Rank senderRank = senderData.rank();
 
-                        if (playerRank.priority() > senderRank.priority() && senderRank.priority() <= 5) {
-                            StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
+                        StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
+                        GuildSettings settings = state.guildSettingsMap.get(playerData.guildKey());
+                        if (playerRank.priority() > senderRank.priority() && senderRank.priority() <= settings.managePlayerRankPriority()) {
                             int status = state.guilds.get(playerData.guildKey()).demoteMember(player);
                             if (status == 0) {
                                 sender.sendMessageToClient(Text.of("Could not demote player"), true);
@@ -162,8 +166,9 @@ public class GuildmateManagementCommands {
                         Rank playerRank = playerData.rank();
                         Rank senderRank = senderData.rank();
 
-                        if (playerRank.priority() > senderRank.priority() && senderRank.priority() <= 5) {
-                            StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
+                        StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
+                        GuildSettings settings = state.guildSettingsMap.get(playerData.guildKey());
+                        if (playerRank.priority() > senderRank.priority() && senderRank.priority() <= settings.managePlayerRankPriority()) {
                             int status = state.guilds.get(playerData.guildKey()).promoteMember(player);
                             if (status == 0) {
                                 sender.sendMessageToClient(Text.of("Could not demote player"), true);
