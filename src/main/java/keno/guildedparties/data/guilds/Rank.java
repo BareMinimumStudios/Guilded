@@ -11,6 +11,6 @@ public record Rank(String name, int priority) {
     ).apply(instance, Rank::new));
 
     public boolean isCoLeader() {
-        return priority <= 0;
+        return priority <= 1;
     }
 }

@@ -1,6 +1,7 @@
 package keno.guildedparties.server.commands;
 
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.CommandNode;
@@ -127,6 +128,16 @@ public class GPCommandRegistry {
                     .executes(GuildManagementCommands::disbandGuildCommand)
                     .build();
 
+            // Guild settings
+            LiteralCommandNode<ServerCommandSource> settingsNode = CommandManager.literal("settings").build();
+
+            // Guild privacy
+            LiteralCommandNode<ServerCommandSource> privacyNode = CommandManager.literal("privacy").build();
+            CommandNode<ServerCommandSource> setPrivacyNode = CommandManager
+                    .argument("isPrivate", BoolArgumentType.bool())
+                    .executes(GuildSettingCommands::changeGuildAccessSetting)
+                    .build();
+
             // Command registry
             // Root command, all other commands are children of this one
             commandDispatcher.getRoot().addChild(guildRootNode);
@@ -189,6 +200,11 @@ public class GPCommandRegistry {
             // Rank removal command
             managementRootNode.addChild(removeRankNode);
             removeRankNode.addChild(rankNode);
+
+            // Guild settings command
+            managementRootNode.addChild(settingsNode);
+            settingsNode.addChild(privacyNode);
+            privacyNode.addChild(setPrivacyNode);
         });
     }
 
