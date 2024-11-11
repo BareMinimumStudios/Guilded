@@ -19,6 +19,8 @@ public class JoinGuildCommand implements Command<ServerCommandSource> {
         ServerCommandSource source = context.getSource();
         ServerPlayerEntity player = source.getPlayer();
 
+        if (player == null) return 0;
+
         if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
             MinecraftServer server = source.getServer();
             StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);

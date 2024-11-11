@@ -32,6 +32,10 @@ public class InvitePlayerCommand implements Command<ServerCommandSource> {
                         if (!player.hasAttached(GPAttachmentTypes.INVITE_ATTACHMENT)) {
                             Invite invite = new Invite(member.guildKey(), sender.getUuid());
                             player.setAttached(GPAttachmentTypes.INVITE_ATTACHMENT, invite);
+                            sender.sendMessageToClient(Text.of("Invite sent successfully"), true);
+                            if (server.isDedicated()) {
+                                player.sendMessageToClient(Text.of("Invite received, will expire in 90 seconds"), false);
+                            }
                             return 1;
                         } else {
                             sender.sendMessageToClient(Text.of("This player already has an invite, try again later"), true);

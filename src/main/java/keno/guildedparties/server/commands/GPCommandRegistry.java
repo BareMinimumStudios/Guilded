@@ -8,6 +8,8 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import keno.guildedparties.server.commands.general.JoinGuildCommand;
 import keno.guildedparties.server.commands.general.LeaveGuildCommand;
 import keno.guildedparties.server.commands.general.ViewPlayerGuildCommand;
+import keno.guildedparties.server.commands.invites.InvitePlayerCommand;
+import keno.guildedparties.server.commands.invites.InviteResponseCommands;
 import keno.guildedparties.server.commands.suggestions.GuildSuggestionProvider;
 import keno.guildedparties.server.commands.suggestions.GuildmateSuggestionProvider;
 import keno.guildedparties.server.commands.suggestions.PlayerSuggestionProvider;
@@ -44,6 +46,21 @@ public class GPCommandRegistry {
 
             LiteralCommandNode<ServerCommandSource> joinGuildNode = CommandManager
                     .literal("join")
+                    .build();
+
+            // Invite nodes
+            LiteralCommandNode<ServerCommandSource> inviteRootNode = CommandManager.literal("invites").build();
+
+            LiteralCommandNode<ServerCommandSource> sendInviteNode = CommandManager.literal("send").build();
+
+            LiteralCommandNode<ServerCommandSource> declineInviteNode = CommandManager
+                    .literal("decline")
+                    .executes(InviteResponseCommands::declineInviteCommand)
+                    .build();
+
+            LiteralCommandNode<ServerCommandSource> acceptInviteNode = CommandManager
+                    .literal("accept")
+                    .executes(InviteResponseCommands::acceptInviteCommand)
                     .build();
 
             // Guildmate management nodes
@@ -87,6 +104,7 @@ public class GPCommandRegistry {
                     .executes(GuildManagementCommands::removeGuildRankCommand)
                     .build();
 
+
             // Command registry
             // Root command, all other commands are children of this one
             commandDispatcher.getRoot().addChild(guildRootNode);
@@ -102,10 +120,15 @@ public class GPCommandRegistry {
             guildRootNode.addChild(joinGuildNode);
             joinGuildNode.addChild(getGuildSuggestionNode(new JoinGuildCommand()));
 
+            // Invites
+            guildRootNode.addChild(inviteRootNode);
+            inviteRootNode.addChild(sendInviteNode);
+            inviteRootNode.addChild(declineInviteNode);
+            inviteRootNode.addChild(acceptInviteNode);
+            sendInviteNode.addChild(getPlayerSuggestionNode(new InvitePlayerCommand()));
+
             // Guildmate management commands
             guildRootNode.addChild(guildmateRootNode);
-
-            // Invite command
 
             // Demote command
             guildmateRootNode.addChild(demotePlayerNode);
