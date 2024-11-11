@@ -5,12 +5,12 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import keno.guildedparties.data.guilds.Rank;
 
 public class Member {
-    public String guildKey;
-    public Rank rank;
+    private String guildKey;
+    private Rank rank;
 
     public static Codec<Member> codec = RecordCodecBuilder.create(instance -> instance.group(
        Codec.STRING.stable().fieldOf("guildKey").forGetter(Member::guildKey),
-       Rank.codec.fieldOf("rank").forGetter(Member::rank)
+       Rank.codec.stable().fieldOf("rank").forGetter(Member::rank)
     ).apply(instance, Member::new));
 
     public Member(String guildKey, Rank rank) {

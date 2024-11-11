@@ -102,7 +102,7 @@ public class GuildedParties implements ModInitializer {
 				}
 
 				Member data = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
-				if (!data.guildKey.equals(guild.getName())) {
+				if (!data.guildKey().equals(guild.getName())) {
 					if (!guild.getRanks().contains(data.rank())) {
 						guild.demoteMember(player);
 					} else {

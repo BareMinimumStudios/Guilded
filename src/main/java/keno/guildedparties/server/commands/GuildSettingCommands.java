@@ -13,33 +13,58 @@ import net.minecraft.text.Text;
 
 @SuppressWarnings("UnstableApiUsage")
 public class GuildSettingCommands {
-    public static int changeGuildAccessSetting(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+    public static int changeGuildPrivacySetting(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         ServerCommandSource source = context.getSource();
         ServerPlayerEntity player = source.getPlayer();
         MinecraftServer server = source.getServer();
         StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
         if (player == null) return 0;
 
+        if (checkPlayerPermissions(player)) {
+            Member member = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
+            GuildSettings settings = state.guildSettingsMap.get(member.guildKey());
+            boolean isPrivate = context.getArgument("isPrivate", Boolean.class);
+            state.guildSettingsMap.put(member.guildKey(), new GuildSettings(isPrivate,
+                    settings.managePlayerRankPriority(),
+                    settings.managePlayerPriority(),
+                    settings.manageGuildPriority(),
+                    settings.invitePlayersPriority()));
+            String accessibility = isPrivate ? "private" : "public";
+            player.sendMessageToClient(Text.of("Your guild is now " + accessibility), true);
+            return 1;
+        }
+        return 0;
+    }
+
+    public static int changeManagePlayerRankPriority(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
+        ServerCommandSource source = context.getSource();
+        ServerPlayerEntity player = source.getPlayer();
+        MinecraftServer server = source.getServer();
+        StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
+        if (player == null) return 0;
+
+        if (checkPlayerPermissions(player)) {
+            Member member = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
+            GuildSettings settings = state.guildSettingsMap.get(member.guildKey());
+            int managePlayerRankPriority = context.getArgument("managePlayerRankPriority", Integer.class);
+            state.guildSettingsMap.put(member.guildKey(), new GuildSettings(settings.isPrivate(),
+                    managePlayerRankPriority, settings.managePlayerPriority(), settings.manageGuildPriority(), settings.invitePlayersPriority()));
+            player.sendMessageToClient(Text.of("Priority to manage player ranks is now %d".formatted(managePlayerRankPriority)), true);
+            return 1;
+        }
+        return 0;
+    }
+
+    private static boolean checkPlayerPermissions(ServerPlayerEntity player) {
         if (player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
             Member member = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
             if (member.rank().isCoLeader()) {
-                GuildSettings settings = state.guildSettingsMap.get(member.guildKey());
-                boolean isPrivate = context.getArgument("isPrivate", Boolean.class);
-                state.guildSettingsMap.put(member.guildKey(), new GuildSettings(isPrivate,
-                        settings.managePlayerRankPriority(),
-                        settings.managePlayerPriority(),
-                        settings.manageGuildPriority(),
-                        settings.invitePlayersPriority()));
-                String accessibility = isPrivate ? "private" : "public";
-                player.sendMessageToClient(Text.of("Your guild is now " + accessibility), true);
-                return 1;
+                return true;
             } else {
-                player.sendMessageToClient(Text.of("Must be the Leader of the guild"), true);
+                player.sendMessageToClient(Text.of("Must be the guild leader"), true);
             }
-        } else {
-            player.sendMessageToClient(Text.of("You must be in a guild"), true);
         }
-
-        return 0;
+        player.sendMessageToClient(Text.of("You aren't in a guild"), true);
+        return false;
     }
 }

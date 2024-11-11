@@ -8,6 +8,7 @@ import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import keno.guildedparties.server.commands.general.JoinGuildCommand;
 import keno.guildedparties.server.commands.general.LeaveGuildCommand;
+import keno.guildedparties.server.commands.general.MessageGuildmatesCommand;
 import keno.guildedparties.server.commands.general.ViewPlayerGuildCommand;
 import keno.guildedparties.server.commands.invites.InvitePlayerCommand;
 import keno.guildedparties.server.commands.invites.InviteResponseCommands;
@@ -16,6 +17,7 @@ import keno.guildedparties.server.commands.suggestions.GuildmateSuggestionProvid
 import keno.guildedparties.server.commands.suggestions.PlayerSuggestionProvider;
 import keno.guildedparties.server.commands.suggestions.RankSuggestionProvider;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.command.argument.MessageArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 
@@ -29,6 +31,12 @@ public class GPCommandRegistry {
                     .build();
 
             // General commands
+            LiteralCommandNode<ServerCommandSource> guildChatNode = CommandManager.literal("guildChat").build();
+
+            CommandNode<ServerCommandSource> GCMessageNode = CommandManager
+                    .argument("message", MessageArgumentType.message())
+                    .executes(new MessageGuildmatesCommand()).build();
+
             LiteralCommandNode<ServerCommandSource> leaveGuildNode = CommandManager
                     .literal("leave")
                     .executes(new LeaveGuildCommand())
@@ -135,12 +143,16 @@ public class GPCommandRegistry {
             LiteralCommandNode<ServerCommandSource> privacyNode = CommandManager.literal("privacy").build();
             CommandNode<ServerCommandSource> setPrivacyNode = CommandManager
                     .argument("isPrivate", BoolArgumentType.bool())
-                    .executes(GuildSettingCommands::changeGuildAccessSetting)
+                    .executes(GuildSettingCommands::changeGuildPrivacySetting)
                     .build();
 
             // Command registry
             // Root command, all other commands are children of this one
             commandDispatcher.getRoot().addChild(guildRootNode);
+
+            // guild chat messages
+            guildRootNode.addChild(guildChatNode);
+            guildChatNode.addChild(GCMessageNode);
 
             // Leave command
             guildRootNode.addChild(leaveGuildNode);

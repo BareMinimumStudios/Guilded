@@ -140,7 +140,7 @@ public class GuildManagementCommands {
         if (senderData.rank().priority() <= settings.manageGuildPriority()) {
             String rankName = StringArgumentType.getString(context, "rankName");
             int rankPriority = IntegerArgumentType.getInteger(context, "rankPriority");
-            if (rankPriority > senderData.rank.priority()) {
+            if (rankPriority > senderData.rank().priority()) {
                 Rank rank = new Rank(rankName, rankPriority);
                 int status = state.guilds.get(senderData.guildKey()).addRank(rank);
                 if (status == 1) {
