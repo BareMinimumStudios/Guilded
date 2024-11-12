@@ -17,7 +17,6 @@ import keno.guildedparties.server.commands.suggestions.GuildmateSuggestionProvid
 import keno.guildedparties.server.commands.suggestions.PlayerSuggestionProvider;
 import keno.guildedparties.server.commands.suggestions.RankSuggestionProvider;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.minecraft.command.argument.MessageArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 
@@ -31,11 +30,10 @@ public class GPCommandRegistry {
                     .build();
 
             // General commands
-            LiteralCommandNode<ServerCommandSource> guildChatNode = CommandManager.literal("guildChat").build();
-
-            CommandNode<ServerCommandSource> GCMessageNode = CommandManager
-                    .argument("message", MessageArgumentType.message())
-                    .executes(new MessageGuildmatesCommand()).build();
+            LiteralCommandNode<ServerCommandSource> guildChatNode = CommandManager
+                    .literal("sendMsgsToGC")
+                    .executes(new MessageGuildmatesCommand())
+                    .build();
 
             LiteralCommandNode<ServerCommandSource> leaveGuildNode = CommandManager
                     .literal("leave")
@@ -152,7 +150,6 @@ public class GPCommandRegistry {
 
             // guild chat messages
             guildRootNode.addChild(guildChatNode);
-            guildChatNode.addChild(GCMessageNode);
 
             // Leave command
             guildRootNode.addChild(leaveGuildNode);

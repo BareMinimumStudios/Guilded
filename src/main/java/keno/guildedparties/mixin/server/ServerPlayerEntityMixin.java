@@ -2,8 +2,6 @@ package keno.guildedparties.mixin.server;
 
 import com.mojang.authlib.GameProfile;
 import keno.guildedparties.data.GPAttachmentTypes;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;

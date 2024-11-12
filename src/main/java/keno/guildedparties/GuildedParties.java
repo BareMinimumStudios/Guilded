@@ -49,12 +49,14 @@ public class GuildedParties implements ModInitializer {
 		ServerMessageDecoratorEvent.EVENT.register(ServerMessageDecoratorEvent.STYLING_PHASE, GuildedParties::addGuildNote);
 	}
 
-	private static Text addGuildNote(ServerPlayerEntity player, Text text) {
+	public static Text addGuildNote(ServerPlayerEntity player, Text text) {
 		if (player != null) {
 			if (player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
-				Member member = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
-				Text note = Text.of("[%s] ".formatted(member.guildKey()));
-				return note.copy().append(text);
+				if (!player.getAttachedOrCreate(GPAttachmentTypes.GC_TOGGLE_ATTACHMENT)) {
+					Member member = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
+					Text note = Text.of("[%s] ".formatted(member.guildKey()));
+					return note.copy().append(text);
+				}
 			}
 		}
 		return text;

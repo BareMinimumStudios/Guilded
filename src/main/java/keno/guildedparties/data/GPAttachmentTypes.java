@@ -14,5 +14,8 @@ public class GPAttachmentTypes {
     public static final AttachmentType<Invite> INVITE_ATTACHMENT = AttachmentRegistry.<Invite>builder()
             .copyOnDeath().buildAndRegister(GuildedParties.GPLoc("invite_attachment"));
 
+    public static final AttachmentType<Boolean> GC_TOGGLE_ATTACHMENT = AttachmentRegistry.<Boolean>builder()
+            .copyOnDeath().initializer(() -> false).buildAndRegister(GuildedParties.GPLoc("gc_toggle_attachment"));
+
     public static void init() {}
 }
