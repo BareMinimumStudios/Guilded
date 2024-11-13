@@ -2,16 +2,16 @@
 	"schemaVersion": 1,
 	"id": "guildedparties",
 	"version": "${version}",
-	"name": "GuildedParties",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"name": "Guilded Parties",
+	"description": "A faction mod for the user and developer",
 	"authors": [
-		"Me!"
+		"Keno"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
 		"sources": "https://github.com/FabricMC/fabric-example-mod"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT for code, ARR for assets",
 	"icon": "assets/guildedparties/icon.png",
 	"environment": "*",
 	"entrypoints": {
@@ -23,6 +23,9 @@
 		],
 		"server": [
 			"keno.guildedparties.server.GPServer"
+		],
+		"client": [
+			"keno.guildedparties.client.GPClient"
 		]
 	},
 	"mixins": [

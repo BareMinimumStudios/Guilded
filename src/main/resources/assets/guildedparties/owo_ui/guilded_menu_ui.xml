@@ -1,0 +1,72 @@
+<owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.20/owo-ui.xsd">
+    <components>
+        <flow-layout direction="vertical">
+            <children>
+                <flow-layout direction="vertical">
+                    <children>
+                        <button id="view-guilds-button">
+                            <text translate="true">gui.guildedparties.view_guilds_button</text>
+                        
+                            <padding>
+                                <all>10</all>
+                            </padding>
+
+                            <margins>
+                                <bottom>5</bottom>
+                                <all>5</all>
+                            </margins>
+
+                            <horizontal-alignment>center</horizontal-alignment>
+                            <vertical-alignment>top</vertical-alignment>
+
+                            <sizing>
+                                <vertical method="fill">40</vertical>
+                                <horizontal method="fill">50</horizontal>
+                            </sizing>
+                        </button>
+                        <button id="create-guild-button">
+                            <text translate="true">gui.guildedparties.create_guild_button</text>
+
+                            <padding>
+                                <all>10</all>
+                            </padding>
+
+                            <margins>
+                                <top>5</top>
+                                <all>5</all>
+                            </margins>
+
+                            <horizontal-alignment>center</horizontal-alignment>
+                            <vertical-alignment>bottom</vertical-alignment>
+
+                            <sizing>
+                                <vertical method="fill">40</vertical>
+                                <horizontal method="fill">50</horizontal>
+                            </sizing>
+                        </button>
+                    </children>
+
+
+                    <surface>
+                        <panel dark="false"/>
+                    </surface>
+
+                    <margins>
+                        <all>10</all>
+                    </margins>
+
+                    <vertical-alignment>center</vertical-alignment>
+                    <horizontal-alignment>center</horizontal-alignment>
+                </flow-layout>
+            </children>
+
+            <vertical-alignment>center</vertical-alignment>
+            <horizontal-alignment>center</horizontal-alignment>
+
+            <surface>
+                <vanilla-translucent/>
+            </surface>
+        </flow-layout>
+    </components>
+</owo-ui>

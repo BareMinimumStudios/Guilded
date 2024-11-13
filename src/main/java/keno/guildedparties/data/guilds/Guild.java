@@ -12,6 +12,9 @@ import net.minecraft.util.Uuids;
 
 import java.util.*;
 
+/**
+ *
+ * */
 @SuppressWarnings("UnstableApiUsage")
 public class Guild {
     public static final Codec<Guild> codec = RecordCodecBuilder.create(instance -> instance.group(
