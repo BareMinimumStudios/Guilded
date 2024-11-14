@@ -2,38 +2,36 @@ package keno.guildedparties.data.guilds;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.util.Uuids;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class GuildBanList {
     public static Codec<GuildBanList> codec = RecordCodecBuilder.create(instance -> instance.group(
-            Uuids.CODEC.listOf().fieldOf("bannedPlayers").forGetter(GuildBanList::getBannedPlayers)
+            Codec.STRING.listOf().fieldOf("bannedPlayers").forGetter(GuildBanList::getBannedPlayers)
     ).apply(instance, GuildBanList::new));
 
-    private final List<UUID> bannedPlayers = new ArrayList<>();
+    private final List<String> bannedPlayers = new ArrayList<>();
 
-    public GuildBanList(List<UUID> list) {
+    public GuildBanList(List<String> list) {
         this.bannedPlayers.addAll(list);
     }
 
-    public boolean isPlayerBanned(UUID playerId) {
-        return bannedPlayers.contains(playerId);
+    public boolean isPlayerBanned(String userName) {
+        return bannedPlayers.contains(userName);
     }
 
-    public void banPlayer(UUID playerId) {
-        if (!this.bannedPlayers.contains(playerId)) {
-             this.bannedPlayers.add(playerId);
+    public void banPlayer(String username) {
+        if (!this.bannedPlayers.contains(username)) {
+             this.bannedPlayers.add(username);
         }
     }
 
-    public void unbanPlayer(UUID playerId) {
-        this.bannedPlayers.remove(playerId);
+    public void unbanPlayer(String string) {
+        this.bannedPlayers.remove(string);
     }
 
-    public List<UUID> getBannedPlayers() {
+    public List<String> getBannedPlayers() {
         return bannedPlayers;
     }
 }

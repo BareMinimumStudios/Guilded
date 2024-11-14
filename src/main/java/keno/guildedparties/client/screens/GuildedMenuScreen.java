@@ -6,8 +6,11 @@ import io.wispforest.owo.ui.container.FlowLayout;
 import keno.guildedparties.GuildedParties;
 
 public class GuildedMenuScreen extends BaseUIModelScreen<FlowLayout> {
-    public GuildedMenuScreen() {
+    public boolean isInGuild;
+
+    public GuildedMenuScreen(boolean isInGuild) {
         super(FlowLayout.class, DataSource.asset(GuildedParties.GPLoc("guilded_menu_ui")));
+        this.isInGuild = isInGuild;
     }
 
     @Override
@@ -16,7 +19,11 @@ public class GuildedMenuScreen extends BaseUIModelScreen<FlowLayout> {
             GuildedParties.LOGGER.info("View guilds button has been pressed");
         });
         flowLayout.childById(ButtonComponent.class, "create-guild-button").onPress(button -> {
-            GuildedParties.LOGGER.info("Create guild button has been pressed");
+            if (isInGuild) {
+                GuildedParties.LOGGER.info("Player is in a guild");
+            } else {
+                GuildedParties.LOGGER.info("Player is not in a guild");
+            }
         });
     }
 }

@@ -32,9 +32,9 @@ public abstract class ServerPlayNetworkHandlerMixin extends ServerCommonNetworkH
             if (sender.getAttachedOrCreate(GPAttachmentTypes.GC_TOGGLE_ATTACHMENT)) {
                 StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(this.server);
                 Member member = sender.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
-                Guild senderGuild = state.guilds.get(member.guildKey());
+                Guild senderGuild = state.getGuild(member.getGuildKey());
                 Text newMessage = Text.of("[%s][%s]: ".formatted(sender.getGameProfile().getName(),
-                        member.rank().name())).copy().append(message.getContent());
+                        member.getRank().name())).copy().append(message.getContent());
                 GuildUtils.broadcastToGuildmates(this.server, senderGuild, newMessage);
                 return false;
             }

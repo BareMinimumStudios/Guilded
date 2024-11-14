@@ -16,11 +16,11 @@ public class GuildSuggestionProvider implements SuggestionProvider<ServerCommand
     public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> commandContext, SuggestionsBuilder builder) throws CommandSyntaxException {
         MinecraftServer server = commandContext.getSource().getServer();
         StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
-        if (state.guilds.isEmpty()) {
+        if (state.getGuilds().isEmpty()) {
             return Suggestions.empty();
         }
         
-        for (String guild_name : state.guilds.keySet()) {
+        for (String guild_name : state.getGuilds().keySet()) {
             builder.suggest(guild_name);
         }
         return builder.buildFuture();

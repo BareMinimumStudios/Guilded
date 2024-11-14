@@ -22,13 +22,14 @@ public class GuildSettingCommands {
 
         if (checkPlayerPermissions(player)) {
             Member member = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
-            GuildSettings settings = state.guildSettingsMap.get(member.guildKey());
+            GuildSettings settings = state.getSettings(member.getGuildKey());
             boolean isPrivate = context.getArgument("isPrivate", Boolean.class);
-            state.guildSettingsMap.put(member.guildKey(), new GuildSettings(isPrivate,
+            state.addSettings(new GuildSettings(isPrivate,
                     settings.managePlayerRankPriority(),
                     settings.managePlayerPriority(),
                     settings.manageGuildPriority(),
-                    settings.invitePlayersPriority()));
+                    settings.invitePlayersPriority()), member.getGuildKey());
+            state.markDirty();
             String accessibility = isPrivate ? "private" : "public";
             player.sendMessageToClient(Text.of("Your guild is now " + accessibility), true);
             return 1;
@@ -45,10 +46,12 @@ public class GuildSettingCommands {
 
         if (checkPlayerPermissions(player)) {
             Member member = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
-            GuildSettings settings = state.guildSettingsMap.get(member.guildKey());
+            GuildSettings settings = state.getSettings(member.getGuildKey());
             int managePlayerRankPriority = context.getArgument("managePlayerRankPriority", Integer.class);
-            state.guildSettingsMap.put(member.guildKey(), new GuildSettings(settings.isPrivate(),
-                    managePlayerRankPriority, settings.managePlayerPriority(), settings.manageGuildPriority(), settings.invitePlayersPriority()));
+            state.addSettings(new GuildSettings(settings.isPrivate(),
+                    managePlayerRankPriority, settings.managePlayerPriority(), settings.manageGuildPriority(), settings.invitePlayersPriority()),
+                    member.getGuildKey());
+            state.markDirty();
             player.sendMessageToClient(Text.of("Priority to manage player ranks is now %d".formatted(managePlayerRankPriority)), true);
             return 1;
         }
@@ -58,7 +61,7 @@ public class GuildSettingCommands {
     private static boolean checkPlayerPermissions(ServerPlayerEntity player) {
         if (player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
             Member member = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
-            if (member.rank().isCoLeader()) {
+            if (member.getRank().isCoLeader()) {
                 return true;
             } else {
                 player.sendMessageToClient(Text.of("Must be the guild leader"), true);

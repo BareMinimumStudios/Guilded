@@ -25,11 +25,12 @@ public class LeaveGuildCommand implements Command<ServerCommandSource> {
 
             // Get the attached data and remove it
             Member playerData = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
-            if (playerData.rank().priority() <= 1) {
+            if (playerData.getRank().priority() <= 1) {
                 player.sendMessageToClient(Text.of("You can't leave since you're the leader"), true);
                 return 0;
             }
-            state.guilds.get(playerData.guildKey()).removePlayerFromGuild(player);
+            state.getGuild(playerData.getGuildKey()).removePlayerFromGuild(player);
+            state.markDirty();
             player.sendMessageToClient(Text.of("Successfully left guild!"), true);
             return 1;
         } else {

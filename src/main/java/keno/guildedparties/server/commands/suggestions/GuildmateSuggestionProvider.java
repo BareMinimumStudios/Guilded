@@ -13,7 +13,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @SuppressWarnings("UnstableApiUsage")
@@ -29,11 +28,11 @@ public class GuildmateSuggestionProvider implements SuggestionProvider<ServerCom
         MinecraftServer server = source.getServer();
         StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
 
-        if (!state.guilds.containsKey(senderData.guildKey())) return Suggestions.empty();
+        if (!state.hasGuild(senderData.getGuildKey())) return Suggestions.empty();
 
-        Guild guild = state.guilds.get(senderData.guildKey());
+        Guild guild = state.getGuild(senderData.getGuildKey());
 
-        for (UUID uuid : guild.getPlayers().keySet()) {
+        for (String uuid : guild.getPlayers().keySet()) {
             ServerPlayerEntity player = server.getPlayerManager().getPlayer(uuid);
             if (player != null) {
                 builder.suggest(player.getGameProfile().getName());

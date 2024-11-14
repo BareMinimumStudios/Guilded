@@ -26,7 +26,7 @@ public class RankSuggestionProvider implements SuggestionProvider<ServerCommandS
             return Suggestions.empty();
         }
         Member member = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
-        Guild guild = state.guilds.get(member.guildKey());
+        Guild guild = state.getGuild(member.getGuildKey());
         for (Rank rank : guild.getRanks()) {
             suggestionsBuilder.suggest(rank.name());
         }

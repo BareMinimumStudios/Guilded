@@ -39,12 +39,12 @@ public class ViewPlayerGuildCommand {
 
             // Get player data
             Member playerData = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
-            Rank rank = playerData.rank();
+            Rank rank = playerData.getRank();
 
             // Get variables for message
-            String guild_name = playerData.guildKey();
+            String guild_name = playerData.getGuildKey();
             String rank_name = rank.name();
-            int members = state.guilds.get(guild_name).getPlayers().size();
+            int members = state.getGuild(guild_name).getPlayers().size();
             boolean isCoLeader = rank.isCoLeader();
 
             String response = "Guild: %s, Members: %d, Rank: %s, CoLeader: %b".formatted(guild_name, members, rank_name, isCoLeader);

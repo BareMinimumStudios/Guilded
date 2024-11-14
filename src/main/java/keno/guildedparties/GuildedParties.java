@@ -2,10 +2,13 @@ package keno.guildedparties;
 
 import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.guilds.Guild;
+import keno.guildedparties.data.guilds.GuildBanList;
 import keno.guildedparties.data.guilds.GuildSettings;
 import keno.guildedparties.data.player.Member;
+import keno.guildedparties.networking.GPNetworking;
 import keno.guildedparties.server.StateSaverAndLoader;
 import keno.guildedparties.server.commands.GPCommandRegistry;
+import keno.guildedparties.utils.GPEndecs;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -23,7 +26,8 @@ import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
 public class GuildedParties implements ModInitializer {
@@ -43,6 +47,9 @@ public class GuildedParties implements ModInitializer {
 		GPAttachmentTypes.init();
 		GPCommandRegistry.init();
 
+		GPEndecs.registerEndecs();
+		GPNetworking.init();
+
 		ServerLifecycleEvents.SERVER_STARTED.register(GuildedParties::fillPersistentState);
 		ServerPlayConnectionEvents.JOIN.register(GuildedParties::syncAndInitializePlayerData);
 
@@ -54,7 +61,7 @@ public class GuildedParties implements ModInitializer {
 			if (player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
 				if (!player.getAttachedOrCreate(GPAttachmentTypes.GC_TOGGLE_ATTACHMENT)) {
 					Member member = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
-					Text note = Text.of("[%s] ".formatted(member.guildKey()));
+					Text note = Text.of("[%s] ".formatted(member.getGuildKey()));
 					return note.copy().append(text);
 				}
 			}
@@ -69,17 +76,20 @@ public class GuildedParties implements ModInitializer {
 		Registry<Guild> guildRegistry = server.getRegistryManager().getOrThrow(GUILD_REGISTRY);
 		Registry<GuildSettings> settingsRegistry = server.getRegistryManager().getOrThrow(SETTINGS_REGISTRY);
 		guildRegistry.stream().iterator().forEachRemaining(guild -> {
-			if (!state.guilds.containsKey(guild.getName())) {
-				state.guilds.put(guild.getName(), guild);
+			if (!state.hasGuild(guild.getName())) {
+				state.addGuild(guild);
 			}
-			if (!state.guildSettingsMap.containsKey(guild.getName())) {
+			if (!state.doesGuildHaveSettings(guild.getName())) {
 				GuildSettings settings;
 				if (settingsRegistry.contains(RegistryKey.of(SETTINGS_REGISTRY, GPLoc(guild.getName())))) {
 					settings = settingsRegistry.getEntry(GPLoc(guild.getName())).orElseThrow().value();
 				} else {
 					settings = new GuildSettings(false, 5, 3, 3, 5);
 				}
-				state.guildSettingsMap.put(guild.getName(), settings);
+				state.addSettings(settings, guild.getName());
+			}
+			if (!state.doesGuildHaveBanlist(guild.getName())) {
+				state.addBanlist(new GuildBanList(new ArrayList<>()), guild.getName());
 			}
 		});
 	}
@@ -89,31 +99,32 @@ public class GuildedParties implements ModInitializer {
 		// Sync guild data to player attachment
 		StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
 		ServerPlayerEntity player = handler.getPlayer();
-		UUID playerId = player.getUuid();
+		String username = player.getGameProfile().getName();
 		boolean isInGuild = false;
-		for (Guild guild : state.guilds.values()) {
-			if (state.banLists.containsKey(guild.getName())) {
-				if (state.banLists.get(guild.getName()).isPlayerBanned(playerId)) continue;
+		for (Guild guild : state.getGuilds().values()) {
+			if (state.doesGuildHaveBanlist(guild.getName())) {
+				if (state.getBanlist(guild.getName()).isPlayerBanned(username)) continue;
 			}
 
-			if (guild.getPlayers().containsKey(playerId)) {
+			if (guild.getPlayers().containsKey(username)) {
 				isInGuild = true;
 				if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
-					player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, new Member(guild.getName(), guild.getPlayers().get(playerId)));
+					player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, new Member(guild.getName(), guild.getPlayers().get(username)));
 					break;
 				}
 
 				Member data = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
-				if (!data.guildKey().equals(guild.getName())) {
-					if (!guild.getRanks().contains(data.rank())) {
+				if (!data.getGuildKey().equals(guild.getName())) {
+					if (!guild.getRanks().contains(data.getRank())) {
 						guild.demoteMember(player);
 					} else {
-						player.modifyAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, member -> new Member(guild.getName(), member.rank()));
+						player.modifyAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, member -> new Member(guild.getName(), member.getRank()));
 					}
 				}
 				break;
 			}
 		}
+		state.markDirty();
 		if (!isInGuild) {
 			player.removeAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
 		}

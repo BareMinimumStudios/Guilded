@@ -28,10 +28,10 @@ public class InvitePlayerCommand implements Command<ServerCommandSource> {
                     if (sender.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
                         Member member = sender.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
                         Registry<GuildSettings> settingsRegistry = server.getRegistryManager().getOrThrow(GuildedParties.SETTINGS_REGISTRY);
-                        GuildSettings settings = settingsRegistry.getEntry(GuildedParties.GPLoc(member.guildKey())).orElseThrow().value();
-                        if (member.rank().priority() <= settings.invitePlayersPriority()) {
+                        GuildSettings settings = settingsRegistry.getEntry(GuildedParties.GPLoc(member.getGuildKey())).orElseThrow().value();
+                        if (member.getRank().priority() <= settings.invitePlayersPriority()) {
                             if (!player.hasAttached(GPAttachmentTypes.INVITE_ATTACHMENT)) {
-                                Invite invite = new Invite(member.guildKey(), sender.getUuid());
+                                Invite invite = new Invite(member.getGuildKey(), sender.getGameProfile().getName());
                                 player.setAttached(GPAttachmentTypes.INVITE_ATTACHMENT, invite);
                                 sender.sendMessageToClient(Text.of("Invite sent successfully"), true);
                                 if (server.isDedicated()) {

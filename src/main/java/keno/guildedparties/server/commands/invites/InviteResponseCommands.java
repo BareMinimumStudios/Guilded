@@ -36,9 +36,10 @@ public class InviteResponseCommands {
                 if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
                     Invite invite = player.getAttached(GPAttachmentTypes.INVITE_ATTACHMENT);
                     StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
-                    if (state.guilds.containsKey(invite.guildName())) {
-                        if (state.guilds.get(invite.guildName()).getPlayers().containsKey(invite.inviteSender())) {
-                            state.guilds.get(invite.guildName()).addPlayerToGuild(player, "Recruit");
+                    if (state.hasGuild(invite.guildName())) {
+                        if (state.getGuild(invite.guildName()).getPlayers().containsKey(invite.inviteSender())) {
+                            state.getGuild(invite.guildName()).addPlayerToGuild(player, "Recruit");
+                            state.markDirty();
                             return 1;
                         } else {
                             player.sendMessageToClient(Text.of("The invite sender is no longer in this guild"), true);

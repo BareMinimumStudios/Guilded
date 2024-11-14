@@ -19,7 +19,6 @@ import net.minecraft.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @SuppressWarnings({"UnstableApiUsage"})
 public class GuildManagementCommands {
@@ -33,19 +32,20 @@ public class GuildManagementCommands {
 
         if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
             String guildName = context.getArgument("guildName", String.class);
-            if (!state.guilds.containsKey(guildName)) {
+            if (!state.hasGuild(guildName)) {
                 String leaderRankName = context.getArgument("leaderRankName", String.class);
                 Rank leaderRank = new Rank(leaderRankName, 1);
-                Pair<UUID, Rank> leader = new Pair<>(player.getUuid(), leaderRank);
+                Pair<String, Rank> leader = new Pair<>(player.getName().getLiteralString(), leaderRank);
                 Guild guild = new Guild(guildName, List.of(leader), List.of(leaderRank));
                 GuildSettings settings = GuildSettings.getDefaultSettings();
                 GuildBanList list = new GuildBanList(new ArrayList<>());
-                state.guilds.put(guildName, guild);
-                state.banLists.put(guildName, list);
-                state.guildSettingsMap.put(guildName, settings);
+                state.addGuild(guild);
+                state.addBanlist(list, guildName);
+                state.addSettings(settings, guildName);
+                state.markDirty();
                 player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, new Member(guildName, leaderRank));
                 server.getPlayerManager().broadcast(Text.of("New guild has been created by "
-                        + player.getName().getLiteralString() + ": " + guildName), false);
+                        + player.getGameProfile().getName() + ": " + guildName), false);
                 return 1;
             } else {
                 player.sendMessageToClient(Text.of("This guild already exists"), true);
@@ -66,17 +66,15 @@ public class GuildManagementCommands {
 
         if (leader.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
             Member member = leader.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
-            if (member.rank().isCoLeader()) {
-                Guild guild = state.guilds.get(member.guildKey());
-                for (UUID id : guild.getPlayers().keySet()) {
-                    ServerPlayerEntity player = server.getPlayerManager().getPlayer(id);
+            if (member.getRank().isCoLeader()) {
+                Guild guild = state.getGuild(member.getGuildKey());
+                for (String playerUsername : guild.getPlayers().keySet()) {
+                    ServerPlayerEntity player = server.getPlayerManager().getPlayer(playerUsername);
                     if (player != null) {
                         guild.removePlayerFromGuild(player);
                     }
                 }
-                state.guildSettingsMap.remove(member.guildKey());
-                state.guilds.remove(member.guildKey());
-                state.banLists.remove(member.guildKey());
+                state.removeGuild(member.getGuildKey());
                 server.getPlayerManager().broadcast(Text.of("The guild, " + guild.getName() + ", has been disbanded"), false);
                 return 1;
             } else {
@@ -101,23 +99,25 @@ public class GuildManagementCommands {
         }
 
         Member senderData = sender.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
-        GuildSettings settings = state.guildSettingsMap.get(senderData.guildKey());
-        if (senderData.rank().priority() <= settings.manageGuildPriority()) {
+        GuildSettings settings = state.getSettings(senderData.getGuildKey());
+        if (senderData.getRank().priority() <= settings.manageGuildPriority()) {
             String rankName = StringArgumentType.getString(context, "rank");
             if (rankName.equals("Recruit")) {
                 sender.sendMessageToClient(Text.of("The Recruit rank can't be removed"), true);
                 return 0;
             }
-            Rank rank = state.guilds.get(senderData.guildKey()).getRank(rankName);
-            for (UUID id : state.guilds.get(senderData.guildKey()).getPlayers().keySet()) {
-                ServerPlayerEntity player = server.getPlayerManager().getPlayer(id);
+            Rank rank = state.getGuild(senderData.getGuildKey()).getRank(rankName);
+            for (String playerName : state.getGuild(senderData.getGuildKey()).getPlayers().keySet()) {
+                ServerPlayerEntity player = server.getPlayerManager().getPlayer(playerName);
                 if (player != null) {
-                    if (player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT).rank().equals(rank)) {
-                        state.guilds.get(senderData.guildKey()).demoteMember(player);
+                    if (player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT).getRank().equals(rank)) {
+                        state.getGuild(senderData.getGuildKey()).demoteMember(player);
                     }
                 }
             }
-            return state.guilds.get(senderData.guildKey()).removeRank(rankName);
+            int status = state.getGuild(senderData.getGuildKey()).removeRank(senderData.getGuildKey());
+            state.markDirty();
+            return status;
         } else {
             sender.sendMessageToClient(Text.of("Your rank is too low priority"), true);
         }
@@ -136,15 +136,16 @@ public class GuildManagementCommands {
             return 0;
         }
         Member senderData = sender.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
-        GuildSettings settings = state.guildSettingsMap.get(senderData.guildKey());
-        if (senderData.rank().priority() <= settings.manageGuildPriority()) {
+        GuildSettings settings = state.getSettings(senderData.getGuildKey());
+        if (senderData.getRank().priority() <= settings.manageGuildPriority()) {
             String rankName = StringArgumentType.getString(context, "rankName");
             int rankPriority = IntegerArgumentType.getInteger(context, "rankPriority");
-            if (rankPriority > senderData.rank().priority()) {
+            if (rankPriority > senderData.getRank().priority()) {
                 Rank rank = new Rank(rankName, rankPriority);
-                int status = state.guilds.get(senderData.guildKey()).addRank(rank);
+                int status = state.getGuild(senderData.getGuildKey()).addRank(rank);
                 if (status == 1) {
                     sender.sendMessageToClient(Text.of("Rank added successfully!"), true);
+                    state.markDirty();
                 } else if (status == 0) {
                     sender.sendMessageToClient(Text.of("Can only add ranks lowers than yours"), true);
                 }
