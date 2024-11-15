@@ -64,7 +64,7 @@ public class GuildUtils {
      * @see GuildUtils#getGuild(MinecraftServer, String)
      * */
     public static Optional<Guild> getGuild(ServerPlayerEntity player) {
-        if (player != null || !player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) return Optional.empty();
+        if (player == null || !player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) return Optional.empty();
 
         Member member = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
         MinecraftServer server = player.getServer();

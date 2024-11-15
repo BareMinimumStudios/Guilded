@@ -1,0 +1,98 @@
+<owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.20/owo-ui.xsd">
+    <templates>
+        <template name="guild-description">
+            <flow-layout direction="vertical">
+                <children>
+                    <label>
+                        <text>Guild: {{guild-name}}</text>
+
+                        <margins>
+                            <all>10</all>
+                        </margins>
+
+                        <vertical-text-alignment>top</vertical-text-alignment>
+                        <horizontal-text-alignment>center</horizontal-text-alignment>
+
+                        <positioning type="layout">50,0</positioning>
+
+                        <color>black</color>
+                    </label>
+
+                    <label>
+                        <text>Rank: {{your-rank}}</text>
+
+                        <margins>
+                            <all>10</all>
+                        </margins>
+
+                        <color>black</color>
+
+                        <vertical-text-alignment>center</vertical-text-alignment>
+                        <horizontal-text-alignment>center</horizontal-text-alignment>
+
+                        <positioning type="layout">-50,0</positioning>
+                    </label>
+                </children>
+
+                <vertical-alignment>center</vertical-alignment>
+                <horizontal-alignment>left</horizontal-alignment>
+
+                <surface>
+                    <panel dark="false"/>
+                </surface>
+            </flow-layout>
+        </template>
+
+
+
+        <template name="guildmate-element">
+            <flow-layout direction="horizontal">
+                <children>
+                    <label>
+                        <text>{{guildmate-name}} Rank: {{guildmate-rank}}</text>
+
+                        <horizontal-text-alignment>left</horizontal-text-alignment>
+                        <vertical-text-alignment>center</vertical-text-alignment>
+
+                        <margins>
+                            <left>10</left>
+                            <right>10</right>
+                        </margins>
+
+                        <positioning type="layout">3,3</positioning>
+
+                        <color>black</color>
+
+                        <sizing>
+                            <vertical method="fill">100</vertical>
+                            <horizontal method="fill">60</horizontal>
+                        </sizing>
+                    </label>
+
+                    <button>
+                        <text translate="true">gui.guildedparties.view_button</text>
+
+                        <padding>
+                            <all>5</all>
+                            <left>5</left>
+                            <right>5</right>
+                        </padding>
+
+                        <vertical-alignment>center</vertical-alignment>
+                        <horizontal-alignment>right</horizontal-alignment>
+
+                        <sizing>
+                            <horizontal method="fill">40</horizontal>
+                            <vertical method="fill">20</vertical>
+                        </sizing>
+                    </button>
+                </children>
+
+                <surface>
+                    <panel dark="false"/>
+                </surface>
+            </flow-layout>
+        </template>
+    </templates>
+</owo-ui>    

@@ -4,6 +4,8 @@ import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
 import keno.guildedparties.GuildedParties;
+import keno.guildedparties.networking.GPNetworking;
+import keno.guildedparties.networking.packets.GetOwnGuildPacket;
 
 public class GuildedMenuScreen extends BaseUIModelScreen<FlowLayout> {
     public boolean isInGuild;
@@ -20,7 +22,7 @@ public class GuildedMenuScreen extends BaseUIModelScreen<FlowLayout> {
         });
         flowLayout.childById(ButtonComponent.class, "create-guild-button").onPress(button -> {
             if (isInGuild) {
-                GuildedParties.LOGGER.info("Player is in a guild");
+                GPNetworking.GP_CHANNEL.clientHandle().send(new GetOwnGuildPacket());
             } else {
                 GuildedParties.LOGGER.info("Player is not in a guild");
             }

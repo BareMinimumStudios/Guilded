@@ -30,9 +30,9 @@ public class GPNetworking {
             GP_CHANNEL.serverHandle(player).send(new GuildedMenuPacket(isInGuild));
         });
 
-        GP_CHANNEL.registerServerbound(GetOwnGuildPacket.class, GetOwnGuildPacket.endec.structOf("get_own_guild"), (handler, access) -> {
+        GP_CHANNEL.registerServerbound(GetOwnGuildPacket.class, (handler, access) -> {
             ServerPlayerEntity player = access.player();
-            Member member = handler.member();
+            Member member = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
 
             Guild guild = GuildUtils.getGuild(player).orElseThrow();
             GP_CHANNEL.serverHandle(player).send(OwnGuildMenuPacket.createFromGuild(member, guild));
