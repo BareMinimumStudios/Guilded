@@ -63,7 +63,7 @@
                         </sizing>
                     </label>
 
-                    <button id="view-button">
+                    <button id="view-guildmate-button">
                         <text translate="true">gui.guildedparties.view_button</text>
 
                         <padding>

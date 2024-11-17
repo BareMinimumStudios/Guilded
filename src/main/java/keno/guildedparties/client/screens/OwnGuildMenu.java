@@ -6,6 +6,7 @@ import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.container.ScrollContainer;
 import io.wispforest.owo.ui.core.*;
+import io.wispforest.owo.ui.parsing.UIModel;
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.data.guilds.Rank;
 import keno.guildedparties.data.player.Member;
@@ -61,12 +62,17 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
 
             for (String username : this.players.keySet()) {
                 String playerRank = this.players.get(username).name();
-                this.playerContainer = this.playerContainer
-                        .child(this.model.expandTemplate(FlowLayout.class, "guildmate-element",
-                                Map.of("guildmate-name", username, "guildmate-rank", playerRank)));
+                this.playerContainer.child(getGuildElement(this.model, username, playerRank));
             }
 
             this.elementsLoaded = true;
         }
+    }
+
+    public FlowLayout getGuildElement(UIModel model, String username, String playerRank)  {
+        FlowLayout guildmateElement = model.expandTemplate(FlowLayout.class, "guildmate-element@guildedparties:own_guild_ui",
+                Map.of("guildmate-name", username, "guildmate-rank", playerRank));
+        guildmateElement.childById(ButtonComponent.class, "view-guildmate-button").onPress(button -> GuildedParties.LOGGER.info("View button was pressed"));
+        return guildmateElement;
     }
 }
