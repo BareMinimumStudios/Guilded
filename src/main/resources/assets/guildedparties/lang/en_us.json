@@ -3,5 +3,7 @@
   "category.guildedparties": "Guilded Parties",
   "gui.guildedparties.view_guilds_button": "View Guilds",
   "gui.guildedparties.create_guild_button": "Your Guild",
-  "gui.guildedparties.view_button": "View"
+  "gui.guildedparties.view_button": "View",
+  "gui.settings_button": "Settings",
+  "gui.management_button": "Management"
 }

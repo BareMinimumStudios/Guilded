@@ -14,7 +14,7 @@
                         <vertical-text-alignment>top</vertical-text-alignment>
                         <horizontal-text-alignment>center</horizontal-text-alignment>
 
-                        <positioning type="layout">50,0</positioning>
+                        <positioning type="relative">10,0</positioning>
 
                         <color>black</color>
                     </label>
@@ -31,7 +31,7 @@
                         <vertical-text-alignment>center</vertical-text-alignment>
                         <horizontal-text-alignment>center</horizontal-text-alignment>
 
-                        <positioning type="layout">-50,0</positioning>
+                        <positioning type="relative">10,10</positioning>
                     </label>
                 </children>
 
@@ -95,6 +95,55 @@
                 <sizing>
                     <horizontal method="fill">100</horizontal>
                 </sizing>
+
+                <surface>
+                    <panel dark="false"/>
+                </surface>
+            </flow-layout>
+        </template>
+
+        <template name="guild-settings">
+            <flow-layout direction="vertical">
+                <children>
+                    <button id="settings-button">
+                        <margins>
+                            <left>1</left>
+                            <right>1</right>
+                        </margins>
+
+                        <text translate="true">gui.settings_button</text>
+
+                        <sizing>
+                            <horizontal method="fill">100</horizontal>
+                            <vertical method="fill">50</vertical>
+                        </sizing>
+                    </button>
+
+                    <button id="management-button">
+                        <text translate="true">gui.management_button</text>
+
+                        <margins>
+                            <left>1</left>
+                            <right>1</right>
+                        </margins>
+
+                        <sizing>
+                            <horizontal method="fill">100</horizontal>
+                            <vertical method="fill">50</vertical>
+                        </sizing>
+                    </button>
+                </children>
+
+                <padding>
+                    <all>5</all>
+                </padding>
+
+                <sizing>
+                    <horizontal method="fill">50</horizontal>
+                    <vertical method="fill">50</vertical>
+                </sizing>
+
+                <positioning type="relative">100,0</positioning>
 
                 <surface>
                     <panel dark="false"/>

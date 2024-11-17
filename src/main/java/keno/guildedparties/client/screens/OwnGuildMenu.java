@@ -43,7 +43,7 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
 
         this.container.child(Containers.verticalScroll(Sizing.fill(50), Sizing.fill(50), this.playerContainer)
                 .surface(Surface.VANILLA_TRANSLUCENT).alignment(HorizontalAlignment.RIGHT, VerticalAlignment.CENTER)
-                .padding(Insets.of(1)).positioning(Positioning.relative(99, 97)));
+                .positioning(Positioning.relative(100, 100)));
     }
 
     @Override
@@ -68,6 +68,9 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
                 String playerRank = this.players.get(username).name();
                 this.playerContainer.child(getGuildElement(this.model, username, playerRank));
             }
+
+            this.container.child(this.model
+                    .expandTemplate(FlowLayout.class, "guild-settings@guildedparties:own_guild_ui", Map.of()));
 
             this.elementsLoaded = true;
         }
