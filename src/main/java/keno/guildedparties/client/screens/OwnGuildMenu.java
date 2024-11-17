@@ -4,7 +4,6 @@ import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
-import io.wispforest.owo.ui.container.ScrollContainer;
 import io.wispforest.owo.ui.core.*;
 import io.wispforest.owo.ui.parsing.UIModel;
 import keno.guildedparties.GuildedParties;
@@ -59,6 +58,11 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
                     .alignment(HorizontalAlignment.CENTER, VerticalAlignment.CENTER)
                     .sizing(Sizing.fill(90))
                     .margins(Insets.of(10)));
+
+            this.container.child(this.model
+                    .expandTemplate(FlowLayout.class, "guild-description@guildedparties:own_guild_ui",
+                            Map.of("guild-name", this.member.getGuildKey(),
+                                    "your-rank", this.member.getRank().name())));
 
             for (String username : this.players.keySet()) {
                 String playerRank = this.players.get(username).name();
