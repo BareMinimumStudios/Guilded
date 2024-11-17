@@ -55,22 +55,15 @@
                         <horizontal-text-alignment>left</horizontal-text-alignment>
                         <vertical-text-alignment>center</vertical-text-alignment>
 
-                        <margins>
-                            <left>10</left>
-                            <right>10</right>
-                        </margins>
-
-                        <positioning type="layout">3,3</positioning>
-
                         <color>black</color>
 
                         <sizing>
                             <vertical method="fill">100</vertical>
-                            <horizontal method="fill">60</horizontal>
+                            <horizontal method="content">1</horizontal>
                         </sizing>
                     </label>
 
-                    <button>
+                    <button id="view-button">
                         <text translate="true">gui.guildedparties.view_button</text>
 
                         <padding>
@@ -83,11 +76,16 @@
                         <horizontal-alignment>right</horizontal-alignment>
 
                         <sizing>
-                            <horizontal method="fill">40</horizontal>
-                            <vertical method="fill">20</vertical>
+                            <horizontal method="content">1</horizontal>
+                            <vertical method="fill">100</vertical>
                         </sizing>
                     </button>
                 </children>
+
+                <sizing>
+                    <horizontal method="fill">100</horizontal>
+                    <vertical method="fill">100</vertical>
+                </sizing>
 
                 <surface>
                     <panel dark="false"/>

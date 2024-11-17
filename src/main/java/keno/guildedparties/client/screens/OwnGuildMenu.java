@@ -1,6 +1,7 @@
 package keno.guildedparties.client.screens;
 
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
+import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.container.ScrollContainer;
@@ -17,14 +18,11 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
     private final Member member;
     private final Map<String, Rank> players;
 
-    private boolean templatesLoaded = false;
+    private boolean elementsLoaded = false;
     private final FlowLayout container = Containers
             .horizontalFlow(Sizing.content(), Sizing.content());
 
     private final FlowLayout playerContainer = Containers.verticalFlow(Sizing.content(), Sizing.content());
-
-    private final ScrollContainer<ParentComponent> scrollContainer = Containers.verticalScroll(Sizing.content(), Sizing.fill(100),
-            playerContainer.surface(Surface.DARK_PANEL));
 
     public OwnGuildMenu(Member member, Map<String, Rank> players, List<Rank> ranks) {
         super(FlowLayout.class, DataSource.asset(GuildedParties.GPLoc("own_guild_ui")));
@@ -40,15 +38,12 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
     @Override
     protected void build(FlowLayout flowLayout) {
         flowLayout.surface(Surface.VANILLA_TRANSLUCENT)
-                .alignment(HorizontalAlignment.CENTER, VerticalAlignment.CENTER);
-        flowLayout.child(this.container
-                .surface(Surface.DARK_PANEL)
                 .alignment(HorizontalAlignment.CENTER, VerticalAlignment.CENTER)
-                .margins(Insets.of(10)));
+                .sizing(Sizing.fill(100));
 
-        this.container.child(this.scrollContainer
-                .surface(Surface.VANILLA_TRANSLUCENT)
-                .alignment(HorizontalAlignment.RIGHT, VerticalAlignment.CENTER));
+        this.container.child(Containers.verticalScroll(Sizing.fill(50), Sizing.fill(50), this.playerContainer)
+                .surface(Surface.VANILLA_TRANSLUCENT).alignment(HorizontalAlignment.RIGHT, VerticalAlignment.CENTER)
+                .padding(Insets.of(1)).positioning(Positioning.relative(99, 97)));
     }
 
     @Override
@@ -57,16 +52,14 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
 
         if (this.uiAdapter == null) return;
 
-        if (!this.templatesLoaded) {
-            this.container.child(this.model.expandTemplate(FlowLayout.class, "guild-description@guildedparties:own_guild_ui",
-                            Map.of("guild-name", member.getGuildKey(), "your-rank", member.getRank().name())));
+        if (!this.elementsLoaded) {
+            this.uiAdapter.rootComponent.child(this.container
+                    .surface(Surface.DARK_PANEL)
+                    .alignment(HorizontalAlignment.CENTER, VerticalAlignment.CENTER)
+                    .sizing(Sizing.fill(90))
+                    .margins(Insets.of(10)));
 
-            for (String username : this.players.keySet()) {
-                this.playerContainer.child(this.model.expandTemplate(FlowLayout.class, "guildmate-element@guildedparties:own_guild_ui",
-                        Map.of("guildmate-name", username, "guildmate-rank", this.players.get(username).name())));
-            }
-
-            this.templatesLoaded = true;
+            this.elementsLoaded = true;
         }
     }
 }

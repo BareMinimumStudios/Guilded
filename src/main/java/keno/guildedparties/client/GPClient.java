@@ -19,7 +19,7 @@ public class GPClient implements ClientModInitializer {
     public void onInitializeClient() {
         KeyBinding openGuildMenu = KeyBindingHelper
                 .registerKeyBinding(new KeyBinding("key.guildedparties.openGuildMenu",
-                        InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_M, "category.guildedparties"));
+                        InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_G, "category.guildedparties"));
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (openGuildMenu.wasPressed()) {
