@@ -79,12 +79,14 @@
                             <horizontal method="content">1</horizontal>
                             <vertical method="fill">100</vertical>
                         </sizing>
+
+                        <positioning type="relative">100,50</positioning>
+
                     </button>
                 </children>
 
                 <sizing>
                     <horizontal method="fill">100</horizontal>
-                    <vertical method="fill">100</vertical>
                 </sizing>
 
                 <surface>

@@ -22,7 +22,7 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
     private final FlowLayout container = Containers
             .horizontalFlow(Sizing.content(), Sizing.content());
 
-    private final FlowLayout playerContainer = Containers.verticalFlow(Sizing.content(), Sizing.content());
+    private FlowLayout playerContainer = Containers.verticalFlow(Sizing.content(), Sizing.content());
 
     public OwnGuildMenu(Member member, Map<String, Rank> players, List<Rank> ranks) {
         super(FlowLayout.class, DataSource.asset(GuildedParties.GPLoc("own_guild_ui")));
@@ -58,6 +58,13 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
                     .alignment(HorizontalAlignment.CENTER, VerticalAlignment.CENTER)
                     .sizing(Sizing.fill(90))
                     .margins(Insets.of(10)));
+
+            for (String username : this.players.keySet()) {
+                String playerRank = this.players.get(username).name();
+                this.playerContainer = this.playerContainer
+                        .child(this.model.expandTemplate(FlowLayout.class, "guildmate-element",
+                                Map.of("guildmate-name", username, "guildmate-rank", playerRank)));
+            }
 
             this.elementsLoaded = true;
         }
