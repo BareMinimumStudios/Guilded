@@ -1,12 +1,15 @@
 package keno.guildedparties.client.screens;
 
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
+import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.component.LabelComponent;
 import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.data.guilds.Rank;
+import keno.guildedparties.networking.packets.BanGuildmatePacket;
+import keno.guildedparties.networking.packets.KickGuildmatePacket;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -67,6 +70,15 @@ public class ViewGuildmateScreen extends BaseUIModelScreen<FlowLayout> {
                 ((LabelComponent)component).color(Color.BLACK);
             }
         });
+
+        layout.childById(ButtonComponent.class, "ban-button").onPress(button
+                -> this.client.setScreen(new ActionConfirmScreen<>("ban this player",
+                new BanGuildmatePacket(this.guildName, this.username))));
+
+        layout.childById(ButtonComponent.class, "kick-button").onPress(button
+                -> this.client.setScreen(new ActionConfirmScreen<>("kick this player",
+                new KickGuildmatePacket(this.guildName, this.username))));
+
         return layout;
     }
 }

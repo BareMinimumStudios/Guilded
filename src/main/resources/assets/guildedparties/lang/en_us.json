@@ -11,5 +11,27 @@
   "gui.guildedparties.scroll_down_hint": "Scroll down on guildmates",
   "gui.guildedparties.change_rank": "Change rank",
   "gui.guildedparties.kick": "Kick",
-  "gui.guildedparties.ban": "Ban"
+  "gui.guildedparties.ban": "Ban",
+  "gui.guildedparties.confirm": "Confirm",
+  "gui.guildedparties.cancel": "Cancel",
+  "guildedparties.cant_perform_on_self": "You can't perform this action on yourself...",
+  "guildedparties.player_is_higher_priority": "This player is higher priority than you...",
+  "guildedparties.need_higher_priority": [
+    "Your rank priority must be less-than or equal to ",
+    {"index": 0}
+  ],
+  "guildedparties.ban_successful": "Ban was successful!",
+  "guildedparties.player_was_banned": [
+    "'",
+    {"index": 0},
+    "' was banned from ",
+    {"index": 1}
+  ],
+  "guildedparties.kick_successful": "Kick was successful!",
+  "guildedparties.player_was_kicked": [
+    "'",
+    {"index": 0},
+    "' was kicked from ",
+    {"index": 1}
+  ]
 }

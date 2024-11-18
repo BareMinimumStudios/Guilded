@@ -30,7 +30,7 @@ public class Guild {
             Guild::new);
 
     private String name;
-    public HashMap<String, Rank> players = new HashMap<>();
+    private HashMap<String, Rank> players = new HashMap<>();
     private final List<Rank> ranks = new ArrayList<>();
 
     public Guild(String name, List<Pair<String, Rank>> playerList, List<Rank> ranks) {
