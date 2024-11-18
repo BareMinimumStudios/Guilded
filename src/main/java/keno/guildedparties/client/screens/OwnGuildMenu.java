@@ -65,8 +65,7 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
                                     "your-rank", this.member.getRank().name())));
 
             for (String username : this.players.keySet()) {
-                String playerRank = this.players.get(username).name();
-                this.playerContainer.child(getGuildElement(this.model, username, playerRank));
+                this.playerContainer.child(getGuildElement(this.model, username, this.players.get(username)));
             }
 
             this.container.child(this.model
@@ -76,10 +75,12 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
         }
     }
 
-    public FlowLayout getGuildElement(UIModel model, String username, String playerRank)  {
+    public FlowLayout getGuildElement(UIModel model, String username, Rank playerRank)  {
         FlowLayout guildmateElement = model.expandTemplate(FlowLayout.class, "guildmate-element@guildedparties:own_guild_ui",
-                Map.of("guildmate-name", username, "guildmate-rank", playerRank));
-        guildmateElement.childById(ButtonComponent.class, "view-guildmate-button").onPress(button -> GuildedParties.LOGGER.info("View button was pressed"));
+                Map.of("guildmate-name", username, "guildmate-rank", playerRank.name()));
+        guildmateElement.childById(ButtonComponent.class, "view-guildmate-button")
+                .onPress(button -> this.client.setScreen(new ViewGuildmateScreen(this.member.getGuildKey(),
+                        username, playerRank)));;
         return guildmateElement;
     }
 }

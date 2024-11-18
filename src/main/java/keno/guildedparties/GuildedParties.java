@@ -81,6 +81,7 @@ public class GuildedParties implements ModInitializer {
 			if (!state.doesGuildHaveSettings(guild.getName())) {
 				GuildSettings settings;
 				if (settingsRegistry.contains(RegistryKey.of(SETTINGS_REGISTRY, GPLoc(guild.getName())))) {
+					// Due to limitations, all guild-settings need to be registered under the guildedparties namespace
 					settings = settingsRegistry.getEntry(GPLoc(guild.getName())).orElseThrow().value();
 				} else {
 					settings = new GuildSettings(false, 5, 3, 3, 5);
@@ -91,6 +92,7 @@ public class GuildedParties implements ModInitializer {
 				state.addBanlist(new GuildBanList(new ArrayList<>()), guild.getName());
 			}
 		});
+		state.markDirty();
 	}
 
 	/** Ensures player data and server data matches up */

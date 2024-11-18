@@ -4,6 +4,11 @@
   "gui.guildedparties.view_guilds_button": "View Guilds",
   "gui.guildedparties.create_guild_button": "Your Guild",
   "gui.guildedparties.view_button": "View",
-  "gui.settings_button": "Settings",
-  "gui.management_button": "Management"
+  "gui.guildedparties.settings_button": "Settings",
+  "gui.guildedparties.management_button": "Management",
+  "gui.guildedparties.leave_button": "Leave",
+  "gui.guildedparties.invite_button": "Invite",
+  "gui.guildedparties.scroll_down_hint": "Scroll down on guildmates",
+  "gui.guildedparties.change_rank": "Change rank",
+  "gui.guildedparties.kick_player": "Kick"
 }
