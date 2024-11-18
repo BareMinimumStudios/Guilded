@@ -47,14 +47,35 @@
                     </label>
 
                     <button id="kick-button">
-                        <text translate="true">gui.guildedparties.kick_player</text>
+                        <text translate="true">gui.guildedparties.kick</text>
+
+                        <margins>
+                            <right>2</right>
+                            <bottom>1</bottom>
+                        </margins>
 
                         <sizing>
                             <vertical method="content">1</vertical>
                             <horizontal method="fill">50</horizontal>
                         </sizing>
 
-                        <positioning type="relative">0,80</positioning>
+                        <positioning type="relative">0,75</positioning>
+                    </button>
+
+                    <button id="ban-button">
+                        <text translate="true">gui.guildedparties.ban</text>
+
+                        <margins>
+                            <left>2</left>
+                            <bottom>1</bottom>
+                        </margins>
+
+                        <sizing>
+                            <vertical method="content">1</vertical>
+                            <horizontal method="fill">50</horizontal>
+                        </sizing>
+
+                        <positioning type="relative">100,75</positioning>
                     </button>
 
                     <button id="change-rank-button">

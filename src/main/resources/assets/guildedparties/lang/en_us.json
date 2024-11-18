@@ -10,5 +10,6 @@
   "gui.guildedparties.invite_button": "Invite",
   "gui.guildedparties.scroll_down_hint": "Scroll down on guildmates",
   "gui.guildedparties.change_rank": "Change rank",
-  "gui.guildedparties.kick_player": "Kick"
+  "gui.guildedparties.kick": "Kick",
+  "gui.guildedparties.ban": "Ban"
 }
