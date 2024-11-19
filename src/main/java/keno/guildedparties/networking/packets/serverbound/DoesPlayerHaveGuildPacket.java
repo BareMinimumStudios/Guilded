@@ -1,4 +1,4 @@
-package keno.guildedparties.networking.packets;
+package keno.guildedparties.networking.packets.serverbound;
 
 import keno.guildedparties.networking.GPNetworking;
 

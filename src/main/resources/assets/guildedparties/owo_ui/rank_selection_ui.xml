@@ -28,7 +28,7 @@
                             <vertical method="content">1</vertical>
                         </sizing>
 
-                        <positioning type="relative">10,40</positioning>
+                        <positioning type="relative">10,20</positioning>
 
                         <horizontal-text-alignment>left</horizontal-text-alignment>
                         <vertical-text-alignment>center</vertical-text-alignment>
@@ -42,7 +42,7 @@
 
                         <text>Priority: {{priority}}</text>
 
-                        <positioning type="relative">10,60</positioning>
+                        <positioning type="relative">10,80</positioning>
 
                         <horizontal-text-alignment>left</horizontal-text-alignment>
                         <vertical-text-alignment>center</vertical-text-alignment>
@@ -50,7 +50,7 @@
                 </children>
 
                 <sizing>
-                    <vertical method="fill">20</vertical>
+                    <vertical method="fill">10</vertical>
                     <horizontal method="fill">100</horizontal>
                 </sizing>
 

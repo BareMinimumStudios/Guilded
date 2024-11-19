@@ -9,6 +9,7 @@ import io.wispforest.owo.ui.parsing.UIModel;
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.data.guilds.Rank;
 import keno.guildedparties.data.player.Member;
+import keno.guildedparties.networking.packets.serverbound.LeaveGuildPacket;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -61,13 +62,10 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
                     .sizing(Sizing.fill(90))
                     .margins(Insets.of(10)));
 
-            this.container.child(this.model
-                    .expandTemplate(FlowLayout.class, "guild-description@guildedparties:own_guild_ui",
-                            Map.of("guild-name", this.member.getGuildKey(),
-                                    "your-rank", this.member.getRank().name())));
+            this.container.child(getGuildDescriptionElement(this.model));
 
             for (String username : this.players.keySet()) {
-                this.playerContainer.child(getGuildElement(this.model, username, this.players.get(username)));
+                this.playerContainer.child(getGuildmateElement(this.model, username, this.players.get(username)));
             }
 
             this.container.child(this.model
@@ -77,7 +75,19 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
         }
     }
 
-    public FlowLayout getGuildElement(UIModel model, String username, Rank playerRank)  {
+    public FlowLayout getGuildDescriptionElement(UIModel model) {
+        FlowLayout layout = model.expandTemplate(FlowLayout.class, "guild-description@guildedparties:own_guild_ui",
+                        Map.of("guild-name", this.member.getGuildKey(),
+                                "your-rank", this.member.getRank().name()));
+
+        layout.childById(ButtonComponent.class, "leave-button").onPress(button
+                -> this.client.setScreen(new ActionConfirmScreen<>("leave the guild",
+                new LeaveGuildPacket(this.member.getGuildKey()))));
+
+        return layout;
+    }
+
+    public FlowLayout getGuildmateElement(UIModel model, String username, Rank playerRank)  {
         FlowLayout guildmateElement = model.expandTemplate(FlowLayout.class, "guildmate-element@guildedparties:own_guild_ui",
                 Map.of("guildmate-name", username, "guildmate-rank", playerRank.name()));
         guildmateElement.childById(ButtonComponent.class, "view-guildmate-button")

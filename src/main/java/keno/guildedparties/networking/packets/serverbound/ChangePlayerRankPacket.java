@@ -1,4 +1,4 @@
-package keno.guildedparties.networking.packets;
+package keno.guildedparties.networking.packets.serverbound;
 
 import io.wispforest.endec.Endec;
 import io.wispforest.endec.impl.StructEndecBuilder;

@@ -5,7 +5,7 @@ import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.networking.GPNetworking;
-import keno.guildedparties.networking.packets.GetOwnGuildPacket;
+import keno.guildedparties.networking.packets.serverbound.GetOwnGuildPacket;
 
 public class GuildedMenuScreen extends BaseUIModelScreen<FlowLayout> {
     public boolean isInGuild;

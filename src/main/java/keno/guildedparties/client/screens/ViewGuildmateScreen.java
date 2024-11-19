@@ -8,9 +8,9 @@ import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.data.guilds.Rank;
-import keno.guildedparties.networking.packets.BanGuildmatePacket;
-import keno.guildedparties.networking.packets.ChangePlayerRankPacket;
-import keno.guildedparties.networking.packets.KickGuildmatePacket;
+import keno.guildedparties.networking.packets.serverbound.BanGuildmatePacket;
+import keno.guildedparties.networking.packets.serverbound.ChangePlayerRankPacket;
+import keno.guildedparties.networking.packets.serverbound.KickGuildmatePacket;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

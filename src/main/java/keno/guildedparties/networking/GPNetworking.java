@@ -8,7 +8,9 @@ import keno.guildedparties.data.guilds.Guild;
 import keno.guildedparties.data.guilds.GuildSettings;
 import keno.guildedparties.data.guilds.Rank;
 import keno.guildedparties.data.player.Member;
-import keno.guildedparties.networking.packets.*;
+import keno.guildedparties.networking.packets.clientbound.GuildedMenuPacket;
+import keno.guildedparties.networking.packets.clientbound.OwnGuildMenuPacket;
+import keno.guildedparties.networking.packets.serverbound.*;
 import keno.guildedparties.server.StateSaverAndLoader;
 import keno.guildedparties.utils.GuildUtils;
 import net.minecraft.server.MinecraftServer;
@@ -111,6 +113,22 @@ public class GPNetworking {
                         }
                     }
                 }
+            }
+        });
+
+        GP_CHANNEL.registerServerbound(LeaveGuildPacket.class, (handler, access) -> {
+            MinecraftServer server = access.runtime();
+            StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
+            ServerPlayerEntity sender = access.player();
+
+            if (!sender.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT).getRank().isCoLeader()) {
+                state.getGuild(handler.guildName()).removePlayerFromGuild(sender);
+                state.markDirty();
+                sender.sendMessageToClient(Text.translatable("guildedparties.leaving_successful"), true);
+                server.getPlayerManager().broadcast(Text.translatable("guildedparties.player_left_guild",
+                        sender.getGameProfile().getName(), handler.guildName()), false);
+            } else {
+                sender.sendMessageToClient(Text.translatable("guildedparties.must_stand_down"), true);
             }
         });
     }

@@ -39,5 +39,14 @@
     "Your rank has been changed to '",
     {"index": 0},
     "'"
-  ]
+  ],
+  "guildedparties.leaving_successful": "Guild has been left successfully!",
+  "guildedparties.player_left_guild": [
+    "'",
+    {"index": 0},
+    "' has left the guild '",
+    {"index": 1},
+    "'"
+  ],
+  "guildedparties.must_stand_down": "You must stand down from leadership first"
 }

@@ -60,14 +60,15 @@ public class RankSelectionScreen<R extends Record> extends BaseUIModelScreen<Flo
     protected void build(FlowLayout flowLayout) {
         flowLayout.surface(Surface.VANILLA_TRANSLUCENT)
                 .alignment(HorizontalAlignment.CENTER, VerticalAlignment.CENTER)
+                .padding(Insets.of(5))
                 .sizing(Sizing.fill(100));
 
         flowLayout.child(Containers.verticalScroll(Sizing.fill(50), Sizing.fill(100), this.ranksContainer)
                 .alignment(HorizontalAlignment.CENTER, VerticalAlignment.CENTER)
-                .positioning(Positioning.relative(25, 0)));
+                .positioning(Positioning.relative(50, 0)));
 
         flowLayout.child(this.button.sizing(Sizing.fill(20), Sizing.content(10))
-                .positioning(Positioning.relative(80, 80)));
+                .positioning(Positioning.relative(90, 100)));
     }
 
     @Override
