@@ -214,6 +214,14 @@ public class Guild {
         }
     }
 
+    public boolean isPlayerInGuild(String username) {
+        return this.players.containsKey(username);
+    }
+
+    public boolean isPlayerInGuild(ServerPlayerEntity player) {
+        return isPlayerInGuild(player.getGameProfile().getName());
+    }
+
     public int addRank(Rank rank) {
         if (!this.ranks.contains(rank)) {
             this.ranks.add(rank);

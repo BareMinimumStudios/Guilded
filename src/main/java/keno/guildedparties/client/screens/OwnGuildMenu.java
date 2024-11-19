@@ -9,6 +9,8 @@ import io.wispforest.owo.ui.parsing.UIModel;
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.data.guilds.Rank;
 import keno.guildedparties.data.player.Member;
+import keno.guildedparties.networking.GPNetworking;
+import keno.guildedparties.networking.packets.serverbound.GetInvitablePlayersPacket;
 import keno.guildedparties.networking.packets.serverbound.LeaveGuildPacket;
 import org.jetbrains.annotations.NotNull;
 
@@ -83,6 +85,9 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
         layout.childById(ButtonComponent.class, "leave-button").onPress(button
                 -> this.client.setScreen(new ActionConfirmScreen<>("leave the guild",
                 new LeaveGuildPacket(this.member.getGuildKey()))));
+
+        layout.childById(ButtonComponent.class, "invite-button").onPress(button
+                -> GPNetworking.GP_CHANNEL.clientHandle().send(new GetInvitablePlayersPacket()));
 
         return layout;
     }

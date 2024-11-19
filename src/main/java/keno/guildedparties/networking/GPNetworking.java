@@ -7,8 +7,10 @@ import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.guilds.Guild;
 import keno.guildedparties.data.guilds.GuildSettings;
 import keno.guildedparties.data.guilds.Rank;
+import keno.guildedparties.data.player.Invite;
 import keno.guildedparties.data.player.Member;
 import keno.guildedparties.networking.packets.clientbound.GuildedMenuPacket;
+import keno.guildedparties.networking.packets.clientbound.InvitePlayersMenuPacket;
 import keno.guildedparties.networking.packets.clientbound.OwnGuildMenuPacket;
 import keno.guildedparties.networking.packets.serverbound.*;
 import keno.guildedparties.server.StateSaverAndLoader;
@@ -16,6 +18,9 @@ import keno.guildedparties.utils.GuildUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /** We will be using OwoLib's networking API due to the limitation and complexity of FAPI's networking */
 @SuppressWarnings("UnstableApiUsage")
@@ -25,6 +30,7 @@ public class GPNetworking {
     public static void init() {
         GP_CHANNEL.registerClientboundDeferred(GuildedMenuPacket.class, GuildedMenuPacket.endec.structOf("open_guilded_menu_packet"));
         GP_CHANNEL.registerClientboundDeferred(OwnGuildMenuPacket.class, OwnGuildMenuPacket.endec.structOf("own_guild_menu_packet"));
+        GP_CHANNEL.registerClientboundDeferred(InvitePlayersMenuPacket.class);
 
         GP_CHANNEL.registerServerbound(DoesPlayerHaveGuildPacket.class, (handler, access) -> {
             ServerPlayerEntity player = access.player();
@@ -91,7 +97,7 @@ public class GPNetworking {
             }
         });
 
-        GP_CHANNEL.registerServerbound(ChangePlayerRankPacket.class, (handler, access) -> {
+        GP_CHANNEL.registerServerbound(ChangePlayerRankPacket.class, ChangePlayerRankPacket.endec.structOf("change_player_rank"), (handler, access) -> {
             MinecraftServer server = access.runtime();
             StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
             ServerPlayerEntity sender = access.player();
@@ -129,6 +135,47 @@ public class GPNetworking {
                         sender.getGameProfile().getName(), handler.guildName()), false);
             } else {
                 sender.sendMessageToClient(Text.translatable("guildedparties.must_stand_down"), true);
+            }
+        });
+
+        GP_CHANNEL.registerServerbound(GetInvitablePlayersPacket.class, (handler, access) -> {
+            MinecraftServer server = access.runtime();
+            StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
+            ServerPlayerEntity sender = access.player();
+            Member senderData = sender.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
+
+            GuildSettings settings = state.getSettings(senderData.getGuildKey());
+            if (canSenderPerformAction(sender, settings.invitePlayersPriority())) {
+                List<String> invitablePlayersUsernames = new ArrayList<>();
+
+                for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+                    if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
+                        invitablePlayersUsernames.add(player.getGameProfile().getName());
+                    }
+                }
+
+                GP_CHANNEL.serverHandle(sender).send(new InvitePlayersMenuPacket(invitablePlayersUsernames));
+            }
+        });
+
+        GP_CHANNEL.registerServerbound(InvitePlayerPacket.class, (handler, access) -> {
+            MinecraftServer server = access.runtime();
+            StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
+            ServerPlayerEntity sender = access.player();
+            Member senderData = sender.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
+
+            if (!state.getGuild(senderData.getGuildKey()).isPlayerInGuild(handler.username())) {
+                ServerPlayerEntity player = server.getPlayerManager().getPlayer(handler.username());
+                if (!player.hasAttached(GPAttachmentTypes.INVITE_ATTACHMENT)) {
+                    player.setAttached(GPAttachmentTypes.INVITE_ATTACHMENT,
+                            new Invite(senderData.getGuildKey(), sender.getGameProfile().getName()));
+
+                    sender.sendMessageToClient(Text.translatable("guildedparties.invite_successful"), true);
+                    player.sendMessageToClient(Text.translatable("guildedparties.invite_received",
+                            player.getGameProfile().getName(), senderData.getGuildKey()), false);
+                } else {
+                    sender.sendMessageToClient(Text.translatable("guildedparties.has_invite_already"), true);
+                }
             }
         });
     }

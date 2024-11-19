@@ -164,7 +164,7 @@ public class GPCommandRegistry {
 
 
             // Invites
-            guildRootNode.addChild(inviteRootNode);
+            commandDispatcher.getRoot().addChild(inviteRootNode);
             inviteRootNode.addChild(sendInviteNode);
             inviteRootNode.addChild(declineInviteNode);
             inviteRootNode.addChild(acceptInviteNode);

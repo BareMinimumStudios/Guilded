@@ -48,5 +48,14 @@
     {"index": 1},
     "'"
   ],
-  "guildedparties.must_stand_down": "You must stand down from leadership first"
+  "guildedparties.must_stand_down": "You must stand down from leadership first",
+  "guildedparties.invite_successful": "Player has been invited successfully!",
+  "guildedparties.has_invite_already": "This player already has an invite",
+  "guildedparties.invite_received": [
+    "'",
+    {"index": 0},
+    "' has sent you an invite to join '",
+    {"index": 1},
+    "'. You have 90 seconds to accept with /invites accept"
+  ]
 }
