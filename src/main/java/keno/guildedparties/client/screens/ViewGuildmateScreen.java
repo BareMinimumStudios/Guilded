@@ -9,21 +9,28 @@ import io.wispforest.owo.ui.core.*;
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.data.guilds.Rank;
 import keno.guildedparties.networking.packets.BanGuildmatePacket;
+import keno.guildedparties.networking.packets.ChangePlayerRankPacket;
 import keno.guildedparties.networking.packets.KickGuildmatePacket;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Map;
 
 public class ViewGuildmateScreen extends BaseUIModelScreen<FlowLayout> {
     private final String guildName;
     private final String username;
     private final Rank rank;
+    private final List<Rank> ranks;
 
     private boolean elementsLoaded = false;
     private FlowLayout container = Containers.horizontalFlow(Sizing.content(), Sizing.content());
 
-    public ViewGuildmateScreen(String guildName, String username, Rank rank) {
+    public ViewGuildmateScreen(List<Rank> ranks,
+                               String guildName,
+                               String username,
+                               Rank rank) {
         super(FlowLayout.class, DataSource.asset(GuildedParties.GPLoc("view_guildmate_ui")));
+        this.ranks = ranks;
         this.guildName = guildName;
         this.username = username;
         this.rank = rank;
@@ -78,6 +85,10 @@ public class ViewGuildmateScreen extends BaseUIModelScreen<FlowLayout> {
         layout.childById(ButtonComponent.class, "kick-button").onPress(button
                 -> this.client.setScreen(new ActionConfirmScreen<>("kick this player",
                 new KickGuildmatePacket(this.guildName, this.username))));
+
+        layout.childById(ButtonComponent.class, "change-rank-button").onPress(button
+                -> this.client.setScreen(new RankSelectionScreen<>(this.ranks,
+                this.guildName, "change this player's rank", this.username, ChangePlayerRankPacket::new)));
 
         return layout;
     }

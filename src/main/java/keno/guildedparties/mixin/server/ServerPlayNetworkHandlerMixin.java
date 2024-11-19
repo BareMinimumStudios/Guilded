@@ -1,6 +1,7 @@
 package keno.guildedparties.mixin.server;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.guilds.Guild;
 import keno.guildedparties.data.player.Member;

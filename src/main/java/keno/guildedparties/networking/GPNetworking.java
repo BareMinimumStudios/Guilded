@@ -47,11 +47,9 @@ public class GPNetworking {
 
             GuildSettings settings = state.getSettings(handler.guildName());
 
-            if (!player.getGameProfile().getName().equals(handler.guildmateName())) {
-                Member senderData = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
-                if (senderData.getRank().priority() <= settings.managePlayerPriority()) {
-                    Rank guildmateData = state.getGuild(handler.guildName()).getPlayers().get(handler.guildmateName());
-                    if (guildmateData.priority() > senderData.getRank().priority()) {
+            if (!areSenderAndPlayerSame(player, handler.guildmateName())) {
+                if (canSenderPerformAction(player, settings.managePlayerPriority())) {
+                    if (isSenderHigherPriorityThanPlayer(state, player, handler.guildmateName())) {
                         state.getGuild(handler.guildName()).removePlayerFromGuild(server, handler.guildmateName());
                         state.getBanlist(handler.guildName()).banPlayer(handler.guildmateName());
                         state.markDirty();
@@ -59,15 +57,11 @@ public class GPNetworking {
                         player.sendMessageToClient(Text.translatable("guildedparties.ban_successful"), true);
                         server.getPlayerManager().broadcast(Text.translatable("guildedparties.player_was_banned",
                                 handler.guildmateName(), handler.guildName()), false);
-                    } else {
-                        player.sendMessageToClient(Text.translatable("guildedparties.player_is_higher_priority"), true);
                     }
                 } else {
                     player.sendMessageToClient(Text.translatable("guildedparties.need_higher_priority",
                             String.valueOf(settings.managePlayerPriority())), true);
                 }
-            } else {
-                player.sendMessageToClient(Text.translatable("guildedparties.cant_perform_on_self"), true);
             }
         });
 
@@ -78,27 +72,81 @@ public class GPNetworking {
 
             GuildSettings settings = state.getSettings(handler.guildName());
 
-            if (!player.getGameProfile().getName().equals(handler.guildmateName())) {
-                Member senderData = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
-                if (senderData.getRank().priority() <= settings.managePlayerPriority()) {
-                    Rank guildmateData = state.getGuild(handler.guildName()).getPlayers().get(handler.guildmateName());
-                    if (guildmateData.priority() > senderData.getRank().priority()) {
+            if (!areSenderAndPlayerSame(player, handler.guildmateName())) {
+                if (canSenderPerformAction(player, settings.managePlayerPriority())) {
+                    if (isSenderHigherPriorityThanPlayer(state, player, handler.guildmateName())) {
                         state.getGuild(handler.guildName()).removePlayerFromGuild(server, handler.guildmateName());
                         state.markDirty();
 
                         player.sendMessageToClient(Text.translatable("guildedparties.kick_successful"), true);
                         server.getPlayerManager().broadcast(Text.translatable("guildedparties.player_was_kicked",
                                 handler.guildmateName(), handler.guildName()), false);
-                    } else {
-                        player.sendMessageToClient(Text.translatable("guildedparties.player_is_higher_priority"), true);
                     }
                 } else {
                     player.sendMessageToClient(Text.translatable("guildedparties.need_higher_priority",
                             String.valueOf(settings.managePlayerPriority())), true);
                 }
-            } else {
-                player.sendMessageToClient(Text.translatable("guildedparties.cant_perform_on_self"), true);
             }
         });
+
+        GP_CHANNEL.registerServerbound(ChangePlayerRankPacket.class, (handler, access) -> {
+            MinecraftServer server = access.runtime();
+            StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
+            ServerPlayerEntity sender = access.player();
+
+            GuildSettings settings = state.getSettings(handler.guildName());
+
+            if (!areSenderAndPlayerSame(sender, handler.username())) {
+                if (canSenderPerformAction(sender, settings.managePlayerRankPriority())) {
+                    if (isSenderHigherPriorityThanPlayer(state, sender, handler.username())) {
+                        state.getGuild(handler.guildName()).changeMemberRank(server, handler.username(), handler.rank());
+                        state.markDirty();
+
+                        sender.sendMessageToClient(Text.translatable("guildedparties.rank_change_successful"), true);
+
+                        ServerPlayerEntity player = server.getPlayerManager().getPlayer(handler.username());
+                        if (player != null) {
+                            player.sendMessageToClient(Text.translatable("guildedparties.rank_was_changed",
+                                    handler.rank().name()), false);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    public static boolean canSenderPerformAction(ServerPlayerEntity sender, int priorityNeeded) {
+        Member senderData = sender.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
+        boolean canThey = senderData.getRank().priority() <= priorityNeeded;
+
+        if (!canThey) {
+            sender.sendMessageToClient(Text.translatable("guildedparties.need_higher_priority",
+                    String.valueOf(priorityNeeded)), true);
+        }
+
+        return canThey;
+    }
+
+    public static boolean areSenderAndPlayerSame(ServerPlayerEntity sender, String playerUsername) {
+        boolean areThey = sender.getGameProfile().getName().equals(playerUsername);
+
+        if (areThey) {
+            sender.sendMessageToClient(Text.translatable("guildedparties.cant_perform_on_self"), true);
+        }
+
+        return sender.getGameProfile().getName().equals(playerUsername);
+    }
+
+    public static boolean isSenderHigherPriorityThanPlayer(StateSaverAndLoader state, ServerPlayerEntity sender,
+                                                 String playerName) {
+        Member senderData = sender.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
+        Rank playerData = state.getGuild(senderData.getGuildKey()).getRank(playerName);
+        boolean areThey = playerData.priority() > senderData.getRank().priority();
+
+        if (!areThey) {
+            sender.sendMessageToClient(Text.translatable("guildedparties.player_is_higher_priority"), true);
+        }
+
+        return areThey;
     }
 }

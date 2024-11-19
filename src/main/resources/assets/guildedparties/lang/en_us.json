@@ -33,5 +33,11 @@
     {"index": 0},
     "' was kicked from ",
     {"index": 1}
+  ],
+  "guildedparties.rank_change_successful": "Rank change was successful!",
+  "guildedparties.rank_was_changed": [
+    "Your rank has been changed to '",
+    {"index": 0},
+    "'"
   ]
 }

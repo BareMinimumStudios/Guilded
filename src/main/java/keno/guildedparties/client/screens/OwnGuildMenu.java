@@ -17,6 +17,7 @@ import java.util.Map;
 public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
     private final Member member;
     private final Map<String, Rank> players;
+    private final List<Rank> ranks;
 
     private boolean elementsLoaded = false;
     private final FlowLayout container = Containers
@@ -28,6 +29,7 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
         super(FlowLayout.class, DataSource.asset(GuildedParties.GPLoc("own_guild_ui")));
         this.member = member;
         this.players = players;
+        this.ranks = ranks;
     }
 
     @Override
@@ -79,8 +81,9 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
         FlowLayout guildmateElement = model.expandTemplate(FlowLayout.class, "guildmate-element@guildedparties:own_guild_ui",
                 Map.of("guildmate-name", username, "guildmate-rank", playerRank.name()));
         guildmateElement.childById(ButtonComponent.class, "view-guildmate-button")
-                .onPress(button -> this.client.setScreen(new ViewGuildmateScreen(this.member.getGuildKey(),
-                        username, playerRank)));;
+                .onPress(button -> this.client.setScreen(new ViewGuildmateScreen(this.ranks,
+                        this.member.getGuildKey(),
+                        username, playerRank)));
         return guildmateElement;
     }
 }
