@@ -5,6 +5,8 @@
             <flow-layout direction="horizontal">
                 <children>
                     <button id="select-rank">
+                        <text translate="true">gui.guildedparties.select</text>
+
                         <sizing>
                             <horizontal method="fill">20</horizontal>
                             <vertical method="fill">100</vertical>

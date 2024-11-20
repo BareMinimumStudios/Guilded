@@ -20,8 +20,8 @@ public class GuildManagementMenu extends BaseUIModelScreen<FlowLayout> {
 
     @Override
     protected void build(FlowLayout flowLayout) {
-        flowLayout.childById(ButtonComponent.class, "ranks-button")
-                .onPress(button -> GuildedParties.LOGGER.info("Ranks button pressed"));
+        flowLayout.childById(ButtonComponent.class, "ranks-button").onPress(button
+                        -> this.client.setScreen(new RankManagementMenu(this.guildName, this.ranks)));
 
         flowLayout.childById(ButtonComponent.class, "leadership-button")
                 .onPress(button -> GuildedParties.LOGGER.info("Leadership button pressed"));

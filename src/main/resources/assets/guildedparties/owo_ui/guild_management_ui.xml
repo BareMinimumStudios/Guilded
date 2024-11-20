@@ -9,12 +9,12 @@
                             <text translate="true">gui.guildedparties.ranks</text>
 
                             <margins>
-                                <bottom>5</bottom>
+                                <bottom>2</bottom>
                             </margins>
 
                             <sizing>
                                 <horizontal method="fill">100</horizontal>
-                                <vertical method="fill">50</vertical>
+                                <vertical method="fill">30</vertical>
                             </sizing>
                         </button>
 
@@ -22,18 +22,18 @@
                             <text translate="true">gui.guildedparties.leadership</text>
 
                             <margins>
-                                <top>5</top>
+                                <top>2</top>
                             </margins>
 
                             <sizing>
                                 <horizontal method="fill">100</horizontal>
-                                <vertical method="fill">50</vertical>
+                                <vertical method="fill">30</vertical>
                             </sizing>
                         </button>
                     </children>
 
                     <sizing>
-                        <vertical method="fill">50</vertical>
+                        <vertical method="content">1</vertical>
                         <horizontal method="fill">50</horizontal>
                     </sizing>
 

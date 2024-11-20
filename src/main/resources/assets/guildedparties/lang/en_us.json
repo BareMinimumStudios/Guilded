@@ -64,5 +64,9 @@
   "gui.guildedparties.manage_guild_priority": "Manage Guild Priority",
   "gui.guildedparties.invite_players_priority": "Invite Players Priority",
   "gui.guildedparties.ranks": "Ranks",
-  "gui.guildedparties.leadership": "Leadership"
+  "gui.guildedparties.leadership": "Leadership",
+  "gui.guildedparties.select": "Select",
+  "gui.guildedparties.add": "Add",
+  "gui.guildedparties.remove": "Remove",
+  "gui.guildedparties.modify": "Modify"
 }
