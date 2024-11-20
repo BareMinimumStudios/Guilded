@@ -1,12 +1,11 @@
 package keno.guildedparties.mixin.server;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.guilds.Guild;
 import keno.guildedparties.data.player.Member;
 import keno.guildedparties.server.StateSaverAndLoader;
-import keno.guildedparties.utils.GuildUtils;
+import keno.guildedparties.utils.GuildApi;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.listener.ServerPlayPacketListener;
 import net.minecraft.network.listener.TickablePacketListener;
@@ -36,7 +35,7 @@ public abstract class ServerPlayNetworkHandlerMixin extends ServerCommonNetworkH
                 Guild senderGuild = state.getGuild(member.getGuildKey());
                 Text newMessage = Text.of("[%s][%s]: ".formatted(sender.getGameProfile().getName(),
                         member.getRank().name())).copy().append(message.getContent());
-                GuildUtils.broadcastToGuildmates(this.server, senderGuild, newMessage);
+                GuildApi.broadcastToGuildmates(this.server, senderGuild, newMessage);
                 return false;
             }
         }

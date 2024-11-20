@@ -10,6 +10,7 @@ import keno.guildedparties.GuildedParties;
 import keno.guildedparties.data.guilds.Rank;
 import keno.guildedparties.data.player.Member;
 import keno.guildedparties.networking.GPNetworking;
+import keno.guildedparties.networking.packets.serverbound.GetGuildSettingsPacket;
 import keno.guildedparties.networking.packets.serverbound.GetInvitablePlayersPacket;
 import keno.guildedparties.networking.packets.serverbound.LeaveGuildPacket;
 import org.jetbrains.annotations.NotNull;
@@ -70,15 +71,14 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
                 this.playerContainer.child(getGuildmateElement(this.model, username, this.players.get(username)));
             }
 
-            this.container.child(this.model
-                    .expandTemplate(FlowLayout.class, "guild-settings@guildedparties:own_guild_ui", Map.of()));
+            this.container.child(getGuildSettingsElement(this.model));
 
             this.elementsLoaded = true;
         }
     }
 
     public FlowLayout getGuildDescriptionElement(UIModel model) {
-        FlowLayout layout = model.expandTemplate(FlowLayout.class, "guild-description@guildedparties:own_guild_ui",
+        FlowLayout layout = model.expandTemplate(FlowLayout.class, "guild-description",
                         Map.of("guild-name", this.member.getGuildKey(),
                                 "your-rank", this.member.getRank().name()));
 
@@ -93,12 +93,28 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
     }
 
     public FlowLayout getGuildmateElement(UIModel model, String username, Rank playerRank)  {
-        FlowLayout guildmateElement = model.expandTemplate(FlowLayout.class, "guildmate-element@guildedparties:own_guild_ui",
+        FlowLayout guildmateElement = model.expandTemplate(FlowLayout.class, "guildmate-element",
                 Map.of("guildmate-name", username, "guildmate-rank", playerRank.name()));
+
         guildmateElement.childById(ButtonComponent.class, "view-guildmate-button")
                 .onPress(button -> this.client.setScreen(new ViewGuildmateScreen(this.ranks,
                         this.member.getGuildKey(),
                         username, playerRank)));
+
         return guildmateElement;
+    }
+
+    public FlowLayout getGuildSettingsElement(UIModel model) {
+        FlowLayout guildSettingsElement = model.expandTemplate(FlowLayout.class, "guild-settings",
+                Map.of());
+
+        guildSettingsElement.childById(ButtonComponent.class, "settings-button")
+                .onPress(button -> {
+                   if (this.member.getRank().isCoLeader()) {
+                       GPNetworking.GP_CHANNEL.clientHandle().send(new GetGuildSettingsPacket(this.member.getGuildKey()));
+                   }
+                });
+
+        return guildSettingsElement;
     }
 }

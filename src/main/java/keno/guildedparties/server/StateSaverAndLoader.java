@@ -41,8 +41,7 @@ public class StateSaverAndLoader extends PersistentState {
             }
 
             if (guildSettingsMap.containsKey(key)) {
-                settings = GuildSettings.codec.encodeStart(NbtOps.INSTANCE,
-                        guildSettingsMap.get(key)).resultOrPartial(GuildedParties.LOGGER::error).orElseThrow();
+                settings = GuildSettings.codec.encodeStart(NbtOps.INSTANCE, getSettings(key)).resultOrPartial(GuildedParties.LOGGER::error).orElseThrow();
             } else {
                 GuildSettings guildSettings = new GuildSettings(false, 5, 3, 3, 5);
                 settings = GuildSettings.codec.encodeStart(NbtOps.INSTANCE, guildSettings).resultOrPartial(GuildedParties.LOGGER::error).orElseThrow();
@@ -101,10 +100,10 @@ public class StateSaverAndLoader extends PersistentState {
     }
 
     public void addSettings(GuildSettings settings, String guildName) {
-        if (!this.guildSettingsMap.containsKey(guildName)) {
-            this.guildSettingsMap.put(guildName, settings);
-        }
+        this.guildSettingsMap.put(guildName, settings);
     }
+
+
 
     public void addBanlist(GuildBanList banList, String guildName) {
         if (!this.banLists.containsKey(guildName)) {

@@ -2,6 +2,7 @@ package keno.guildedparties.utils;
 
 import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.guilds.Guild;
+import keno.guildedparties.data.guilds.GuildSettings;
 import keno.guildedparties.data.player.Member;
 import keno.guildedparties.server.StateSaverAndLoader;
 import net.minecraft.server.MinecraftServer;
@@ -12,9 +13,19 @@ import java.util.Optional;
 
 /** Utility functions for guilds */
 @SuppressWarnings("UnstableApiUsage")
-public class GuildUtils {
+public class GuildApi {
+    /** Use this method to modify data on the persistent state, without needing to mark it dirty
+     * @param server the server to get the state from
+     * @param handler lambda that gives you the state
+     * */
+    public static void modifyGuildPersistentState(MinecraftServer server, StateHandler handler) {
+        StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
+        handler.handleState(state);
+        state.markDirty();
+    }
+
     /** A static method to send a message to all players in a guild
-     * @see GuildUtils GuildUtils for overloads
+     * @see GuildApi GuildUtils for overloads
      * */
     public static void broadcastToGuildmates(MinecraftServer server, Guild guild, Text text) {
         Text message = Text.of("[GC] ").copy().append(text).withColor(0xffffcc00);
@@ -49,6 +60,8 @@ public class GuildUtils {
      * @return Optional that will contain a guild object, or be empty if the guild isn't found
      * @see Member
      * @see Guild
+     * @see GuildApi#modifyGuildPersistentState(MinecraftServer, StateHandler) modifyGuildPersistentState
+     * for modifying guild data
      * */
     public static Optional<Guild> getGuild(MinecraftServer server, String guildName) {
         StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
@@ -61,7 +74,7 @@ public class GuildUtils {
      * @param player The player to retrieve a guild object from, via their Member data
      * @see Member
      * @see Guild
-     * @see GuildUtils#getGuild(MinecraftServer, String)
+     * @see GuildApi#getGuild(MinecraftServer, String)
      * */
     public static Optional<Guild> getGuild(ServerPlayerEntity player) {
         if (player == null || !player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) return Optional.empty();
@@ -69,5 +82,13 @@ public class GuildUtils {
         Member member = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
         MinecraftServer server = player.getServer();
         return getGuild(server, member.getGuildKey());
+    }
+
+    public static GuildSettings getSettings(MinecraftServer server, String guildName) {
+        StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
+
+        if (!state.doesGuildHaveSettings(guildName)) return GuildSettings.getDefaultSettings();
+
+        return state.getSettings(guildName);
     }
 }

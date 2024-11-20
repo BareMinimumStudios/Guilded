@@ -3,7 +3,9 @@ package keno.guildedparties.client;
 import keno.guildedparties.client.screens.GuildedMenuScreen;
 import keno.guildedparties.client.screens.InvitablePlayersScreen;
 import keno.guildedparties.client.screens.OwnGuildMenu;
+import keno.guildedparties.client.screens.GuildSettingsMenu;
 import keno.guildedparties.networking.GPNetworking;
+import keno.guildedparties.networking.packets.clientbound.GuildSettingsMenuPacket;
 import keno.guildedparties.networking.packets.clientbound.InvitePlayersMenuPacket;
 import keno.guildedparties.networking.packets.serverbound.DoesPlayerHaveGuildPacket;
 import keno.guildedparties.networking.packets.clientbound.GuildedMenuPacket;
@@ -49,6 +51,11 @@ public class GPClient implements ClientModInitializer {
         GPNetworking.GP_CHANNEL.registerClientbound(InvitePlayersMenuPacket.class, (packet, access) -> {
             MinecraftClient client = access.runtime();
             client.setScreen(new InvitablePlayersScreen(packet.usernames()));
+        });
+
+        GPNetworking.GP_CHANNEL.registerClientbound(GuildSettingsMenuPacket.class, (packet, access) -> {
+            MinecraftClient client = access.runtime();
+            client.setScreen(new GuildSettingsMenu(packet.guildName(), packet.settings()));
         });
     }
 }
