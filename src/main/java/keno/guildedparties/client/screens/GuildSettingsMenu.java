@@ -21,8 +21,9 @@ public class GuildSettingsMenu extends BaseUIModelScreen<FlowLayout> {
     public GuildSettingsMenu(String guildName, GuildSettings currentSettings) {
         super(FlowLayout.class, DataSource.asset(GuildedParties.GPLoc("settings_menu_ui")));
         this.guildName = guildName;
-        this.isGuildPrivate = currentSettings.isPrivate();
 
+        this.isGuildPrivate = currentSettings.isPrivate();
+        // Because of how values are handled in discrete sliders, we need to normalize our setting values before setting them as defaults
         this.managePlayerRankPriority = normalizeValues(currentSettings.managePlayerRankPriority());
         this.managePlayerPriority = normalizeValues(currentSettings.managePlayerPriority());
         this.manageGuildPriority = normalizeValues(currentSettings.manageGuildPriority());
