@@ -109,11 +109,14 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
                 Map.of());
 
         guildSettingsElement.childById(ButtonComponent.class, "settings-button")
-                .onPress(button -> {
-                   if (this.member.getRank().isCoLeader()) {
-                       GPNetworking.GP_CHANNEL.clientHandle().send(new GetGuildSettingsPacket(this.member.getGuildKey()));
-                   }
-                });
+                .active(this.member.getRank().isCoLeader())
+                .onPress(button
+                        -> GPNetworking.GP_CHANNEL.clientHandle().send(new GetGuildSettingsPacket(this.member.getGuildKey())));
+
+        guildSettingsElement.childById(ButtonComponent.class, "management-button")
+                .active(this.member.getRank().isCoLeader())
+                .onPress(button
+                        -> this.client.setScreen(new GuildManagementMenu(this.member.getGuildKey(), this.ranks)));
 
         return guildSettingsElement;
     }
