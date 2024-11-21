@@ -68,5 +68,16 @@
   "gui.guildedparties.select": "Select",
   "gui.guildedparties.add": "Add",
   "gui.guildedparties.remove": "Remove",
-  "gui.guildedparties.modify": "Modify"
+  "gui.guildedparties.modify": "Modify",
+  "gui.guildedparties.rank_explanation": "Reminder: Leader <= 1, Recruit=50",
+  "guildedparties.name_is_empty": [
+    {"index": 0},
+    " name cannot be empty"
+  ],
+  "guildedparties.rank_cannot_be_add": "This rank cannot be added",
+  "guildedparties.rank_added": [
+    "The rank '",
+    {"index": 0},
+    "' was added successfully!"
+  ]
 }

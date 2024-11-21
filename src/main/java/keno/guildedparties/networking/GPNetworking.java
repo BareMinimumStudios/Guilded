@@ -84,8 +84,8 @@ public class GPNetworking {
             if (!areSenderAndPlayerSame(player, handler.guildmateName())) {
                 if (canSenderPerformAction(player, settings.managePlayerPriority())) {
                     if (isSenderHigherPriorityThanPlayer(player, handler.guildmateName())) {
-                        GuildApi.modifyGuildPersistentState(server, state
-                                -> state.getGuild(handler.guildName()).removePlayerFromGuild(server, handler.guildmateName()));
+                        GuildApi.modifyGuildPersistentState(server, state -> state.getGuild(handler.guildName())
+                                .removePlayerFromGuild(server, handler.guildmateName()));
 
                         player.sendMessageToClient(Text.translatable("guildedparties.kick_successful"), true);
                         server.getPlayerManager().broadcast(Text.translatable("guildedparties.player_was_kicked",
@@ -107,8 +107,7 @@ public class GPNetworking {
             if (!areSenderAndPlayerSame(sender, handler.username())) {
                 if (canSenderPerformAction(sender, settings.managePlayerRankPriority())) {
                     if (isSenderHigherPriorityThanPlayer(sender, handler.username())) {
-                        GuildApi.modifyGuildPersistentState(server, state
-                                -> state.getGuild(handler.guildName()).changeMemberRank(server,
+                        GuildApi.modifyGuildPersistentState(server, state -> state.getGuild(handler.guildName()).changeMemberRank(server,
                                 handler.username(), handler.rank()));
 
                         sender.sendMessageToClient(Text.translatable("guildedparties.rank_change_successful"), true);
@@ -128,8 +127,7 @@ public class GPNetworking {
             ServerPlayerEntity sender = access.player();
 
             if (!isSenderLeader(sender)) {
-                GuildApi.modifyGuildPersistentState(server, state
-                        -> state.getGuild(handler.guildName()).removePlayerFromGuild(sender));
+                GuildApi.modifyGuildPersistentState(server, state -> state.getGuild(handler.guildName()).removePlayerFromGuild(sender));
                 sender.sendMessageToClient(Text.translatable("guildedparties.leaving_successful"), true);
                 server.getPlayerManager().broadcast(Text.translatable("guildedparties.player_left_guild",
                         sender.getGameProfile().getName(), handler.guildName()), false);
@@ -182,8 +180,7 @@ public class GPNetworking {
             ServerPlayerEntity sender = access.player();
 
             if (isSenderLeader(sender)) {
-                GuildApi.modifyGuildPersistentState(server, state
-                        -> state.addSettings(handler.settings(), handler.guildName()));
+                GuildApi.modifyGuildPersistentState(server, state -> state.addSettings(handler.settings(), handler.guildName()));
             }
         });
 
@@ -194,6 +191,18 @@ public class GPNetworking {
             GuildSettings settings = GuildApi.getSettings(server, handler.guildName());
 
             GP_CHANNEL.serverHandle(sender).send(new GuildSettingsMenuPacket(handler.guildName(), settings));
+        });
+
+        GP_CHANNEL.registerServerbound(AddRankPacket.class, (handler, access) -> {
+            MinecraftServer server = access.runtime();
+            ServerPlayerEntity sender = access.player();
+
+            Rank rank = new Rank(handler.rankName(), handler.rankPriority());
+
+            GuildApi.modifyGuildPersistentState(server, state -> state.getGuild(handler.guildName()).addRank(rank));
+
+            sender.sendMessageToClient(Text.translatable("guildedparties.rank_added",
+                    handler.rankName()), false);
         });
     }
 
