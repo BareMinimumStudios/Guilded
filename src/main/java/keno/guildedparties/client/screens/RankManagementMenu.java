@@ -16,14 +16,13 @@ public class RankManagementMenu extends BaseUIModelScreen<FlowLayout> {
         super(FlowLayout.class, DataSource.asset(GuildedParties.GPLoc("rank_management_ui")));
         this.guildName = guildName;
         this.ranks = ranks;
-        for (Rank rank : ranks) {
-            GuildedParties.LOGGER.info(rank.name());
-        }
     }
 
     @Override
     protected void build(FlowLayout flowLayout) {
         flowLayout.childById(ButtonComponent.class, "add-rank")
                 .onPress(button -> this.client.setScreen(new RankAdditionMenu(this.guildName, this.ranks)));
+        flowLayout.childById(ButtonComponent.class, "remove-rank")
+                .onPress(button -> this.client.setScreen(new RankRemovalMenu(this.guildName, this.ranks)));
     }
 }

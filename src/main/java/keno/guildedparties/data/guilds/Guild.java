@@ -55,6 +55,9 @@ public class Guild {
         }
     }
 
+    public Rank getPlayerRank(String username) {
+        return this.players.get(username);
+    }
 
     public List<Rank> getRanks() {
         return ranks;
@@ -88,10 +91,7 @@ public class Guild {
         return players;
     }
 
-    public int demoteMember(ServerPlayerEntity player) {
-        String username = player.getGameProfile().getName();
-        if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) return 0;
-
+    public int demoteMember(String username) {
         if (this.players.containsKey(username)) {
             Rank originalRank = this.players.get(username);
             Rank demotionRank = null;
@@ -105,11 +105,29 @@ public class Guild {
 
             if (demotionRank == null) return 0;
             final Rank rank = demotionRank;
-            player.modifyAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, member -> new Member(member.getGuildKey(), rank));
             this.players.put(username, rank);
             return 1;
         }
         return 0;
+    }
+
+    public int demoteMember(ServerPlayerEntity player) {
+        if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) return 0;
+        Rank originalRank = this.players.get(player.getGameProfile().getName());
+        Rank demotionRank = null;
+        for (Rank rank : this.ranks) {
+            if (rank.priority() > originalRank.priority()) {
+                if (demotionRank == null || rank.priority() < demotionRank.priority()) {
+                    demotionRank = rank;
+                }
+            }
+        }
+
+        if (demotionRank == null) return 0;
+        final Rank rank = demotionRank;
+        this.players.put(player.getGameProfile().getName(), rank);
+        player.modifyAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, member -> new Member(member.getGuildKey(), rank));
+        return 1;
     }
 
     public int promoteMember(ServerPlayerEntity player) {

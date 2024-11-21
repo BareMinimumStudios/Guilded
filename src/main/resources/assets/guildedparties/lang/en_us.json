@@ -79,5 +79,11 @@
     "The rank '",
     {"index": 0},
     "' was added successfully!"
+  ],
+  "guildedparties.rank_removal_successful": "Rank was removed successfully!",
+  "guildedparties.rank_was_removed": [
+    "The rank '",
+    {"index": 0},
+    "' was removed"
   ]
 }

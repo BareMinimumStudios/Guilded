@@ -204,6 +204,41 @@ public class GPNetworking {
             sender.sendMessageToClient(Text.translatable("guildedparties.rank_added",
                     handler.rankName()), false);
         });
+
+        GP_CHANNEL.registerServerbound(RemoveRankPacket.class, RemoveRankPacket.endec.structOf("remove_rank_packet"), (handler, access)
+                -> {
+            MinecraftServer server = access.runtime();
+            ServerPlayerEntity sender = access.player();
+
+            Guild guild = GuildApi.getGuild(server, handler.guildName()).orElseThrow();
+
+            GuildApi.modifyGuildPersistentState(server, state -> {
+                state.getGuild(handler.guildName()).removeRank(handler.rank().name());
+
+                server.getPlayerManager().getPlayerList().forEach(player -> {
+                    if (player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
+                        if (player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT).getGuildKey().equals(handler.guildName())) {
+                            Member guildmateData = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
+                            if (guildmateData.getRank().equals(handler.rank())) {
+                                state.getGuild(handler.guildName()).demoteMember(player);
+                            }
+                        }
+                    }
+                });
+
+                for (String username : state.getGuild(handler.guildName()).getPlayers().keySet()) {
+                    if (state.getGuild(handler.guildName()).getPlayerRank(username).equals(handler.rank())) {
+                        state.getGuild(handler.guildName()).demoteMember(username);
+                    }
+                }
+            });
+
+            sender.sendMessageToClient(Text.translatable("guildedparties.rank_removal_successful"),
+                    true);
+
+            GuildApi.broadcastToGuildmates(server, guild, Text.translatable("guildedparties.rank_was_removed",
+                    handler.rank().name()));
+        });
     }
 
     public static boolean isSenderLeader(ServerPlayerEntity player) {

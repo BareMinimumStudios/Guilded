@@ -12,7 +12,7 @@
                             <vertical method="fill">100</vertical>
                         </sizing>
 
-                        <positioning type="relative">80,0</positioning>
+                        <positioning type="relative">100,0</positioning>
 
                         <vertical-alignment>center</vertical-alignment>
                         <horizontal-alignment>center</horizontal-alignment>
@@ -44,7 +44,7 @@
 
                         <text>Priority: {{priority}}</text>
 
-                        <positioning type="relative">10,80</positioning>
+                        <positioning type="relative">10,90</positioning>
 
                         <horizontal-text-alignment>left</horizontal-text-alignment>
                         <vertical-text-alignment>center</vertical-text-alignment>
