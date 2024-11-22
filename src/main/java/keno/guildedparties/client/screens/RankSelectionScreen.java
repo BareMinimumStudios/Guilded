@@ -76,19 +76,22 @@ public class RankSelectionScreen<R extends Record> extends BaseUIModelScreen<Flo
         super.init();
 
         if (!this.elementsLoaded) {
+            int i = 0;
             for (Rank rank : ranks) {
-                this.ranksContainer.child(getRankSelectionElement(rank));
+                if (!rank.name().equals("Recruit")) {
+                    this.ranksContainer.child(getRankSelectionElement(rank, i++));
+                }
             }
 
             this.elementsLoaded = true;
         }
     }
 
-    private FlowLayout getRankSelectionElement(Rank rank) {
-        FlowLayout layout = this.model.expandTemplate(FlowLayout.class, "rank-element",
+    private FlowLayout getRankSelectionElement(Rank rank, int iteration) {
+        FlowLayout element = this.model.expandTemplate(FlowLayout.class, "rank-element",
                 Map.of("name", rank.name(), "priority", String.valueOf(rank.priority())));
 
-        layout.childById(ButtonComponent.class, "select-rank").onPress(selectButton -> {
+        element.childById(ButtonComponent.class, "select-rank").onPress(selectButton -> {
             this.selectedRank = rank;
             this.ranksContainer.forEachDescendant(component -> {
                 if (component instanceof FlowLayout flowLayout) {
@@ -105,6 +108,14 @@ public class RankSelectionScreen<R extends Record> extends BaseUIModelScreen<Flo
             this.button.active(true);
         });
 
-        return layout;
+        if (iteration == 0) {
+            element.margins(Insets.bottom(2));
+        } else if (iteration == this.ranks.size() - 1) {
+            element.margins(Insets.top(2));
+        } else {
+            element.margins(Insets.vertical(2));
+        }
+
+        return element;
     }
 }

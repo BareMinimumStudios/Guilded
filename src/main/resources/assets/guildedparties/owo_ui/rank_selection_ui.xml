@@ -8,7 +8,7 @@
                         <text translate="true">gui.guildedparties.select</text>
 
                         <sizing>
-                            <horizontal method="fill">20</horizontal>
+                            <horizontal method="fill">30</horizontal>
                             <vertical method="fill">100</vertical>
                         </sizing>
 
@@ -30,7 +30,7 @@
                             <vertical method="content">1</vertical>
                         </sizing>
 
-                        <positioning type="relative">10,20</positioning>
+                        <positioning type="relative">0,0</positioning>
 
                         <horizontal-text-alignment>left</horizontal-text-alignment>
                         <vertical-text-alignment>center</vertical-text-alignment>
@@ -44,7 +44,7 @@
 
                         <text>Priority: {{priority}}</text>
 
-                        <positioning type="relative">10,90</positioning>
+                        <positioning type="relative">0,100</positioning>
 
                         <horizontal-text-alignment>left</horizontal-text-alignment>
                         <vertical-text-alignment>center</vertical-text-alignment>

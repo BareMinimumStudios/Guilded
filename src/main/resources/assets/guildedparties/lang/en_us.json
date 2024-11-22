@@ -85,5 +85,6 @@
     "The rank '",
     {"index": 0},
     "' was removed"
-  ]
+  ],
+  "guildedparties.rank_modified": "Rank was modified successfully!"
 }

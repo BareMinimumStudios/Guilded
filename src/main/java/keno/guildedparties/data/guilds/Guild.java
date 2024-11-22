@@ -91,7 +91,7 @@ public class Guild {
         return players;
     }
 
-    public int demoteMember(String username) {
+    public int demoteMember(MinecraftServer server, String username) {
         if (this.players.containsKey(username)) {
             Rank originalRank = this.players.get(username);
             Rank demotionRank = null;
@@ -105,7 +105,7 @@ public class Guild {
 
             if (demotionRank == null) return 0;
             final Rank rank = demotionRank;
-            this.players.put(username, rank);
+            this.changeMemberRank(server, username, rank);
             return 1;
         }
         return 0;

@@ -24,5 +24,7 @@ public class RankManagementMenu extends BaseUIModelScreen<FlowLayout> {
                 .onPress(button -> this.client.setScreen(new RankAdditionMenu(this.guildName, this.ranks)));
         flowLayout.childById(ButtonComponent.class, "remove-rank")
                 .onPress(button -> this.client.setScreen(new RankRemovalMenu(this.guildName, this.ranks)));
+        flowLayout.childById(ButtonComponent.class, "modify-rank")
+                .onPress(button -> this.client.setScreen(new RankModificationMenu(this.guildName, this.ranks)));
     }
 }

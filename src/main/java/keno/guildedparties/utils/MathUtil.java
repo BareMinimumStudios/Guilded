@@ -1,6 +1,18 @@
 package keno.guildedparties.utils;
 
 public class MathUtil {
+    public static double denormalizeValues(double normalizedValue, double min, double max) {
+        return normalizedValue * (max - min) - min;
+    }
+
+    public static double denormalizeValues(float normalizedValue, float min, float max) {
+        return denormalizeValues((double) normalizedValue, min, max);
+    }
+
+    public static double denormalizeValues(int normalizedValue, int min, int max) {
+        return denormalizeValues((double) normalizedValue, min, max);
+    }
+
     public static double normalizeValues(double value, double min, double max) {
         return (value - min) / (max - min);
     }

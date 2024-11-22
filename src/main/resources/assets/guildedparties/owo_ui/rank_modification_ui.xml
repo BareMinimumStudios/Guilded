@@ -1,0 +1,114 @@
+<owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.20/owo-ui.xsd">
+    <components>
+        <flow-layout direction="vertical">
+            <children>
+                <flow-layout direction="horizontal">
+                    <children>
+                        <flow-layout direction="vertical" id="rank-container">
+                            <children/>
+
+                            <padding>
+                                <all>5</all>
+                            </padding>
+
+                            <margins>
+                                <right>2</right>
+                            </margins>
+
+                            <surface>
+                                <panel dark="true"/>
+                            </surface>
+
+                            <sizing>
+                                <horizontal method="fill">40</horizontal>
+                                <vertical method="fill">100</vertical>
+                            </sizing>
+                        </flow-layout>
+
+                        <flow-layout direction="vertical">
+                            <children>
+                                <button id="confirm-button">
+                                    <text translate="true">gui.guildedparties.confirm</text>
+
+                                    <sizing>
+                                        <vertical method="content">1</vertical>
+                                        <horizontal method="content">1</horizontal>
+                                    </sizing>
+
+                                    <margins>
+                                        <bottom>2</bottom>
+                                    </margins>
+                                </button>
+
+                                <text-box id="rank-name">
+                                    <sizing>
+                                        <vertical method="content">1</vertical>
+                                        <horizontal method="fill">100</horizontal>
+                                    </sizing>
+
+                                    <margins>
+                                        <top>2</top>
+                                        <bottom>2</bottom>
+                                    </margins>
+                                </text-box>
+
+                                <discrete-slider min="1" max="50" id="rank-priority">
+                                    <sizing>
+                                        <vertical method="fill">10</vertical>
+                                        <horizontal method="fill">100</horizontal>
+                                    </sizing>
+
+                                    <margins>
+                                        <top>2</top>
+                                    </margins>
+                                </discrete-slider>
+                            </children>
+
+                            <padding>
+                                <all>5</all>
+                            </padding>
+
+                            <margins>
+                                <left>2</left>
+                            </margins>
+
+                            <surface>
+                                <panel dark="true"/>
+                            </surface>
+
+                            <sizing>
+                                <vertical method="fill">100</vertical>
+                                <horizontal method="fill">60</horizontal>
+                            </sizing>
+                        </flow-layout>
+                    </children>
+
+                    <surface>
+                        <panel dark="false"/>
+                    </surface>
+
+                    <padding>
+                        <all>5</all>
+                    </padding>
+
+                    <sizing>
+                        <horizontal method="fill">90</horizontal>
+                        <vertical method="fill">90</vertical>
+                    </sizing>
+
+                    <positioning type="relative">50,50</positioning>
+                </flow-layout>
+            </children>
+
+            <sizing>
+                <vertical method="fill">100</vertical>
+                <horizontal method="fill">100</horizontal>
+            </sizing>
+
+            <surface>
+                <vanilla-translucent/>
+            </surface>
+        </flow-layout>
+    </components>
+</owo-ui>

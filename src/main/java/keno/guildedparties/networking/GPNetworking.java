@@ -21,6 +21,7 @@ import net.minecraft.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /** We will be using OwoLib's networking API due to the limitation and complexity of FAPI's networking */
 @SuppressWarnings("UnstableApiUsage")
@@ -228,7 +229,7 @@ public class GPNetworking {
 
                 for (String username : state.getGuild(handler.guildName()).getPlayers().keySet()) {
                     if (state.getGuild(handler.guildName()).getPlayerRank(username).equals(handler.rank())) {
-                        state.getGuild(handler.guildName()).demoteMember(username);
+                        state.getGuild(handler.guildName()).demoteMember(server, username);
                     }
                 }
             });
@@ -238,6 +239,23 @@ public class GPNetworking {
 
             GuildApi.broadcastToGuildmates(server, guild, Text.translatable("guildedparties.rank_was_removed",
                     handler.rank().name()));
+        });
+
+        GP_CHANNEL.registerServerbound(ModifyRankPacket.class, ModifyRankPacket.endec.structOf("modify_rank_packet"), (handler, access) -> {
+            MinecraftServer server = access.runtime();
+
+            GuildApi.modifyGuildPersistentState(server, state -> {
+                Set<String> usernames = state.getGuild(handler.guildName()).getPlayers().keySet();
+                for (String username : usernames) {
+                    if (state.getGuild(handler.guildName()).getPlayerRank(username).equals(handler.oldRank())) {
+                        state.getGuild(handler.guildName()).changeMemberRank(server, username, handler.newRank());
+                    }
+                }
+                state.getGuild(handler.guildName()).removeRank(handler.oldRank().name());
+                state.getGuild(handler.guildName()).addRank(handler.newRank());
+            });
+
+            access.player().sendMessageToClient(Text.translatable("guildedparties.rank_modified"), true);
         });
     }
 
