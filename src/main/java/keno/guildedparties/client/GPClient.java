@@ -1,5 +1,6 @@
 package keno.guildedparties.client;
 
+import keno.guildedparties.client.compat.GuildedClientCompatEntrypoint;
 import keno.guildedparties.client.screens.GuildedMenuScreen;
 import keno.guildedparties.client.screens.InvitablePlayersScreen;
 import keno.guildedparties.client.screens.OwnGuildMenu;
@@ -13,10 +14,14 @@ import keno.guildedparties.networking.packets.clientbound.OwnGuildMenuPacket;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.List;
 
 public class GPClient implements ClientModInitializer {
     @Override
@@ -34,6 +39,17 @@ public class GPClient implements ClientModInitializer {
         });
 
         handleClientNetworking();
+        initializeCompatHelpers();
+    }
+
+    public void initializeCompatHelpers() {
+        List<EntrypointContainer<GuildedClientCompatEntrypoint>> containers
+                = FabricLoader.getInstance().getEntrypointContainers("guilded_client", GuildedClientCompatEntrypoint.class);
+
+        for (EntrypointContainer<GuildedClientCompatEntrypoint> container : containers) {
+            GuildedClientCompatEntrypoint entrypoint = container.getEntrypoint();
+            entrypoint.initClient();
+        }
     }
 
     /** Client-bound packets are handled here */

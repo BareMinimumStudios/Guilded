@@ -26,6 +26,9 @@
 		],
 		"client": [
 			"keno.guildedparties.client.GPClient"
+		],
+		"guilded": [
+			"keno.guildedparties.compat.GPGuildedCompat"
 		]
 	},
 	"mixins": [

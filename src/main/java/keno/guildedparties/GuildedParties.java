@@ -1,5 +1,6 @@
 package keno.guildedparties;
 
+import keno.guildedparties.compat.GuildedCompatEntrypoint;
 import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.guilds.Guild;
 import keno.guildedparties.data.guilds.GuildBanList;
@@ -16,6 +17,7 @@ import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.fabricmc.fabric.api.message.v1.ServerMessageDecoratorEvent;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
@@ -53,6 +55,17 @@ public class GuildedParties implements ModInitializer {
 		ServerPlayConnectionEvents.JOIN.register(GuildedParties::syncAndInitializePlayerData);
 
 		ServerMessageDecoratorEvent.EVENT.register(ServerMessageDecoratorEvent.STYLING_PHASE, GuildedParties::addGuildNote);
+
+		initializeCompatEntrypoint();
+	}
+
+	public void initializeCompatEntrypoint() {
+		GuildedParties.LOGGER.info("Initializing compatibilities");
+
+		FabricLoader.getInstance().getEntrypointContainers("guilded", GuildedCompatEntrypoint.class).forEach(container -> {
+			GuildedCompatEntrypoint entrypoint = container.getEntrypoint();
+			entrypoint.init();
+		});
 	}
 
 	public static Text addGuildNote(ServerPlayerEntity player, Text text) {
