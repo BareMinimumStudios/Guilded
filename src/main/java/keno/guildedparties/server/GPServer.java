@@ -2,15 +2,12 @@ package keno.guildedparties.server;
 
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.config.GPServerConfig;
-import keno.guildedparties.config.GPServerConfigModel;
 import keno.guildedparties.data.guilds.Guild;
 import keno.guildedparties.data.guilds.GuildSettings;
 import keno.guildedparties.networking.GPNetworking;
 import keno.guildedparties.server.commands.GPCommandRegistry;
 import keno.guildedparties.server.compat.ServerGuildedCompatEntrypoint;
 import net.fabricmc.api.DedicatedServerModInitializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.fabricmc.fabric.api.message.v1.ServerMessageDecoratorEvent;

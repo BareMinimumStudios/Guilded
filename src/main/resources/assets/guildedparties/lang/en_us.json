@@ -89,7 +89,7 @@
   "guildedparties.rank_modified": "Rank was modified successfully!",
   "gui.guildedparties.disband": "Disband",
   "gui.guildedparties.step_down": "Step down",
-  "guildedparties.stepped_down": "You have stood down and are no longer \nleading this guild",
+  "guildedparties.stepped_down": "You have stood down and are no longer leading this guild",
   "guildedparties.leader_stepped_down": [
     "'",
     {"index": 0},
@@ -116,5 +116,17 @@
   "text.config.gp-config.option.guildToAutoJoin": "Guild To Auto-join",
   "text.config.gp-config.option.guildToAutoJoin.tooltip": "Lets you auto-join a guild on a server, if present. \n(You will be a recruit)",
   "text.config.gp-config.option.wantsToAutoJoinGuild": "Should Auto-Join guild",
-  "text.config.gp-config.option.wantsToAutoJoinGuild.tooltip": "Determines if the player wants to auto-join a \nclient-referenced guild (see 'Guild To Auto-join')"
+  "text.config.gp-config.option.wantsToAutoJoinGuild.tooltip": "Determines if the player wants to auto-join a \nclient-referenced guild (see 'Guild To Auto-join')",
+  "guildedparties.guild_was_created": [
+    "The guild '",
+    {"index": 0},
+    "' has been created by '",
+    {"index": 1},
+    "'"
+  ],
+  "guildedparties.guild_exists": [
+    "The guild '",
+    {"index": 0},
+    "' already exists"
+  ]
 }

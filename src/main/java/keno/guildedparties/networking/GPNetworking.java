@@ -5,6 +5,7 @@ import io.wispforest.owo.network.OwoNetChannel;
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.guilds.Guild;
+import keno.guildedparties.data.guilds.GuildBanList;
 import keno.guildedparties.data.guilds.GuildSettings;
 import keno.guildedparties.data.guilds.Rank;
 import keno.guildedparties.data.player.Invite;
@@ -19,9 +20,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /** We will be using OwoLib's networking API due to the limitation and complexity of FAPI's networking */
 @SuppressWarnings({"UnstableApiUsage", "DataFlowIssue"})
@@ -299,6 +298,35 @@ public class GPNetworking {
 
             server.getPlayerManager().broadcast(Text.translatable("guildedparties.guild_disbanded",
                     handler.guildName()), false);
+        });
+
+        GP_CHANNEL.registerServerbound(CreateGuildPacket.class, (handler, access) -> {
+            MinecraftServer server = access.runtime();
+            ServerPlayerEntity player = access.player();
+
+            String guildName = handler.guildName();
+            Rank leadershipRank = new Rank(handler.leaderRankName(), 1);
+
+            if (GuildApi.getGuild(server, guildName).isEmpty()) {
+                String username = player.getGameProfile().getName();
+                Map<String, Rank> playerMap = Map.of(username, leadershipRank);
+                List<Rank> ranks = List.of(leadershipRank);
+                Guild guild = new Guild(guildName, playerMap, ranks);
+
+                GuildApi.modifyGuildPersistentState(server, state -> {
+                    state.addGuild(guild);
+                    state.addSettings(GuildSettings.getDefaultSettings(), guildName);
+                    state.addBanlist(new GuildBanList(List.of()), guildName);
+                });
+
+                player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, new Member(guildName, leadershipRank));
+
+                server.getPlayerManager().broadcast(Text.translatable("guildedparties.guild_was_created",
+                        handler.guildName(), username), false);
+            } else {
+                player.sendMessageToClient(Text.translatable("guildedparties.guild_exists",
+                        handler.guildName()), true);
+            }
         });
     }
 

@@ -24,7 +24,7 @@ public class GuildedMenuScreen extends BaseUIModelScreen<FlowLayout> {
             if (isInGuild) {
                 GPNetworking.GP_CHANNEL.clientHandle().send(new GetOwnGuildPacket());
             } else {
-                GuildedParties.LOGGER.info("Player is not in a guild");
+                this.client.setScreen(new CreateGuildMenu());
             }
         });
     }
