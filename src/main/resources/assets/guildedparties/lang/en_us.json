@@ -105,11 +105,16 @@
     "'"
   ],
   "text.config.gp-config.option.enableServerCommands": "Enable Server Commands",
+  "text.config.gp-config.option.enableServerCommands.tooltip": "Turns on experimental server-side commands",
   "text.config.gp-config.title": "Guilded Config",
   "guildedparties.guild_disbanded": [
     "The guild '",
     {"index": 0},
     "' has ",
     {"text": "disbanded", "color": "red"}
-  ]
+  ],
+  "text.config.gp-config.option.guildToAutoJoin": "Guild To Auto-join",
+  "text.config.gp-config.option.guildToAutoJoin.tooltip": "Lets you auto-join a guild on a server, if present. \n(You will be a recruit)",
+  "text.config.gp-config.option.wantsToAutoJoinGuild": "Should Auto-Join guild",
+  "text.config.gp-config.option.wantsToAutoJoinGuild.tooltip": "Determines if the player wants to auto-join a \nclient-referenced guild (see 'Guild To Auto-join')"
 }

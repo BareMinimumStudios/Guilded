@@ -30,7 +30,7 @@ public class GPNetworking {
     // This is currently unused, but will be once guild shops are added
     public static final OwoNetChannel GP_SHOPS_CHANNEL = OwoNetChannel.create(GuildedParties.GPLoc("gp_shops_channel"));
 
-    public static void init(boolean isDedicated) {
+    public static void init() {
         GP_CHANNEL.registerClientboundDeferred(GuildedMenuPacket.class, GuildedMenuPacket.endec.structOf("open_guilded_menu_packet"));
         GP_CHANNEL.registerClientboundDeferred(OwnGuildMenuPacket.class, OwnGuildMenuPacket.endec.structOf("own_guild_menu_packet"));
         GP_CHANNEL.registerClientboundDeferred(InvitePlayersMenuPacket.class);

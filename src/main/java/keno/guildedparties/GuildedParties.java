@@ -51,7 +51,7 @@ public class GuildedParties implements ModInitializer {
 		GPCommandRegistry.init(false);
 
 		GPEndecs.registerEndecs();
-		GPNetworking.init(false);
+		GPNetworking.init();
 
 		ServerLifecycleEvents.SERVER_STARTED.register(GuildedParties::fillPersistentState);
 		ServerPlayConnectionEvents.JOIN.register(GuildedParties::syncAndInitializePlayerData);
@@ -91,7 +91,12 @@ public class GuildedParties implements ModInitializer {
 		Registry<GuildSettings> settingsRegistry = server.getRegistryManager().getOrThrow(SETTINGS_REGISTRY);
 		guildRegistry.stream().iterator().forEachRemaining(guild -> {
 			if (!state.hasGuild(guild.getName())) {
-				state.addGuild(guild);
+				if (!guild.getName().contains(Character.toString(','))) {
+					state.addGuild(guild);
+				} else {
+					GuildedParties.LOGGER.info("Could not add {} due to containing an illegal character", guild.getName());
+					return;
+				}
 			}
 			if (!state.doesGuildHaveSettings(guild.getName())) {
 				GuildSettings settings;
@@ -117,6 +122,8 @@ public class GuildedParties implements ModInitializer {
 		ServerPlayerEntity player = handler.getPlayer();
 		String username = player.getGameProfile().getName();
 		boolean isInGuild = false;
+
+
 		for (Guild guild : state.getGuilds().values()) {
 			if (state.doesGuildHaveBanlist(guild.getName())) {
 				if (state.getBanlist(guild.getName()).isPlayerBanned(username)) continue;
@@ -132,7 +139,7 @@ public class GuildedParties implements ModInitializer {
 				Member data = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
 				if (!data.getGuildKey().equals(guild.getName())) {
 					if (!guild.getRanks().contains(data.getRank())) {
-						guild.demoteMember(player);
+						guild.demoteMember(server, username);
 					} else {
 						player.modifyAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, member -> new Member(guild.getName(), member.getRank()));
 					}
@@ -140,7 +147,9 @@ public class GuildedParties implements ModInitializer {
 				break;
 			}
 		}
-		state.markDirty();
+
+        state.markDirty();
+
 		if (!isInGuild) {
 			player.removeAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
 		}

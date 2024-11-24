@@ -7,6 +7,8 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import keno.guildedparties.GuildedParties;
+import keno.guildedparties.config.GPConfig;
+import keno.guildedparties.server.GPServer;
 import keno.guildedparties.server.commands.general.JoinGuildCommand;
 import keno.guildedparties.server.commands.general.LeaveGuildCommand;
 import keno.guildedparties.server.commands.general.MessageGuildmatesCommand;
@@ -146,7 +148,9 @@ public class GPCommandRegistry {
                     .build();
 
             // Command registry
-            boolean enableServerCommands = GuildedParties.CONFIG.enableServerCommands();
+            boolean enableServerCommands = isDedicated ? GPServer.CONFIG.enableServerCommands()
+                    : GuildedParties.CONFIG.enableServerCommands();
+
             // Root command, all other commands are children of this one
             commandDispatcher.getRoot().addChild(guildRootNode);
 

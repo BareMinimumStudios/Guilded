@@ -32,7 +32,7 @@ public class GuildManagementCommands {
 
         if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
             String guildName = context.getArgument("guildName", String.class);
-            if (!state.hasGuild(guildName)) {
+            if (!state.hasGuild(guildName) && !guildName.contains(Character.toString(','))) {
                 String leaderRankName = context.getArgument("leaderRankName", String.class);
                 Rank leaderRank = new Rank(leaderRankName, 1);
                 Pair<String, Rank> leader = new Pair<>(player.getName().getLiteralString(), leaderRank);
