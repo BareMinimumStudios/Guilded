@@ -1,4 +1,4 @@
-package keno.guildedparties.client.screens;
+package keno.guildedparties.client.screens.own_guild;
 
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
@@ -7,6 +7,8 @@ import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
 import io.wispforest.owo.ui.parsing.UIModel;
 import keno.guildedparties.GuildedParties;
+import keno.guildedparties.client.screens.ActionConfirmScreen;
+import keno.guildedparties.client.screens.own_guild.management.GuildManagementMenu;
 import keno.guildedparties.data.guilds.Rank;
 import keno.guildedparties.data.player.Member;
 import keno.guildedparties.networking.GPNetworking;
@@ -116,7 +118,7 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
         guildSettingsElement.childById(ButtonComponent.class, "management-button")
                 .active(this.member.getRank().isCoLeader())
                 .onPress(button
-                        -> this.client.setScreen(new GuildManagementMenu(this.member.getGuildKey(), this.ranks)));
+                        -> this.client.setScreen(new GuildManagementMenu(this.member.getGuildKey(), this.players, this.ranks)));
 
         return guildSettingsElement;
     }

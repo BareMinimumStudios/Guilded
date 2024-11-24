@@ -30,8 +30,8 @@ public class GPServer implements DedicatedServerModInitializer {
 
         ServerMessageDecoratorEvent.EVENT.register(ServerMessageDecoratorEvent.STYLING_PHASE, GuildedParties::addGuildNote);
 
-        GPCommandRegistry.init();
-        GPNetworking.init();
+        GPCommandRegistry.init(true);
+        GPNetworking.init(true);
         initializeCompatEntrypoint();
     }
 

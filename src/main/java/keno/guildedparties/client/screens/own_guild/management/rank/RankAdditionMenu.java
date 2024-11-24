@@ -1,4 +1,4 @@
-package keno.guildedparties.client.screens;
+package keno.guildedparties.client.screens.own_guild.management.rank;
 
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;

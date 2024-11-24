@@ -6,6 +6,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import keno.guildedparties.GuildedParties;
 import keno.guildedparties.server.commands.general.JoinGuildCommand;
 import keno.guildedparties.server.commands.general.LeaveGuildCommand;
 import keno.guildedparties.server.commands.general.MessageGuildmatesCommand;
@@ -23,7 +24,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import java.util.function.Consumer;
 
 public class GPCommandRegistry {
-    public static void init() {
+    public static void init(boolean isDedicated) {
         CommandRegistrationCallback.EVENT.register((commandDispatcher, commandRegistryAccess, registrationEnvironment) -> {
             LiteralCommandNode<ServerCommandSource> guildRootNode = CommandManager
                     .literal("guilded")
@@ -145,23 +146,25 @@ public class GPCommandRegistry {
                     .build();
 
             // Command registry
+            boolean enableServerCommands = GuildedParties.CONFIG.enableServerCommands();
             // Root command, all other commands are children of this one
             commandDispatcher.getRoot().addChild(guildRootNode);
 
             // guild chat messages
             guildRootNode.addChild(guildChatNode);
 
-            // Leave command
-            guildRootNode.addChild(leaveGuildNode);
+            if (enableServerCommands) {
+                // Leave command
+                guildRootNode.addChild(leaveGuildNode);
 
-            // View command, with it's sub-branch
-            guildRootNode.addChild(viewNode);
-            viewNode.addChild(viewPlayerNode);
+                // View command, with it's sub-branch
+                guildRootNode.addChild(viewNode);
+                viewNode.addChild(viewPlayerNode);
 
-            // Join command
-            guildRootNode.addChild(joinGuildNode);
-            joinGuildNode.addChild(getGuildSuggestionNode(new JoinGuildCommand()));
-
+                // Join command
+                guildRootNode.addChild(joinGuildNode);
+                joinGuildNode.addChild(getGuildSuggestionNode(new JoinGuildCommand()));
+            }
 
             // Invites
             commandDispatcher.getRoot().addChild(inviteRootNode);
@@ -170,50 +173,52 @@ public class GPCommandRegistry {
             inviteRootNode.addChild(acceptInviteNode);
             sendInviteNode.addChild(getPlayerSuggestionNode(new InvitePlayerCommand()));
 
-            // Guildmate management commands
-            guildRootNode.addChild(guildmateRootNode);
+            if (enableServerCommands) {
+                // Guildmate management commands
+                guildRootNode.addChild(guildmateRootNode);
 
-            // Demote command
-            guildmateRootNode.addChild(demotePlayerNode);
-            demotePlayerNode.addChild(getGuildmateSuggestionNode(GuildmateManagementCommands::demotePlayerCommand));
+                // Demote command
+                guildmateRootNode.addChild(demotePlayerNode);
+                demotePlayerNode.addChild(getGuildmateSuggestionNode(GuildmateManagementCommands::demotePlayerCommand));
 
-            // Promote command
-            guildmateRootNode.addChild(promotePlayerNode);
-            promotePlayerNode.addChild(getGuildmateSuggestionNode(GuildmateManagementCommands::promotePlayerCommand));
+                // Promote command
+                guildmateRootNode.addChild(promotePlayerNode);
+                promotePlayerNode.addChild(getGuildmateSuggestionNode(GuildmateManagementCommands::promotePlayerCommand));
 
-            // Kick command
-            guildmateRootNode.addChild(kickPlayerNode);
-            kickPlayerNode.addChild(getGuildmateSuggestionNode(GuildmateManagementCommands::kickPlayerCommand));
+                // Kick command
+                guildmateRootNode.addChild(kickPlayerNode);
+                kickPlayerNode.addChild(getGuildmateSuggestionNode(GuildmateManagementCommands::kickPlayerCommand));
 
-            // Ban command
-            guildmateRootNode.addChild(banPlayerNode);
-            banPlayerNode.addChild(getGuildmateSuggestionNode(GuildmateManagementCommands::banPlayerCommand));
+                // Ban command
+                guildmateRootNode.addChild(banPlayerNode);
+                banPlayerNode.addChild(getGuildmateSuggestionNode(GuildmateManagementCommands::banPlayerCommand));
 
-            // Guild management commands
-            guildRootNode.addChild(managementRootNode);
+                // Guild management commands
+                guildRootNode.addChild(managementRootNode);
 
-            // Guild disbanding command
-            managementRootNode.addChild(disbandGuildNode);
-            disbandGuildNode.addChild(confirmDisbandNode);
+                // Guild disbanding command
+                managementRootNode.addChild(disbandGuildNode);
+                disbandGuildNode.addChild(confirmDisbandNode);
 
-            // Guild creation command
-            managementRootNode.addChild(createGuildNode);
-            createGuildNode.addChild(guildNameNode);
-            guildNameNode.addChild(leaderRankNameNode);
+                // Guild creation command
+                managementRootNode.addChild(createGuildNode);
+                createGuildNode.addChild(guildNameNode);
+                guildNameNode.addChild(leaderRankNameNode);
 
-            // Rank creation command
-            managementRootNode.addChild(createRankNode);
-            createRankNode.addChild(rankNameNode);
-            rankNameNode.addChild(rankPriorityNode);
+                // Rank creation command
+                managementRootNode.addChild(createRankNode);
+                createRankNode.addChild(rankNameNode);
+                rankNameNode.addChild(rankPriorityNode);
 
-            // Rank removal command
-            managementRootNode.addChild(removeRankNode);
-            removeRankNode.addChild(rankNode);
+                // Rank removal command
+                managementRootNode.addChild(removeRankNode);
+                removeRankNode.addChild(rankNode);
 
-            // Guild settings command
-            managementRootNode.addChild(settingsNode);
-            settingsNode.addChild(privacyNode);
-            privacyNode.addChild(setPrivacyNode);
+                // Guild settings command
+                managementRootNode.addChild(settingsNode);
+                settingsNode.addChild(privacyNode);
+                privacyNode.addChild(setPrivacyNode);
+            }
         });
     }
 

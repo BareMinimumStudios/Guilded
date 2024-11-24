@@ -1,4 +1,4 @@
-package keno.guildedparties.client.screens;
+package keno.guildedparties.client.screens.own_guild;
 
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
@@ -7,6 +7,7 @@ import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
 import keno.guildedparties.GuildedParties;
+import keno.guildedparties.client.screens.ActionConfirmScreen;
 import keno.guildedparties.data.guilds.Rank;
 import net.minecraft.text.Text;
 import org.apache.commons.lang3.function.TriFunction;

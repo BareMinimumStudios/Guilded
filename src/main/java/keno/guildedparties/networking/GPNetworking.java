@@ -24,11 +24,13 @@ import java.util.List;
 import java.util.Set;
 
 /** We will be using OwoLib's networking API due to the limitation and complexity of FAPI's networking */
-@SuppressWarnings("UnstableApiUsage")
+@SuppressWarnings({"UnstableApiUsage", "DataFlowIssue"})
 public class GPNetworking {
     public static final OwoNetChannel GP_CHANNEL = OwoNetChannel.create(GuildedParties.GPLoc("gp_channel"));
+    // This is currently unused, but will be once guild shops are added
+    public static final OwoNetChannel GP_SHOPS_CHANNEL = OwoNetChannel.create(GuildedParties.GPLoc("gp_shops_channel"));
 
-    public static void init() {
+    public static void init(boolean isDedicated) {
         GP_CHANNEL.registerClientboundDeferred(GuildedMenuPacket.class, GuildedMenuPacket.endec.structOf("open_guilded_menu_packet"));
         GP_CHANNEL.registerClientboundDeferred(OwnGuildMenuPacket.class, OwnGuildMenuPacket.endec.structOf("own_guild_menu_packet"));
         GP_CHANNEL.registerClientboundDeferred(InvitePlayersMenuPacket.class);
@@ -256,6 +258,47 @@ public class GPNetworking {
             });
 
             access.player().sendMessageToClient(Text.translatable("guildedparties.rank_modified"), true);
+        });
+
+        GP_CHANNEL.registerServerbound(StepDownPacket.class, (handler, access) -> {
+            MinecraftServer server = access.runtime();
+            ServerPlayerEntity sender = access.player();
+            String senderUsername = sender.getGameProfile().getName();
+
+            if (isSenderLeader(sender)) {
+                if (!areSenderAndPlayerSame(sender, handler.username())) {
+                    Rank leaderRank = GuildApi.getGuild(sender).orElseThrow().getPlayerRank(sender);
+                    GuildApi.modifyGuildPersistentState(server, (state -> {
+                        state.getGuild(handler.guildName()).demoteMember(server, senderUsername);
+                        state.getGuild(handler.guildName()).changeMemberRank(server, handler.username(), leaderRank);
+                    }));
+
+                    sender.sendMessageToClient(Text.translatable("guildedparties.stepped_down"), true);
+                    server.getPlayerManager().broadcast(Text.translatable("guildedparties.leader_stepped_down",
+                            senderUsername, handler.guildName(), handler.username()), false);
+                    ServerPlayerEntity newLeader = server.getPlayerManager().getPlayer(handler.username());
+                    if (newLeader != null) {
+                        newLeader.sendMessageToClient(Text.translatable("guildedparties.new_leader", handler.guildName()), true);
+                    }
+                }
+            }
+        });
+
+        GP_CHANNEL.registerServerbound(DisbandGuildPacket.class, (handler, access) -> {
+            MinecraftServer server = access.runtime();
+
+            GuildApi.modifyGuildPersistentState(server, state -> {
+                for (String username : state.getGuild(handler.guildName()).getPlayers().keySet()) {
+                    ServerPlayerEntity player = server.getPlayerManager().getPlayer(username);
+                    if (player != null) {
+                        player.removeAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
+                    }
+                }
+                state.removeGuild(handler.guildName());
+            });
+
+            server.getPlayerManager().broadcast(Text.translatable("guildedparties.guild_disbanded",
+                    handler.guildName()), false);
         });
     }
 

@@ -1,4 +1,4 @@
-package keno.guildedparties.client.screens;
+package keno.guildedparties.client.screens.own_guild.management;
 
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
@@ -6,6 +6,7 @@ import io.wispforest.owo.ui.component.DiscreteSliderComponent;
 import io.wispforest.owo.ui.component.SmallCheckboxComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
 import keno.guildedparties.GuildedParties;
+import keno.guildedparties.client.screens.ActionConfirmScreen;
 import keno.guildedparties.data.guilds.GuildSettings;
 import keno.guildedparties.networking.packets.serverbound.ChangeGuildSettingsPacket;
 import keno.guildedparties.utils.MathUtil;

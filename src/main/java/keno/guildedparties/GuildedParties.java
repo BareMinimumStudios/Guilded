@@ -1,6 +1,7 @@
 package keno.guildedparties;
 
 import keno.guildedparties.compat.GuildedCompatEntrypoint;
+import keno.guildedparties.config.GPConfig;
 import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.guilds.Guild;
 import keno.guildedparties.data.guilds.GuildBanList;
@@ -40,16 +41,17 @@ public class GuildedParties implements ModInitializer {
 	// It is considered best practice to use your mod id as the logger's name.
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+	public static final GPConfig CONFIG = GPConfig.createAndLoad();
 
 	@Override
 	public void onInitialize() {
 		DynamicRegistries.registerSynced(GUILD_REGISTRY, Guild.codec, Guild.codec);
 		DynamicRegistries.registerSynced(SETTINGS_REGISTRY, GuildSettings.codec, GuildSettings.codec);
 		GPAttachmentTypes.init();
-		GPCommandRegistry.init();
+		GPCommandRegistry.init(false);
 
 		GPEndecs.registerEndecs();
-		GPNetworking.init();
+		GPNetworking.init(false);
 
 		ServerLifecycleEvents.SERVER_STARTED.register(GuildedParties::fillPersistentState);
 		ServerPlayConnectionEvents.JOIN.register(GuildedParties::syncAndInitializePlayerData);

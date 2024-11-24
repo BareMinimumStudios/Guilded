@@ -59,6 +59,10 @@ public class Guild {
         return this.players.get(username);
     }
 
+    public Rank getPlayerRank(ServerPlayerEntity player) {
+        return getPlayerRank(player.getGameProfile().getName());
+    }
+
     public List<Rank> getRanks() {
         return ranks;
     }
@@ -111,6 +115,7 @@ public class Guild {
         return 0;
     }
 
+    @Deprecated
     public int demoteMember(ServerPlayerEntity player) {
         if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) return 0;
         Rank originalRank = this.players.get(player.getGameProfile().getName());

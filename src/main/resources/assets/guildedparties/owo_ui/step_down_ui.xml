@@ -1,0 +1,128 @@
+<owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.20/owo-ui.xsd">
+    <components>
+        <flow-layout direction="vertical">
+            <children>
+                <flow-layout direction="horizontal">
+                    <children>
+                        <scroll direction="vertical">
+                            <flow-layout direction="vertical" id="player-container">
+                                <children/>
+
+                                <padding>
+                                    <all>5</all>
+                                </padding>
+
+                                <sizing>
+                                    <horizontal method="fill">100</horizontal>
+                                    <vertical method="fill">100</vertical>
+                                </sizing>
+
+                                <surface>
+                                    <panel dark="true"/>
+                                </surface>
+                            </flow-layout>
+
+                            <sizing>
+                                <vertical method="fill">100</vertical>
+                                <horizontal method="fill">50</horizontal>
+                            </sizing>
+
+                            <margins>
+                                <right>2</right>
+                            </margins>
+                        </scroll>
+
+                        <button id="confirm-button">
+                            <text translate="true">gui.guildedparties.confirm</text>
+
+                            <margins>
+                                <left>2</left>
+                            </margins>
+
+                            <sizing>
+                                <vertical method="fill">100</vertical>
+                                <horizontal method="fill">49</horizontal>
+                            </sizing>
+                        </button>
+                    </children>
+
+                    <sizing>
+                        <vertical method="fill">80</vertical>
+                        <horizontal method="fill">80</horizontal>
+                    </sizing>
+
+                    <positioning type="relative">50,50</positioning>
+
+                    <padding>
+                        <all>5</all>
+                    </padding>
+
+                    <surface>
+                        <panel dark="false"/>
+                    </surface>
+                </flow-layout>
+            </children>
+            
+            <sizing>
+                <vertical method="fill">100</vertical>
+                <horizontal method="fill">100</horizontal>
+            </sizing>
+            
+            <surface>
+                <vanilla-translucent/>
+            </surface>
+        </flow-layout>
+    </components>
+    <templates>
+        <template name="player-element">
+            <flow-layout direction="horizontal">
+                <children>
+                    <label>
+                        <text>{{username}}</text>
+
+                        <sizing>
+                            <vertical method="content">1</vertical>
+                            <horizontal method="content">1</horizontal>
+                        </sizing>
+
+                        <vertical-text-alignment>center</vertical-text-alignment>
+                        <horizontal-text-alignment>left</horizontal-text-alignment>
+
+                        <positioning type="relative">0,0</positioning>
+                    </label>
+
+                    <label>
+                        <text>Rank: {{rank}}</text>
+
+                        <sizing>
+                            <vertical method="content">1</vertical>
+                            <horizontal method="content">1</horizontal>
+                        </sizing>
+
+                        <vertical-text-alignment>center</vertical-text-alignment>
+                        <horizontal-text-alignment>left</horizontal-text-alignment>
+
+                        <positioning type="relative">0,100</positioning>
+                    </label>
+
+                    <button id="select-button">
+                        <text translate="true">gui.guildedparties.select</text>
+
+                        <sizing>
+                            <vertical method="fill">100</vertical>
+                            <horizontal method="fill">30</horizontal>
+                        </sizing>
+
+                        <positioning type="relative">100,0</positioning>
+                    </button>
+                </children>
+
+                <sizing>
+                    <horizontal method="fill">100</horizontal>
+                    <vertical method="fill">10</vertical>
+                </sizing>
+            </flow-layout>
+        </template>
+    </templates>
+</owo-ui>

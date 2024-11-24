@@ -86,5 +86,30 @@
     {"index": 0},
     "' was removed"
   ],
-  "guildedparties.rank_modified": "Rank was modified successfully!"
+  "guildedparties.rank_modified": "Rank was modified successfully!",
+  "gui.guildedparties.disband": "Disband",
+  "gui.guildedparties.step_down": "Step down",
+  "guildedparties.stepped_down": "You have stood down and are no longer \nleading this guild",
+  "guildedparties.leader_stepped_down": [
+    "'",
+    {"index": 0},
+    "' has stood down from '",
+    {"index": 1},
+    "'. \n'",
+    {"index": 2, "color": "gold"},
+    "' is the new leader."
+  ],
+  "guildedparties.new_leader": [
+    "You are now the leader of '",
+    {"index": 0},
+    "'"
+  ],
+  "text.config.gp-config.option.enableServerCommands": "Enable Server Commands",
+  "text.config.gp-config.title": "Guilded Config",
+  "guildedparties.guild_disbanded": [
+    "The guild '",
+    {"index": 0},
+    "' has ",
+    {"text": "disbanded", "color": "red"}
+  ]
 }
