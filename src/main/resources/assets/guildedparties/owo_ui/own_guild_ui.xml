@@ -33,7 +33,7 @@
                             <color>black</color>
 
                             <vertical-text-alignment>center</vertical-text-alignment>
-                            <horizontal-text-alignment>center</horizontal-text-alignment>
+                            <horizontal-text-alignment>left</horizontal-text-alignment>
 
                             <positioning type="relative">0,20</positioning>
 
