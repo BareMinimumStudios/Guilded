@@ -37,7 +37,7 @@
                     </children>
 
                     <margins>
-                        <right>2</right>
+                        <right>5</right>
                     </margins>
 
                     <positioning type="relative">50,50</positioning>
@@ -56,10 +56,6 @@
                     <text translate="true">gui.guildedparties.join</text>
 
                     <positioning type="relative">80,12</positioning>
-
-                    <margins>
-                        <left>2</left>
-                    </margins>
 
                     <sizing>
                         <horizontal method="content">1</horizontal>
