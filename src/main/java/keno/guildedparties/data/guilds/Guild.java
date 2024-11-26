@@ -20,20 +20,23 @@ public class Guild {
             Codec.STRING.stable().fieldOf("guild_name").forGetter(Guild::getName),
             Codec.pair(Codec.STRING.fieldOf("username").codec(),
                     Rank.codec.fieldOf("rank").codec()).listOf().fieldOf("players").forGetter(Guild::encryptPlayerHashmap),
-            Rank.codec.stable().listOf().fieldOf("ranks").forGetter(Guild::getRanks)
+            Rank.codec.stable().listOf().fieldOf("ranks").forGetter(Guild::getRanks),
+            Codec.STRING.optionalFieldOf("description", "none").forGetter(Guild::getDescription)
     ).apply(instance, Guild::new));
 
     public static Endec<Guild> endec = StructEndecBuilder.of(
             Endec.STRING.fieldOf("guild_name", Guild::getName),
             Rank.endec.mapOf().fieldOf("players", Guild::getPlayers),
             Rank.endec.listOf().fieldOf("ranks", Guild::getRanks),
+            Endec.STRING.fieldOf("description", Guild::getDescription),
             Guild::new);
 
     private String name;
     private HashMap<String, Rank> players = new HashMap<>();
     private final List<Rank> ranks = new ArrayList<>();
+    private String description;
 
-    public Guild(String name, List<Pair<String, Rank>> playerList, List<Rank> ranks) {
+    public Guild(String name, List<Pair<String, Rank>> playerList, List<Rank> ranks, String description) {
         this.name = name;
         for (Pair<String, Rank> pair : playerList) {
             String userName = pair.getFirst();
@@ -45,14 +48,16 @@ public class Guild {
         if (!this.ranks.contains(recruit)) {
             this.ranks.add(recruit);
         }
+        this.description = description;
     }
 
-    public Guild(String name, Map<String, Rank> playerMap, List<Rank> ranks) {
+    public Guild(String name, Map<String, Rank> playerMap, List<Rank> ranks, String description) {
         this.name = name;
         this.ranks.addAll(ranks);
         for (String playerName : playerMap.keySet()) {
             this.players.put(playerName, playerMap.get(playerName));
         }
+        this.description = description;
     }
 
     public Rank getPlayerRank(String username) {
@@ -263,5 +268,13 @@ public class Guild {
             }
         }
         return 0;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

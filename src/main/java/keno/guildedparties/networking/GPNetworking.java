@@ -3,6 +3,7 @@ package keno.guildedparties.networking;
 
 import io.wispforest.owo.network.OwoNetChannel;
 import keno.guildedparties.GuildedParties;
+import keno.guildedparties.client.screens.ViewGuildsMenu;
 import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.guilds.Guild;
 import keno.guildedparties.data.guilds.GuildBanList;
@@ -10,10 +11,7 @@ import keno.guildedparties.data.guilds.GuildSettings;
 import keno.guildedparties.data.guilds.Rank;
 import keno.guildedparties.data.player.Invite;
 import keno.guildedparties.data.player.Member;
-import keno.guildedparties.networking.packets.clientbound.GuildSettingsMenuPacket;
-import keno.guildedparties.networking.packets.clientbound.GuildedMenuPacket;
-import keno.guildedparties.networking.packets.clientbound.InvitePlayersMenuPacket;
-import keno.guildedparties.networking.packets.clientbound.OwnGuildMenuPacket;
+import keno.guildedparties.networking.packets.clientbound.*;
 import keno.guildedparties.networking.packets.serverbound.*;
 import keno.guildedparties.utils.GuildApi;
 import net.minecraft.server.MinecraftServer;
@@ -31,10 +29,17 @@ public class GPNetworking {
 
     public static void init() {
         GP_CHANNEL.registerClientboundDeferred(GuildedMenuPacket.class, GuildedMenuPacket.endec.structOf("open_guilded_menu_packet"));
+
         GP_CHANNEL.registerClientboundDeferred(OwnGuildMenuPacket.class, OwnGuildMenuPacket.endec.structOf("own_guild_menu_packet"));
+
         GP_CHANNEL.registerClientboundDeferred(InvitePlayersMenuPacket.class);
+
         GP_CHANNEL.registerClientboundDeferred(GuildSettingsMenuPacket.class,
                 GuildSettingsMenuPacket.endec.structOf("guild_settings_menu"));
+
+        GP_CHANNEL.registerClientboundDeferred(ViewGuildsPacket.class,
+                ViewGuildsPacket.endec.structOf("view_guilds"));
+
 
         GP_CHANNEL.registerServerbound(DoesPlayerHaveGuildPacket.class, (handler, access) -> {
             ServerPlayerEntity player = access.player();
@@ -311,7 +316,7 @@ public class GPNetworking {
                 String username = player.getGameProfile().getName();
                 Map<String, Rank> playerMap = Map.of(username, leadershipRank);
                 List<Rank> ranks = List.of(leadershipRank);
-                Guild guild = new Guild(guildName, playerMap, ranks);
+                Guild guild = new Guild(guildName, playerMap, ranks, "none");
 
                 GuildApi.modifyGuildPersistentState(server, state -> {
                     state.addGuild(guild);
@@ -327,6 +332,28 @@ public class GPNetworking {
                 player.sendMessageToClient(Text.translatable("guildedparties.guild_exists",
                         handler.guildName()), true);
             }
+        });
+
+        GP_CHANNEL.registerServerbound(GetGuildInfosPacket.class, (handler, access) -> {
+            MinecraftServer server = access.runtime();
+            ServerPlayerEntity player = access.player();
+            List<ViewGuildsMenu.GuildDisplayInfo> displayInfos = new ArrayList<>();
+            boolean playerIsInGuild = player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
+
+            GuildApi.forEachGuildInServer(server, guild -> {
+                String guildName = guild.getName();
+
+                String leaderName = guild.getPlayers().keySet().stream().filter(username
+                        -> guild.getPlayerRank(username).isCoLeader()).findFirst().orElseThrow();
+
+                int members = guild.getPlayers().size();
+
+                displayInfos.add(new ViewGuildsMenu.GuildDisplayInfo(guildName, leaderName, members));
+            });
+
+
+
+            GP_CHANNEL.serverHandle(player).send(new ViewGuildsPacket(displayInfos, playerIsInGuild));
         });
     }
 

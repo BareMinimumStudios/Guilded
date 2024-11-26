@@ -10,10 +10,17 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 /** Utility functions for guilds */
 @SuppressWarnings("UnstableApiUsage")
 public class GuildApi {
+    public static void forEachGuildInServer(MinecraftServer server, Consumer<Guild> guildConsumer) {
+        StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
+        state.getGuilds().values().forEach(guildConsumer);
+        state.markDirty();
+    }
+
     /** Use this method to modify data on the persistent state, without needing to mark it dirty
      * @param server the server to get the state from
      * @param handler lambda that gives you the state

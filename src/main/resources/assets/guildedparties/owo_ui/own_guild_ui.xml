@@ -7,11 +7,7 @@
                     <label>
                         <text>Guild: {{guild-name}}</text>
 
-                        <margins>
-                            <all>10</all>
-                        </margins>
-
-                        <vertical-text-alignment>top</vertical-text-alignment>
+                        <vertical-text-alignment>center</vertical-text-alignment>
                         <horizontal-text-alignment>center</horizontal-text-alignment>
 
                         <positioning type="relative">0,0</positioning>
@@ -22,23 +18,48 @@
                     <label>
                         <text>Rank: {{your-rank}}</text>
 
-                        <margins>
-                            <all>10</all>
-                        </margins>
-
                         <color>black</color>
 
-                        <vertical-text-alignment>top</vertical-text-alignment>
+                        <vertical-text-alignment>center</vertical-text-alignment>
                         <horizontal-text-alignment>center</horizontal-text-alignment>
 
                         <positioning type="relative">0,10</positioning>
                     </label>
+
+                    <scroll direction="vertical">
+                        <label>
+                            <text>Description: {{description}}</text>
+
+                            <color>black</color>
+
+                            <vertical-text-alignment>center</vertical-text-alignment>
+                            <horizontal-text-alignment>center</horizontal-text-alignment>
+
+                            <positioning type="relative">0,20</positioning>
+
+                            <sizing>
+                                <horizontal method="fill">100</horizontal>
+                                <vertical method="content">1</vertical>
+                            </sizing>
+
+                            <max-width>200</max-width>
+                        </label>
+
+                        <sizing>
+                            <horizontal method="fill">100</horizontal>
+                            <vertical method="fill">50</vertical>
+                        </sizing>
+                    </scroll>
 
                     <button id="leave-button">
                         <text translate="true">gui.guildedparties.leave_button</text>
 
                         <vertical-alignment>center</vertical-alignment>
                         <horizontal-alignment>center</horizontal-alignment>
+
+                        <margins>
+                            <top>5</top>
+                        </margins>
 
                         <sizing>
                             <horizontal method="fill">100</horizontal>

@@ -1,0 +1,19 @@
+{
+  "guild_name": "perfected_order",
+  "players": [
+    {
+      "username": "KenopsicManiac",
+      "rank": {
+        "rank_name": "Overseer",
+        "rank_priority": 1
+      }
+    }
+  ],
+  "ranks": [
+    {
+      "rank_name": "Overseer",
+      "rank_priority": 1
+    }
+  ],
+  "description": "A group from the Backrooms that believes in equilibrium and 'Perfecting the balance' though the mean of the latter is unknown"
+}

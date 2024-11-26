@@ -24,6 +24,7 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
     private final Member member;
     private final Map<String, Rank> players;
     private final List<Rank> ranks;
+    private final String summary;
 
     private boolean elementsLoaded = false;
     private final FlowLayout container = Containers
@@ -31,11 +32,12 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
 
     private FlowLayout playerContainer = Containers.verticalFlow(Sizing.content(), Sizing.content());
 
-    public OwnGuildMenu(Member member, Map<String, Rank> players, List<Rank> ranks) {
+    public OwnGuildMenu(Member member, Map<String, Rank> players, List<Rank> ranks, String description) {
         super(FlowLayout.class, DataSource.asset(GuildedParties.GPLoc("own_guild_ui")));
         this.member = member;
         this.players = players;
         this.ranks = ranks;
+        this.summary = description;
     }
 
     @Override
@@ -82,7 +84,8 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
     public FlowLayout getGuildDescriptionElement(UIModel model) {
         FlowLayout layout = model.expandTemplate(FlowLayout.class, "guild-description",
                         Map.of("guild-name", this.member.getGuildKey(),
-                                "your-rank", this.member.getRank().name()));
+                                "your-rank", this.member.getRank().name(),
+                                "description", this.summary));
 
         layout.childById(ButtonComponent.class, "leave-button").onPress(button
                 -> this.client.setScreen(new ActionConfirmScreen<>("leave the guild",

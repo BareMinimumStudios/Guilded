@@ -36,7 +36,7 @@ public class GuildManagementCommands {
                 String leaderRankName = context.getArgument("leaderRankName", String.class);
                 Rank leaderRank = new Rank(leaderRankName, 1);
                 Pair<String, Rank> leader = new Pair<>(player.getName().getLiteralString(), leaderRank);
-                Guild guild = new Guild(guildName, List.of(leader), List.of(leaderRank));
+                Guild guild = new Guild(guildName, List.of(leader), List.of(leaderRank), "none");
                 GuildSettings settings = GuildSettings.getDefaultSettings();
                 GuildBanList list = new GuildBanList(new ArrayList<>());
                 state.addGuild(guild);

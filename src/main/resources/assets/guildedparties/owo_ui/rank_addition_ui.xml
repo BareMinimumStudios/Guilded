@@ -33,6 +33,8 @@
                         <label>
                             <text translate="true">gui.guildedparties.rank_explanation</text>
 
+                            <color>black</color>
+
                             <margins>
                                 <top>2</top>
                                 <bottom>2</bottom>

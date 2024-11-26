@@ -5,6 +5,7 @@ import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.networking.GPNetworking;
+import keno.guildedparties.networking.packets.serverbound.GetGuildInfosPacket;
 import keno.guildedparties.networking.packets.serverbound.GetOwnGuildPacket;
 
 public class GuildedMenuScreen extends BaseUIModelScreen<FlowLayout> {
@@ -17,9 +18,9 @@ public class GuildedMenuScreen extends BaseUIModelScreen<FlowLayout> {
 
     @Override
     protected void build(FlowLayout flowLayout) {
-        flowLayout.childById(ButtonComponent.class, "view-guilds-button").onPress(button -> {
-            GuildedParties.LOGGER.info("View guilds button has been pressed");
-        });
+        flowLayout.childById(ButtonComponent.class, "view-guilds-button").onPress(button
+                -> GPNetworking.GP_CHANNEL.clientHandle().send(new GetGuildInfosPacket()));
+
         flowLayout.childById(ButtonComponent.class, "create-guild-button").onPress(button -> {
             if (isInGuild) {
                 GPNetworking.GP_CHANNEL.clientHandle().send(new GetOwnGuildPacket());

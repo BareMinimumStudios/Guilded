@@ -7,10 +7,6 @@
                     <children>
                         <button id="view-guilds-button">
                             <text translate="true">gui.guildedparties.view_guilds_button</text>
-                        
-                            <padding>
-                                <all>10</all>
-                            </padding>
 
                             <margins>
                                 <bottom>5</bottom>
@@ -27,10 +23,6 @@
                         </button>
                         <button id="create-guild-button">
                             <text translate="true">gui.guildedparties.create_guild_button</text>
-
-                            <padding>
-                                <all>10</all>
-                            </padding>
 
                             <margins>
                                 <top>5</top>
@@ -67,6 +59,11 @@
             <surface>
                 <vanilla-translucent/>
             </surface>
+
+            <sizing>
+                <vertical method="fill">100</vertical>
+                <horizontal method="fill">100</horizontal>
+            </sizing>
         </flow-layout>
     </components>
 </owo-ui>

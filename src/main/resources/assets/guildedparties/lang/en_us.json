@@ -128,5 +128,7 @@
     "The guild '",
     {"index": 0},
     "' already exists"
-  ]
+  ],
+  "gui.guildedparties.scroll_down": "Scroll down",
+  "gui.guildedparties.join": "Join"
 }

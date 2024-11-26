@@ -2,15 +2,13 @@ package keno.guildedparties.client;
 
 import keno.guildedparties.client.compat.GuildedClientCompatEntrypoint;
 import keno.guildedparties.client.screens.GuildedMenuScreen;
+import keno.guildedparties.client.screens.ViewGuildsMenu;
 import keno.guildedparties.client.screens.own_guild.InvitablePlayersScreen;
 import keno.guildedparties.client.screens.own_guild.OwnGuildMenu;
 import keno.guildedparties.client.screens.own_guild.management.GuildSettingsMenu;
 import keno.guildedparties.networking.GPNetworking;
-import keno.guildedparties.networking.packets.clientbound.GuildSettingsMenuPacket;
-import keno.guildedparties.networking.packets.clientbound.InvitePlayersMenuPacket;
+import keno.guildedparties.networking.packets.clientbound.*;
 import keno.guildedparties.networking.packets.serverbound.DoesPlayerHaveGuildPacket;
-import keno.guildedparties.networking.packets.clientbound.GuildedMenuPacket;
-import keno.guildedparties.networking.packets.clientbound.OwnGuildMenuPacket;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -61,7 +59,7 @@ public class GPClient implements ClientModInitializer {
 
         GPNetworking.GP_CHANNEL.registerClientbound(OwnGuildMenuPacket.class, (packet, access) -> {
             MinecraftClient client = access.runtime();
-            client.setScreen(new OwnGuildMenu(packet.member(), packet.players(), packet.ranks()));
+            client.setScreen(new OwnGuildMenu(packet.member(), packet.players(), packet.ranks(), packet.summary()));
         });
 
         GPNetworking.GP_CHANNEL.registerClientbound(InvitePlayersMenuPacket.class, (packet, access) -> {
@@ -72,6 +70,11 @@ public class GPClient implements ClientModInitializer {
         GPNetworking.GP_CHANNEL.registerClientbound(GuildSettingsMenuPacket.class, (packet, access) -> {
             MinecraftClient client = access.runtime();
             client.setScreen(new GuildSettingsMenu(packet.guildName(), packet.settings()));
+        });
+
+        GPNetworking.GP_CHANNEL.registerClientbound(ViewGuildsPacket.class, (packet, access) -> {
+            MinecraftClient client = access.runtime();
+            client.setScreen(new ViewGuildsMenu(packet.infos(), packet.isInGuild()));
         });
     }
 }
