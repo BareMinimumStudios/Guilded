@@ -8,6 +8,7 @@ import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.guilds.GuildSettings;
 import keno.guildedparties.data.player.Invite;
 import keno.guildedparties.data.player.Member;
+import keno.guildedparties.utils.GuildApi;
 import net.minecraft.registry.Registry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
@@ -27,8 +28,7 @@ public class InvitePlayerCommand implements Command<ServerCommandSource> {
                 if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
                     if (sender.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
                         Member member = sender.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
-                        Registry<GuildSettings> settingsRegistry = server.getRegistryManager().getOrThrow(GuildedParties.SETTINGS_REGISTRY);
-                        GuildSettings settings = settingsRegistry.getEntry(GuildedParties.GPLoc(member.getGuildKey())).orElseThrow().value();
+                        GuildSettings settings = GuildApi.getSettings(server, member.getGuildKey());
                         if (member.getRank().priority() <= settings.invitePlayersPriority()) {
                             if (!player.hasAttached(GPAttachmentTypes.INVITE_ATTACHMENT)) {
                                 Invite invite = new Invite(member.getGuildKey(), sender.getGameProfile().getName());

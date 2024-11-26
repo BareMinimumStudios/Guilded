@@ -15,6 +15,8 @@ public class HeardData {
         return guilds;
     }
 
+    /** Loads the hashmap containing
+     * @param guilds a map where the keys are filenames,*/
     protected static void loadGuilds(Map<String, Guild> guilds) {
         HeardData.guilds = new HashMap<>(guilds);
     }

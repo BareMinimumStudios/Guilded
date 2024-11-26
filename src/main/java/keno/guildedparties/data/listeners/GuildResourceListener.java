@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.mojang.serialization.JsonOps;
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.data.guilds.Guild;
+import keno.guildedparties.utils.IdUtils;
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
@@ -25,10 +26,7 @@ public class GuildResourceListener implements SimpleResourceReloadListener<Map<S
                 Identifier id = resource.getKey();
 
                 // Essentially reducing the string into it's file name
-                String name = id.getPath();
-                String[] pathSeparated = name.split("/");
-                name = pathSeparated[pathSeparated.length - 1];
-                name = name.replaceAll(".json", "");
+                String name = IdUtils.reduceIdToFilename(id);
 
                 try (var inputStream = resource.getValue().getInputStream()) {
                     var json = GuildedParties.GSON.fromJson(new InputStreamReader(inputStream), JsonObject.class);

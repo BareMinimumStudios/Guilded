@@ -89,9 +89,10 @@ public class GuildedParties implements ModInitializer {
 	/** Ensures data-driven objects are in the persistent state */
 	public static void fillPersistentState(MinecraftServer server) {
 		// Add any data-registered guilds to the state
+		GuildedParties.LOGGER.info("Loading data-driven guilds onto {} server", server.isDedicated() ? "dedicated" : "integrated");
 		StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
-		HashMap<String, Guild> guilds = HeardData.getGuilds();
-		HashMap<String, GuildSettings> guildSettings = HeardData.getGuildSettings();
+		final HashMap<String, Guild> guilds = HeardData.getGuilds();
+		final HashMap<String, GuildSettings> guildSettings = HeardData.getGuildSettings();
 		guilds.keySet().iterator().forEachRemaining(file_name -> {
 			Guild guild = guilds.get(file_name);
 			if (!state.hasGuild(guild.getName())) {
@@ -107,6 +108,7 @@ public class GuildedParties implements ModInitializer {
 				if (guildSettings.containsKey(file_name)) {
 					settings = guildSettings.get(file_name);
 				} else {
+					GuildedParties.LOGGER.info("Guild {} lacks a settings json, generating a default. \nIf one is present, the file name must be the same as the guild json", guild.getName());
 					settings = new GuildSettings(false, 5, 3, 3, 5);
 				}
 				state.addSettings(settings, guild.getName());
