@@ -3,14 +3,15 @@ package keno.guildedparties;
 import keno.guildedparties.compat.GuildedCompatEntrypoint;
 import keno.guildedparties.config.GPConfig;
 import keno.guildedparties.data.GPAttachmentTypes;
+import keno.guildedparties.data.guilds.HeardData;
 import keno.guildedparties.data.guilds.Guild;
 import keno.guildedparties.data.guilds.GuildBanList;
 import keno.guildedparties.data.guilds.GuildSettings;
+import keno.guildedparties.data.listeners.GuildResourceListener;
 import keno.guildedparties.data.player.Member;
 import keno.guildedparties.networking.GPNetworking;
 import keno.guildedparties.server.StateSaverAndLoader;
 import keno.guildedparties.server.commands.GPCommandRegistry;
-import keno.guildedparties.utils.GPEndecs;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -18,9 +19,11 @@ import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.fabricmc.fabric.api.message.v1.ServerMessageDecoratorEvent;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -30,11 +33,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
 public class GuildedParties implements ModInitializer {
 	public static final String MOD_ID = "guildedparties";
-	public static RegistryKey<Registry<Guild>> GUILD_REGISTRY = RegistryKey.ofRegistry(Identifier.of("guilded", "guilds"));
 	public static RegistryKey<Registry<GuildSettings>> SETTINGS_REGISTRY = RegistryKey.ofRegistry(Identifier.of("guilded", "settings"));
 
 	// This logger is used to write text to the console and the log file.
@@ -45,12 +48,12 @@ public class GuildedParties implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		DynamicRegistries.registerSynced(GUILD_REGISTRY, Guild.codec, Guild.codec);
+		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new GuildResourceListener());
+
 		DynamicRegistries.registerSynced(SETTINGS_REGISTRY, GuildSettings.codec, GuildSettings.codec);
 		GPAttachmentTypes.init();
 		GPCommandRegistry.init(false);
 
-		GPEndecs.registerEndecs();
 		GPNetworking.init();
 
 		ServerLifecycleEvents.SERVER_STARTED.register(GuildedParties::fillPersistentState);
@@ -87,9 +90,9 @@ public class GuildedParties implements ModInitializer {
 	public static void fillPersistentState(MinecraftServer server) {
 		// Add any data-registered guilds to the state
 		StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
-		Registry<Guild> guildRegistry = server.getRegistryManager().getOrThrow(GUILD_REGISTRY);
+		List<Guild> guilds = HeardData.getGuilds();
 		Registry<GuildSettings> settingsRegistry = server.getRegistryManager().getOrThrow(SETTINGS_REGISTRY);
-		guildRegistry.stream().iterator().forEachRemaining(guild -> {
+		guilds.stream().iterator().forEachRemaining(guild -> {
 			if (!state.hasGuild(guild.getName())) {
 				if (!guild.getName().contains(Character.toString(','))) {
 					state.addGuild(guild);

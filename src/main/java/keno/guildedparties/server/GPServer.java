@@ -2,8 +2,8 @@ package keno.guildedparties.server;
 
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.config.GPServerConfig;
-import keno.guildedparties.data.guilds.Guild;
 import keno.guildedparties.data.guilds.GuildSettings;
+import keno.guildedparties.data.listeners.GuildResourceListener;
 import keno.guildedparties.networking.GPNetworking;
 import keno.guildedparties.server.commands.GPCommandRegistry;
 import keno.guildedparties.server.compat.ServerGuildedCompatEntrypoint;
@@ -12,12 +12,13 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.fabricmc.fabric.api.message.v1.ServerMessageDecoratorEvent;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
+import net.minecraft.resource.ResourceType;
 
 import java.util.List;
 
-import static keno.guildedparties.GuildedParties.GUILD_REGISTRY;
 import static keno.guildedparties.GuildedParties.SETTINGS_REGISTRY;
 
 public class GPServer implements DedicatedServerModInitializer {
@@ -25,7 +26,8 @@ public class GPServer implements DedicatedServerModInitializer {
 
     @Override
     public void onInitializeServer() {
-        DynamicRegistries.registerSynced(GUILD_REGISTRY, Guild.codec, Guild.codec);
+        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new GuildResourceListener());
+
         DynamicRegistries.registerSynced(SETTINGS_REGISTRY, GuildSettings.codec, GuildSettings.codec);
 
         ServerLifecycleEvents.SERVER_STARTED.register(GuildedParties::fillPersistentState);
