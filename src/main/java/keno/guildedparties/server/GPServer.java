@@ -4,6 +4,7 @@ import keno.guildedparties.GuildedParties;
 import keno.guildedparties.config.GPServerConfig;
 import keno.guildedparties.data.guilds.GuildSettings;
 import keno.guildedparties.data.listeners.GuildResourceListener;
+import keno.guildedparties.data.listeners.GuildSettingsResourceListener;
 import keno.guildedparties.networking.GPNetworking;
 import keno.guildedparties.server.commands.GPCommandRegistry;
 import keno.guildedparties.server.compat.ServerGuildedCompatEntrypoint;
@@ -27,8 +28,7 @@ public class GPServer implements DedicatedServerModInitializer {
     @Override
     public void onInitializeServer() {
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new GuildResourceListener());
-
-        DynamicRegistries.registerSynced(SETTINGS_REGISTRY, GuildSettings.codec, GuildSettings.codec);
+        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new GuildSettingsResourceListener());
 
         ServerLifecycleEvents.SERVER_STARTED.register(GuildedParties::fillPersistentState);
         ServerPlayConnectionEvents.JOIN.register(GuildedParties::syncAndInitializePlayerData);
