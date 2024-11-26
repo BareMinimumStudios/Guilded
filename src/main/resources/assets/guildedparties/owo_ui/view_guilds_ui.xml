@@ -6,7 +6,7 @@
                 <label>
                     <text translate="true">gui.guildedparties.scroll_down</text>
 
-                    <positioning type="relative">50,0</positioning>
+                    <positioning type="relative">50,5</positioning>
                 </label>
 
                 <flow-layout direction="vertical">
@@ -55,7 +55,7 @@
                 <button>
                     <text translate="true">gui.guildedparties.join</text>
 
-                    <positioning type="relative">100,50</positioning>
+                    <positioning type="relative">80,12</positioning>
 
                     <margins>
                         <left>2</left>
