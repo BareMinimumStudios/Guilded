@@ -41,7 +41,6 @@ import java.util.HashMap;
 @SuppressWarnings("UnstableApiUsage")
 public class GuildedParties implements ModInitializer {
 	public static final String MOD_ID = "guildedparties";
-	public static RegistryKey<Registry<GuildSettings>> SETTINGS_REGISTRY = RegistryKey.ofRegistry(Identifier.of("guilded", "settings"));
 
 
 
@@ -56,8 +55,7 @@ public class GuildedParties implements ModInitializer {
 	public void onInitialize() {
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new GuildResourceListener());
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new GuildSettingsResourceListener());
-
-		DynamicRegistries.registerSynced(SETTINGS_REGISTRY, GuildSettings.codec, GuildSettings.codec);
+		
 		GPAttachmentTypes.init();
 		GPCommandRegistry.init(false);
 
