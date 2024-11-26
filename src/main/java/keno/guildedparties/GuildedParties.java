@@ -1,9 +1,12 @@
 package keno.guildedparties;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import keno.guildedparties.compat.GuildedCompatEntrypoint;
 import keno.guildedparties.config.GPConfig;
 import keno.guildedparties.data.GPAttachmentTypes;
-import keno.guildedparties.data.guilds.HeardData;
+import keno.guildedparties.data.listeners.GuildSettingsResourceListener;
+import keno.guildedparties.data.listeners.HeardData;
 import keno.guildedparties.data.guilds.Guild;
 import keno.guildedparties.data.guilds.GuildBanList;
 import keno.guildedparties.data.guilds.GuildSettings;
@@ -33,22 +36,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 @SuppressWarnings("UnstableApiUsage")
 public class GuildedParties implements ModInitializer {
 	public static final String MOD_ID = "guildedparties";
 	public static RegistryKey<Registry<GuildSettings>> SETTINGS_REGISTRY = RegistryKey.ofRegistry(Identifier.of("guilded", "settings"));
 
+
+
 	// This logger is used to write text to the console and the log file.
 	// It is considered best practice to use your mod id as the logger's name.
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static final GPConfig CONFIG = GPConfig.createAndLoad();
+	public static final Gson GSON = new GsonBuilder().create();
 
 	@Override
 	public void onInitialize() {
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new GuildResourceListener());
+		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new GuildSettingsResourceListener());
 
 		DynamicRegistries.registerSynced(SETTINGS_REGISTRY, GuildSettings.codec, GuildSettings.codec);
 		GPAttachmentTypes.init();
@@ -90,9 +97,10 @@ public class GuildedParties implements ModInitializer {
 	public static void fillPersistentState(MinecraftServer server) {
 		// Add any data-registered guilds to the state
 		StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
-		List<Guild> guilds = HeardData.getGuilds();
-		Registry<GuildSettings> settingsRegistry = server.getRegistryManager().getOrThrow(SETTINGS_REGISTRY);
-		guilds.stream().iterator().forEachRemaining(guild -> {
+		HashMap<String, Guild> guilds = HeardData.getGuilds();
+		HashMap<String, GuildSettings> guildSettings = HeardData.getGuildSettings();
+		guilds.keySet().iterator().forEachRemaining(file_name -> {
+			Guild guild = guilds.get(file_name);
 			if (!state.hasGuild(guild.getName())) {
 				if (!guild.getName().contains(Character.toString(','))) {
 					state.addGuild(guild);
@@ -103,9 +111,8 @@ public class GuildedParties implements ModInitializer {
 			}
 			if (!state.doesGuildHaveSettings(guild.getName())) {
 				GuildSettings settings;
-				if (settingsRegistry.contains(RegistryKey.of(SETTINGS_REGISTRY, GPLoc(guild.getName())))) {
-					// Due to limitations, all guild-settings need to be registered under the guildedparties namespace
-					settings = settingsRegistry.getEntry(GPLoc(guild.getName())).orElseThrow().value();
+				if (guildSettings.containsKey(file_name)) {
+					settings = guildSettings.get(file_name);
 				} else {
 					settings = new GuildSettings(false, 5, 3, 3, 5);
 				}

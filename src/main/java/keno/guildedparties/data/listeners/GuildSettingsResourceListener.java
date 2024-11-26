@@ -1,9 +1,9 @@
 package keno.guildedparties.data.listeners;
 
-import com.google.gson.*;
-import com.mojang.serialization.JsonOps;
+import com.google.gson.JsonObject;
+import io.wispforest.endec.format.gson.GsonDeserializer;
 import keno.guildedparties.GuildedParties;
-import keno.guildedparties.data.guilds.Guild;
+import keno.guildedparties.data.guilds.GuildSettings;
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
@@ -15,12 +15,12 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public class GuildResourceListener implements SimpleResourceReloadListener<Map<String, Guild>> {
+public class GuildSettingsResourceListener implements SimpleResourceReloadListener<Map<String, GuildSettings>> {
     @Override
-    public CompletableFuture<Map<String, Guild>> load(ResourceManager manager, Executor executor) {
+    public CompletableFuture<Map<String, GuildSettings>> load(ResourceManager manager, Executor executor) {
         return CompletableFuture.supplyAsync(() -> {
-            HashMap<String, Guild> guilds = new HashMap<>();
-            for (var resource : manager.findResources("guilded/guilds", id
+            HashMap<String, GuildSettings> settingsMap = new HashMap<>();
+            for (var resource : manager.findResources("guilded/guild_settings", id
                     -> id.getPath().endsWith(".json")).entrySet()) {
                 Identifier id = resource.getKey();
 
@@ -32,24 +32,23 @@ public class GuildResourceListener implements SimpleResourceReloadListener<Map<S
 
                 try (var inputStream = resource.getValue().getInputStream()) {
                     var json = GuildedParties.GSON.fromJson(new InputStreamReader(inputStream), JsonObject.class);
-                    Guild guild = Guild.codec.decode(JsonOps.INSTANCE, json).getOrThrow().getFirst();
-                    guilds.put(name, guild);
+                    GuildSettings settings = GuildSettings.endec.decodeFully(GsonDeserializer::of, json);
+                    settingsMap.put(name, settings);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-
-            return Map.copyOf(guilds);
-        }, executor);
+            return Map.copyOf(settingsMap);
+        });
     }
 
     @Override
-    public CompletableFuture<Void> apply(Map<String, Guild> data, ResourceManager manager, Executor executor) {
-        return CompletableFuture.runAsync(() -> HeardData.loadGuilds(data), executor);
+    public CompletableFuture<Void> apply(Map<String, GuildSettings> data, ResourceManager manager, Executor executor) {
+        return CompletableFuture.runAsync(() -> HeardData.loadGuildSettings(data));
     }
 
     @Override
     public Identifier getFabricId() {
-        return GuildedParties.GPLoc("guilds_resource_listener");
+        return GuildedParties.GPLoc("guild_settings_resource_listener");
     }
 }
