@@ -26,7 +26,7 @@ public class GuildSettingsResourceListener implements SimpleResourceReloadListen
                 Identifier id = resource.getKey();
 
                 // Essentially reducing the string into it's file name
-                String name = IdUtils.reduceIdToFilename(id);
+                String name = IdUtils.reduceIdToFilename(id, IdUtils.FileType.JSON);
 
                 try (var inputStream = resource.getValue().getInputStream()) {
                     var json = GuildedParties.GSON.fromJson(new InputStreamReader(inputStream), JsonObject.class);
