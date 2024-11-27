@@ -99,7 +99,7 @@ public class GuildedParties implements ModInitializer {
 				if (!guild.getName().contains(Character.toString(','))) {
 					state.addGuild(guild);
 				} else {
-					GuildedParties.LOGGER.info("Could not add {} due to containing an illegal character", guild.getName());
+					GuildedParties.LOGGER.warn("Could not add '{}' due to containing an illegal character \nThe guild's name cannot contain a ','", guild.getName());
 					return;
 				}
 			}
@@ -108,7 +108,7 @@ public class GuildedParties implements ModInitializer {
 				if (guildSettings.containsKey(file_name)) {
 					settings = guildSettings.get(file_name);
 				} else {
-					GuildedParties.LOGGER.info("Guild {} lacks a settings json, generating a default. \nIf one is present, the file name must be the same as the guild json", guild.getName());
+					GuildedParties.LOGGER.warn("Guild {} lacks a settings json, generating a default. \nIf one is present, the file name must be the same as the guild json", guild.getName());
 					settings = new GuildSettings(false, 5, 3, 3, 5);
 				}
 				state.addSettings(settings, guild.getName());

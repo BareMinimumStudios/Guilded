@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "perfection",
+  "version": "${version}",
+  "name": "Perfection",
+  "description": "Guilded test mod",
+  "authors": [
+    "Keno"
+  ],
+  "license": "MIT",
+  "environment": "*",
+  "icon": "assets/perfection/icon.png",
+  "entrypoints": {
+    "main": [
+      "keno.net.perfection.Perfection"
+    ]
+  },
+  "depends": {
+    "fabricloader": "*",
+    "fabric": "*",
+    "minecraft": "~1.21.3",
+    "guildedparties": ">=0.1.0"
+  }
+}
