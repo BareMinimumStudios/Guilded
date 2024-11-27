@@ -130,5 +130,11 @@
     "' already exists"
   ],
   "gui.guildedparties.scroll_down": "Scroll down",
-  "gui.guildedparties.join": "Join"
+  "gui.guildedparties.join": "Join",
+  "guildedparties.coming_soon": "Coming soon...",
+  "guildedparties.guild_is_private": [
+    "The guild '",
+    {"index": 0},
+    "' is private."
+  ]
 }

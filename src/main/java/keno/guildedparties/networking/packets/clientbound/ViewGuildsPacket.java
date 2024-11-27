@@ -2,7 +2,7 @@ package keno.guildedparties.networking.packets.clientbound;
 
 import io.wispforest.endec.Endec;
 import io.wispforest.endec.impl.StructEndecBuilder;
-import keno.guildedparties.client.screens.ViewGuildsMenu;
+import keno.guildedparties.client.screens.view_guilds.ViewGuildsMenu;
 
 import java.util.List;
 

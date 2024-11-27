@@ -12,7 +12,7 @@
                 <flow-layout direction="vertical">
                     <children>
                         <scroll direction="vertical">
-                            <flow-layout direction="vertical">
+                            <flow-layout direction="vertical" id="guild-container">
                                 <children/>
 
                                 <surface>
@@ -20,7 +20,7 @@
                                 </surface>
 
                                 <padding>
-                                    <all>2</all>
+                                    <all>4</all>
                                 </padding>
                                 
                                 <sizing>
@@ -51,17 +51,6 @@
                         <blur quality="5" size="2"/>
                     </surface>
                 </flow-layout>
-                
-                <button>
-                    <text translate="true">gui.guildedparties.join</text>
-
-                    <positioning type="relative">80,12</positioning>
-
-                    <sizing>
-                        <horizontal method="content">1</horizontal>
-                        <vertical method="content">1</vertical>
-                    </sizing>
-                </button>
             </children>
 
             <surface>
@@ -74,4 +63,55 @@
             </sizing>
         </flow-layout>
     </components>
+
+    <templates>
+        <template name="guild-info">
+            <flow-layout direction="horizontal">
+                <children>
+                    <label>
+                        <text>{{guild-name}}</text>
+
+                        <horizontal-text-alignment>left</horizontal-text-alignment>
+                        <vertical-text-alignment>center</vertical-text-alignment>
+
+                        <positioning type="relative">0,0</positioning>
+                    </label>
+
+                    <label>
+                        <text>Leader: {{leader-name}}</text>
+
+                        <horizontal-text-alignment>left</horizontal-text-alignment>
+                        <vertical-text-alignment>center</vertical-text-alignment>
+
+                        <positioning type="relative">0,50</positioning>
+                    </label>
+
+                    <label>
+                        <text>Members: {{number-of-members}}</text>
+
+                        <horizontal-text-alignment>left</horizontal-text-alignment>
+                        <vertical-text-alignment>center</vertical-text-alignment>
+
+                        <positioning type="relative">0,100</positioning>
+                    </label>
+
+                    <button id="view-button">
+                        <text translate="true">gui.guildedparties.view_button</text>
+
+                        <sizing>
+                            <vertical method="fill">100</vertical>
+                            <horizontal method="content">1</horizontal>
+                        </sizing>
+
+                        <positioning type="relative">100,0</positioning>
+                    </button>
+                </children>
+
+                <sizing>
+                    <horizontal method="fill">100</horizontal>
+                    <vertical method="fill">30</vertical>
+                </sizing>
+            </flow-layout>
+        </template>
+    </templates>
 </owo-ui>

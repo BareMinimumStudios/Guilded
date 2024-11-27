@@ -3,7 +3,7 @@ package keno.guildedparties.networking;
 
 import io.wispforest.owo.network.OwoNetChannel;
 import keno.guildedparties.GuildedParties;
-import keno.guildedparties.client.screens.ViewGuildsMenu;
+import keno.guildedparties.client.screens.view_guilds.ViewGuildsMenu;
 import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.guilds.Guild;
 import keno.guildedparties.data.guilds.GuildBanList;
@@ -348,12 +348,32 @@ public class GPNetworking {
 
                 int members = guild.getPlayers().size();
 
-                displayInfos.add(new ViewGuildsMenu.GuildDisplayInfo(guildName, leaderName, members));
+                String description = guild.getDescription();
+
+                displayInfos.add(new ViewGuildsMenu.GuildDisplayInfo(guildName, leaderName,
+                        members, description));
             });
 
-
-
             GP_CHANNEL.serverHandle(player).send(new ViewGuildsPacket(displayInfos, playerIsInGuild));
+        });
+
+        GP_CHANNEL.registerServerbound(JoinGuildPacket.class, (handler, access) -> {
+            MinecraftServer server = access.runtime();
+            ServerPlayerEntity player = access.player();
+
+            if (!GuildApi.getSettings(server, handler.guildName()).isPrivate()) {
+                GuildApi.modifyGuildPersistentState(server, state -> {
+                    state.getGuild(handler.guildName()).addPlayerToGuild(player, "Recruit");
+                });
+
+                player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, new Member(handler.guildName(), new Rank("Recruit", 50)));
+
+                GP_CHANNEL.serverHandle(player).send(OwnGuildMenuPacket.createFromGuild(player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT),
+                        GuildApi.getGuild(server, handler.guildName()).orElseThrow()));
+            } else {
+                player.sendMessageToClient(Text.translatable("guildedparties.guild_is_private",
+                        handler.guildName()), true);
+            }
         });
     }
 

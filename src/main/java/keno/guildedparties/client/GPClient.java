@@ -2,7 +2,7 @@ package keno.guildedparties.client;
 
 import keno.guildedparties.client.compat.GuildedClientCompatEntrypoint;
 import keno.guildedparties.client.screens.GuildedMenuScreen;
-import keno.guildedparties.client.screens.ViewGuildsMenu;
+import keno.guildedparties.client.screens.view_guilds.ViewGuildsMenu;
 import keno.guildedparties.client.screens.own_guild.InvitablePlayersScreen;
 import keno.guildedparties.client.screens.own_guild.OwnGuildMenu;
 import keno.guildedparties.client.screens.own_guild.management.GuildSettingsMenu;
