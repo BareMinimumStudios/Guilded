@@ -23,6 +23,20 @@
 
                             <margins>
                                 <top>2</top>
+                                <bottom>2</bottom>
+                            </margins>
+
+                            <sizing>
+                                <horizontal method="fill">100</horizontal>
+                                <vertical method="fill">30</vertical>
+                            </sizing>
+                        </button>
+
+                        <button id="description-button">
+                            <text translate="true">gui.guildedparties.description</text>
+
+                            <margins>
+                                <top>2</top>
                             </margins>
 
                             <sizing>

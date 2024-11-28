@@ -121,7 +121,8 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
         guildSettingsElement.childById(ButtonComponent.class, "management-button")
                 .active(this.member.getRank().isCoLeader())
                 .onPress(button
-                        -> this.client.setScreen(new GuildManagementMenu(this.member.getGuildKey(), this.players, this.ranks)));
+                        -> this.client.setScreen(new GuildManagementMenu(this.member.getGuildKey(), this.players,
+                            this.ranks, this.summary)));
 
         return guildSettingsElement;
     }

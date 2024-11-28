@@ -2,14 +2,13 @@
 	"schemaVersion": 1,
 	"id": "guildedparties",
 	"version": "${version}",
-	"name": "Guilded Parties",
+	"name": "Guilded",
 	"description": "A faction mod for the user and developer",
 	"authors": [
 		"Keno"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/XeroTheProtogen/GuildedParties"
 	},
 	"license": "MIT for code, ARR for assets",
 	"icon": "assets/guildedparties/icon.png",
@@ -38,9 +37,6 @@
 		"fabricloader": ">=0.16.9",
 		"minecraft": "~1.21.3",
 		"java": ">=21",
-		"fabric-api": "*"
-	},
-	"suggests": {
-		"another-mod": "*"
+		"fabric-api": ">=0.107.3+1.21.3"
 	}
 }

@@ -15,12 +15,14 @@ public class GuildManagementMenu extends BaseUIModelScreen<FlowLayout> {
     private final String guildName;
     private final List<Rank> ranks;
     private final Map<String, Rank> players;
+    private final String description;
 
-    public GuildManagementMenu(String guildName, Map<String, Rank> players, List<Rank> ranks) {
+    public GuildManagementMenu(String guildName, Map<String, Rank> players, List<Rank> ranks, String description) {
         super(FlowLayout.class, DataSource.asset(GuildedParties.GPLoc("guild_management_ui")));
         this.guildName = guildName;
         this.players = players;
         this.ranks = ranks;
+        this.description = description;
     }
 
     @Override
@@ -31,5 +33,8 @@ public class GuildManagementMenu extends BaseUIModelScreen<FlowLayout> {
         flowLayout.childById(ButtonComponent.class, "leadership-button")
                 .onPress(button
                         -> this.client.setScreen(new LeadershipMenu(this.guildName, this.players)));
+        flowLayout.childById(ButtonComponent.class, "description-button")
+                .onPress(button
+                        -> this.client.setScreen(new GuildDescriptionMenu(this.guildName, this.description)));
     }
 }

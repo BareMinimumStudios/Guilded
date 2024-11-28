@@ -139,5 +139,11 @@
     "The guild '",
     {"index": 0},
     "' is private."
+  ],
+  "gui.guildedparties.description": "Description",
+  "guildedparties.guild_description_changed": [
+    "The description of '",
+    {"index": 0},
+    "' has been changed successfully"
   ]
 }

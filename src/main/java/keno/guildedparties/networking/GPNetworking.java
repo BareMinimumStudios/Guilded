@@ -261,7 +261,7 @@ public class GPNetworking {
                             if (player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT).getGuildKey().equals(handler.guildName())) {
                                 Member guildmateData = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
                                 if (guildmateData.getRank().equals(handler.rank())) {
-                                    state.getGuild(handler.guildName()).demoteMember(player);
+                                    state.getGuild(handler.guildName()).demoteMember(server, player.getGameProfile().getName());
                                 }
                             }
                         }
@@ -413,9 +413,8 @@ public class GPNetworking {
             ServerPlayerEntity player = access.player();
 
             if (!GuildApi.getSettings(server, handler.guildName()).isPrivate()) {
-                GuildApi.modifyGuildPersistentState(server, state -> {
-                    state.getGuild(handler.guildName()).addPlayerToGuild(player, "Recruit");
-                });
+                GuildApi.modifyGuildPersistentState(server, state
+                        -> state.getGuild(handler.guildName()).addPlayerToGuild(player, "Recruit"));
 
                 player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, new Member(handler.guildName(), new Rank("Recruit", 50)));
 
@@ -424,6 +423,22 @@ public class GPNetworking {
             } else {
                 player.sendMessageToClient(Text.translatable("guildedparties.guild_is_private",
                         handler.guildName()), true);
+            }
+        });
+
+        GP_CHANNEL.registerServerbound(ChangeDescriptionPacket.class, (handler, access) -> {
+            MinecraftServer server = access.runtime();
+            ServerPlayerEntity player = access.player();
+
+            GuildSettings settings = GuildApi.getSettings(server, handler.guildName());
+
+            if (canSenderPerformAction(player, settings.manageGuildPriority()) ||
+                isSenderLeader(player)) {
+                GuildApi.modifyGuildPersistentState(server, state
+                        -> state.getGuild(handler.guildName()).setDescription(handler.description()));
+
+                player.sendMessageToClient(Text.translatable("guildedparties.guild_description_changed",
+                        handler.guildName()), false);
             }
         });
     }
