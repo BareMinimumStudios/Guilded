@@ -16,6 +16,9 @@
   "gui.guildedparties.cancel": "Cancel",
   "guildedparties.cant_perform_on_self": "You can't perform this action on yourself...",
   "guildedparties.player_is_higher_priority": "This player is higher priority than you...",
+  "guildedparties.already_in_guild": "You are already in a guild",
+  "guildedparties.is_not_leader": "Must be leader of the guild to perform this action",
+  "guildedparties.not_in_guild": "You must be in a guild",
   "guildedparties.need_higher_priority": [
     "Your rank priority must be less-than or equal to ",
     {"index": 0}
