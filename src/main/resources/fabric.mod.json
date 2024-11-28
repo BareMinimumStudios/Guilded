@@ -11,7 +11,7 @@
 		"sources": "https://github.com/XeroTheProtogen/GuildedParties"
 	},
 	"license": "MIT for code, ARR for assets",
-	"icon": "assets/guildedparties/icon.png",
+	"icon": "assets/guildedparties/guilded.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
