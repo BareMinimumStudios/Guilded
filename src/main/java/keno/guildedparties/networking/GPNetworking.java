@@ -185,18 +185,22 @@ public class GPNetworking {
                 GuildSettings settings = GuildApi.getSettings(server, senderData.getGuildKey());
 
                 if (canSenderPerformAction(sender, settings.invitePlayersPriority())) {
-                    if (!GuildApi.getGuild(sender).orElseThrow().isPlayerInGuild(handler.username())) {
-                        ServerPlayerEntity player = server.getPlayerManager().getPlayer(handler.username());
-                        if (!player.hasAttached(GPAttachmentTypes.INVITE_ATTACHMENT)) {
-                            player.setAttached(GPAttachmentTypes.INVITE_ATTACHMENT,
-                                    new Invite(senderData.getGuildKey(), sender.getGameProfile().getName()));
+                    if (!GuildApi.getBanList(server, senderData.getGuildKey()).isPlayerBanned(handler.username())) {
+                        if (!GuildApi.getGuild(sender).orElseThrow().isPlayerInGuild(handler.username())) {
+                            ServerPlayerEntity player = server.getPlayerManager().getPlayer(handler.username());
+                            if (!player.hasAttached(GPAttachmentTypes.INVITE_ATTACHMENT)) {
+                                player.setAttached(GPAttachmentTypes.INVITE_ATTACHMENT,
+                                        new Invite(senderData.getGuildKey(), sender.getGameProfile().getName()));
 
-                            sender.sendMessageToClient(Text.translatable("guildedparties.invite_successful"), true);
-                            player.sendMessageToClient(Text.translatable("guildedparties.invite_received",
-                                    player.getGameProfile().getName(), senderData.getGuildKey()), false);
-                        } else {
-                            sender.sendMessageToClient(Text.translatable("guildedparties.has_invite_already"), true);
+                                sender.sendMessageToClient(Text.translatable("guildedparties.invite_successful"), true);
+                                player.sendMessageToClient(Text.translatable("guildedparties.invite_received",
+                                        player.getGameProfile().getName(), senderData.getGuildKey()), false);
+                            } else {
+                                sender.sendMessageToClient(Text.translatable("guildedparties.has_invite_already"), true);
+                            }
                         }
+                    } else {
+                        sender.sendMessageToClient(Text.translatable("guildedparties.player_is_banned"), true);
                     }
                 }
             }
@@ -413,13 +417,17 @@ public class GPNetworking {
             ServerPlayerEntity player = access.player();
 
             if (!GuildApi.getSettings(server, handler.guildName()).isPrivate()) {
-                GuildApi.modifyGuildPersistentState(server, state
-                        -> state.getGuild(handler.guildName()).addPlayerToGuild(player, "Recruit"));
+                if (!GuildApi.getBanList(server, handler.guildName()).isPlayerBanned(player.getGameProfile().getName())) {
+                    GuildApi.modifyGuildPersistentState(server, state
+                            -> state.getGuild(handler.guildName()).addPlayerToGuild(player, "Recruit"));
 
-                player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, new Member(handler.guildName(), new Rank("Recruit", 50)));
+                    player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, new Member(handler.guildName(), new Rank("Recruit", 50)));
 
-                GP_CHANNEL.serverHandle(player).send(OwnGuildMenuPacket.createFromGuild(player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT),
-                        GuildApi.getGuild(server, handler.guildName()).orElseThrow()));
+                    GP_CHANNEL.serverHandle(player).send(OwnGuildMenuPacket.createFromGuild(player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT),
+                            GuildApi.getGuild(server, handler.guildName()).orElseThrow()));
+                } else {
+                    player.sendMessageToClient(Text.translatable("guildedparties.banned"), true);
+                }
             } else {
                 player.sendMessageToClient(Text.translatable("guildedparties.guild_is_private",
                         handler.guildName()), true);

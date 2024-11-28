@@ -2,6 +2,7 @@ package keno.guildedparties.utils;
 
 import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.guilds.Guild;
+import keno.guildedparties.data.guilds.GuildBanList;
 import keno.guildedparties.data.guilds.GuildSettings;
 import keno.guildedparties.data.player.Member;
 import keno.guildedparties.server.StateSaverAndLoader;
@@ -97,5 +98,11 @@ public class GuildApi {
         if (!state.doesGuildHaveSettings(guildName)) return GuildSettings.getDefaultSettings();
 
         return state.getSettings(guildName);
+    }
+
+    public static GuildBanList getBanList(MinecraftServer server, String guildName) {
+        StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
+
+        return state.getBanlist(guildName);
     }
 }

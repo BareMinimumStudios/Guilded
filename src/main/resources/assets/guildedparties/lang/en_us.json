@@ -145,5 +145,7 @@
     "The description of '",
     {"index": 0},
     "' has been changed successfully"
-  ]
+  ],
+  "guildedparties.banned": "You were banned from this guild",
+  "guildedparties.player_is_banned": "This player was banned from the guild"
 }
