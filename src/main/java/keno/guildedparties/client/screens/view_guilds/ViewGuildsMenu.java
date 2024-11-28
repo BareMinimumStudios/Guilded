@@ -50,7 +50,7 @@ public class ViewGuildsMenu extends BaseUIModelScreen<FlowLayout> {
                         "number-of-members", String.valueOf(info.members)));
 
         layout.childById(ButtonComponent.class, "view-button")
-                .onPress(button -> this.client.setScreen(new ViewGuildMenu(info.guildName(), info.guildName(), info.members(),
+                .onPress(button -> this.client.setScreen(new ViewGuildMenu(info.guildName(), info.leaderName(), info.members(),
                         info.description(), this.isPlayerInGuild, false)));
 
         return layout;
