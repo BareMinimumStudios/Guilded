@@ -32,7 +32,7 @@ public class GuildmateManagementCommands {
                             server.getPlayerManager().broadcast(Text.of(message), false);
 
                             StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
-                            state.getGuild(oldLeaderData.getGuildKey()).demoteMember(oldLeader);
+                            state.getGuild(oldLeaderData.getGuildKey()).demoteMember(server, oldLeader.getGameProfile().getName());
                             int status = state.getGuild(oldLeaderData.getGuildKey()).changeMemberRank(newLeader, oldLeaderData.getRank());
                             state.markDirty();
                             return status;
@@ -129,7 +129,7 @@ public class GuildmateManagementCommands {
                         StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
                         GuildSettings settings = state.getSettings(playerData.getGuildKey());
                         if (playerRank.priority() > senderRank.priority() && senderRank.priority() <= settings.managePlayerRankPriority()) {
-                            int status = state.getGuild(playerData.getGuildKey()).demoteMember(player);
+                            int status = state.getGuild(playerData.getGuildKey()).demoteMember(server, player.getGameProfile().getName());
                             state.markDirty();
                             if (status == 0) {
                                 sender.sendMessageToClient(Text.of("Could not demote player"), true);

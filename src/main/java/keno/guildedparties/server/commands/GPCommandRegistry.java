@@ -146,6 +146,18 @@ public class GPCommandRegistry {
                     .executes(GuildSettingCommands::changeGuildPrivacySetting)
                     .build();
 
+            LiteralCommandNode<ServerCommandSource> managePlayerRankNode = CommandManager.literal("managePlayerRank")
+                    .build();
+
+            CommandNode<ServerCommandSource> managePlayerRankPriorityNode = CommandManager
+                    .argument("managePlayerRankPriority", IntegerArgumentType.integer(1, 50))
+                    .executes(GuildSettingCommands::changeManagePlayerRankPriority)
+                    .build();
+
+            LiteralCommandNode<ServerCommandSource> standDownNode = CommandManager.literal("standdown")
+                    .executes(GuildmateManagementCommands::standDownCommand)
+                    .build();
+
             // Command registry
             boolean enableServerCommands = isDedicated ? GPServer.CONFIG.enableServerCommands()
                     : GuildedParties.CONFIG.enableServerCommands();
@@ -221,6 +233,11 @@ public class GPCommandRegistry {
                 managementRootNode.addChild(settingsNode);
                 settingsNode.addChild(privacyNode);
                 privacyNode.addChild(setPrivacyNode);
+
+                settingsNode.addChild(managePlayerRankNode);
+                managePlayerRankNode.addChild(managePlayerRankPriorityNode);
+
+                managementRootNode.addChild(standDownNode);
             }
         });
     }
