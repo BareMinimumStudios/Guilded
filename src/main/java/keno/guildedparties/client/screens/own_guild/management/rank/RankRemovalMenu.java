@@ -42,7 +42,7 @@ public class RankRemovalMenu extends BaseUIModelScreen<FlowLayout> {
         if (!this.elementsLoaded) {
             int i = 0;
             for (Rank rank : this.ranks) {
-                if (!rank.name().equals("Recruit")) {
+                if (!rank.name().equals("Recruit") && !rank.isCoLeader()) {
                     this.uiAdapter.rootComponent.childById(FlowLayout.class, "rank-list")
                             .child(getRankElement(rank, i++));
                 }

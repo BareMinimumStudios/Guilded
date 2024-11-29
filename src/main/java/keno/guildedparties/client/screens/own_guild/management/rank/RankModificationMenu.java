@@ -57,7 +57,7 @@ public class RankModificationMenu extends BaseUIModelScreen<FlowLayout> {
         if (!elementsLoaded) {
             int i = 0;
             for (Rank rank : this.ranks) {
-                if (!rank.name().equals("Recruit")) {
+                if (!rank.name().equals("Recruit") && !rank.isCoLeader()) {
                     this.uiAdapter.rootComponent.childById(FlowLayout.class, "rank-container")
                             .child(getRankElement(rank, i++));
                 }

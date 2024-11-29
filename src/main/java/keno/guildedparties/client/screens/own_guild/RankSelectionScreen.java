@@ -79,7 +79,7 @@ public class RankSelectionScreen<R extends Record> extends BaseUIModelScreen<Flo
         if (!this.elementsLoaded) {
             int i = 0;
             for (Rank rank : ranks) {
-                if (!rank.name().equals("Recruit")) {
+                if (!rank.name().equals("Recruit") && !rank.isCoLeader()) {
                     this.ranksContainer.child(getRankSelectionElement(rank, i++));
                 }
             }
