@@ -95,7 +95,13 @@ public class StateSaverAndLoader extends PersistentState {
 
     public void addGuild(Guild guild) {
         if (!this.guilds.containsKey(guild.getName())) {
-            this.guilds.put(guild.getName(), guild);
+            addGuild(guild, guild.getName());
+        }
+    }
+
+    public void addGuild(Guild guild, String guildName) {
+        if (!this.guilds.containsKey(guildName)) {
+            this.guilds.put(guildName, guild);
         }
     }
 

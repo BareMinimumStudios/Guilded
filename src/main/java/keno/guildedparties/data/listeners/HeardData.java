@@ -5,6 +5,7 @@ import keno.guildedparties.data.guilds.GuildSettings;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /** Any data that's been "heard" (collected from resource listeners) are stored here for use*/
 public class HeardData {
@@ -13,6 +14,10 @@ public class HeardData {
 
     public static HashMap<String, Guild> getGuilds() {
         return guilds;
+    }
+
+    public static Set<String> getGuildNames() {
+        return guilds.keySet();
     }
 
     /** Loads the hashmap containing

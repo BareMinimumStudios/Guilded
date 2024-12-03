@@ -11,10 +11,8 @@ import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.message.v1.ServerMessageDecoratorEvent;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
-import net.minecraft.resource.ResourceType;
 
 import java.util.List;
 
@@ -23,16 +21,11 @@ public class GPServer implements DedicatedServerModInitializer {
 
     @Override
     public void onInitializeServer() {
-        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new GuildResourceListener());
-        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new GuildSettingsResourceListener());
-
-        ServerLifecycleEvents.SERVER_STARTED.register(GuildedParties::fillPersistentState);
         ServerPlayConnectionEvents.JOIN.register(GuildedParties::syncAndInitializePlayerData);
 
         ServerMessageDecoratorEvent.EVENT.register(ServerMessageDecoratorEvent.STYLING_PHASE, GuildedParties::addGuildNote);
 
         GPCommandRegistry.init(true);
-        GPNetworking.init();
         initializeCompatEntrypoint();
     }
 

@@ -53,6 +53,10 @@ public class Guild {
 
     public Guild(String name, Map<String, Rank> playerMap, List<Rank> ranks, String description) {
         this.name = name;
+        Rank recruit = new Rank("Recruit", 50);
+        if (!ranks.contains(recruit)) {
+            this.ranks.add(recruit);
+        }
         this.ranks.addAll(ranks);
         for (String playerName : playerMap.keySet()) {
             this.players.put(playerName, playerMap.get(playerName));
