@@ -54,14 +54,15 @@ public class RankAdditionMenu extends BaseUIModelScreen<FlowLayout> {
                         }
                     }
 
+                    if (!canAddRank) {
+                        return;
+                    }
+
                     if (!this.hasSliderBeenMoved) {
                         this.rankPriority = MathUtil.denormalizeValues(this.rankPriority, 1d, 50d);
                     }
-
-                    if (canAddRank) {
-                        GPNetworking.GP_CHANNEL.clientHandle().send(new AddRankPacket(guildName, rankName, (int) rankPriority));
-                        this.client.setScreen(null);
-                    }
+                    GPNetworking.GP_CHANNEL.clientHandle().send(new AddRankPacket(guildName, rankName, (int) rankPriority));
+                    this.client.setScreen(null);
                 });
     }
 }
