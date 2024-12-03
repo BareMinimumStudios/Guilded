@@ -8,6 +8,8 @@ import io.wispforest.endec.Endec;
 import io.wispforest.endec.impl.StructEndecBuilder;
 import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.player.Member;
+import keno.guildedparties.networking.GPNetworking;
+import keno.guildedparties.networking.packets.clientbound.KickedFromMenuPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -225,6 +227,7 @@ public class Guild {
             if (player != null) {
                 if (player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
                     player.removeAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
+                    GPNetworking.GP_CHANNEL.serverHandle(player).send(new KickedFromMenuPacket());
                 }
             }
         }

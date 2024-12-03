@@ -40,6 +40,7 @@ public class GPNetworking {
         GP_CHANNEL.registerClientboundDeferred(ViewGuildsPacket.class,
                 ViewGuildsPacket.endec.structOf("view_guilds"));
 
+        GP_CHANNEL.registerClientboundDeferred(KickedFromMenuPacket.class);
 
         GP_CHANNEL.registerServerbound(DoesPlayerHaveGuildPacket.class, (handler, access) -> {
             ServerPlayerEntity player = access.player();

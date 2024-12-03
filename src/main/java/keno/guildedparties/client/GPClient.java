@@ -76,5 +76,10 @@ public class GPClient implements ClientModInitializer {
             MinecraftClient client = access.runtime();
             client.setScreen(new ViewGuildsMenu(packet.infos(), packet.isInGuild()));
         });
+
+        GPNetworking.GP_CHANNEL.registerClientbound(KickedFromMenuPacket.class, (packet, access) -> {
+            MinecraftClient client = access.runtime();
+            client.setScreen(null);
+        });
     }
 }
