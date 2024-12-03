@@ -21,6 +21,9 @@ public class RankAdditionMenu extends BaseUIModelScreen<FlowLayout> {
     private String rankName = "";
     private double rankPriority = MathUtil.normalizeValues(20, 1, 50);
 
+    //Lets us know if we should de-normalize rankPriority or not
+    private boolean hasSliderBeenMoved = false;
+
     public RankAdditionMenu(String guildName, List<Rank> ranks) {
         super(FlowLayout.class, DataSource.asset(GuildedParties.GPLoc("rank_addition_ui")));
         this.guildName = guildName;
@@ -34,8 +37,10 @@ public class RankAdditionMenu extends BaseUIModelScreen<FlowLayout> {
 
         flowLayout.childById(DiscreteSliderComponent.class, "rank-priority")
                 .value(rankPriority)
-                .onChanged().subscribe(value
-                        -> this.rankPriority = value);
+                .onChanged().subscribe(value ->{
+                    this.rankPriority = value;
+                    this.hasSliderBeenMoved = true;
+                });
 
         flowLayout.childById(ButtonComponent.class, "confirm-button")
                 .onPress(button -> {
@@ -47,6 +52,10 @@ public class RankAdditionMenu extends BaseUIModelScreen<FlowLayout> {
                             this.client.player.sendMessage(Text.translatable("guildedparties.rank_cannot_be_add"), true);
                             break;
                         }
+                    }
+
+                    if (!this.hasSliderBeenMoved) {
+                        this.rankPriority = MathUtil.denormalizeValues(this.rankPriority, 1d, 50d);
                     }
 
                     if (canAddRank) {

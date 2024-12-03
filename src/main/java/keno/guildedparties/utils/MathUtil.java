@@ -2,7 +2,7 @@ package keno.guildedparties.utils;
 
 public class MathUtil {
     public static double denormalizeValues(double normalizedValue, double min, double max) {
-        return normalizedValue * (max - min) - min;
+        return normalizedValue * (max - min) + min;
     }
 
     public static double denormalizeValues(float normalizedValue, float min, float max) {
