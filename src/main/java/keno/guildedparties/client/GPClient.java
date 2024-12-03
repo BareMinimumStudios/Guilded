@@ -2,10 +2,10 @@ package keno.guildedparties.client;
 
 import keno.guildedparties.client.compat.GuildedClientCompatEntrypoint;
 import keno.guildedparties.client.screens.GuildedMenuScreen;
-import keno.guildedparties.client.screens.view_guilds.ViewGuildsMenu;
 import keno.guildedparties.client.screens.own_guild.InvitablePlayersScreen;
 import keno.guildedparties.client.screens.own_guild.OwnGuildMenu;
 import keno.guildedparties.client.screens.own_guild.management.GuildSettingsMenu;
+import keno.guildedparties.client.screens.view_guilds.ViewGuildsMenu;
 import keno.guildedparties.networking.GPNetworking;
 import keno.guildedparties.networking.packets.clientbound.*;
 import keno.guildedparties.networking.packets.serverbound.DoesPlayerHaveGuildPacket;

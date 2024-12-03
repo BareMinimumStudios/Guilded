@@ -1,6 +1,6 @@
 package keno.guildedparties.data.listeners;
 
-import com.google.gson.*;
+import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.data.guilds.Guild;

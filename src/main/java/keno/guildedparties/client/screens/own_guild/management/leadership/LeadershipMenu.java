@@ -8,7 +8,6 @@ import keno.guildedparties.client.screens.ActionConfirmScreen;
 import keno.guildedparties.data.guilds.Rank;
 import keno.guildedparties.networking.packets.serverbound.DisbandGuildPacket;
 
-import java.util.List;
 import java.util.Map;
 
 public class LeadershipMenu extends BaseUIModelScreen<FlowLayout> {

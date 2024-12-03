@@ -13,7 +13,10 @@ import keno.guildedparties.networking.packets.clientbound.KickedFromMenuPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /** The object that stores a guild's members, name, and ranks */
 @SuppressWarnings("UnstableApiUsage")

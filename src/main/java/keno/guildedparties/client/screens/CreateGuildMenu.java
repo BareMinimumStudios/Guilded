@@ -6,7 +6,6 @@ import io.wispforest.owo.ui.component.TextBoxComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.networking.packets.serverbound.CreateGuildPacket;
-import net.minecraft.text.Text;
 
 public class CreateGuildMenu extends BaseUIModelScreen<FlowLayout> {
     private String guildName = "";

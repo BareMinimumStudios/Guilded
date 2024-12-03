@@ -18,7 +18,10 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /** We will be using OwoLib's networking API due to the limitation and complexity of FAPI's networking */
 @SuppressWarnings({"UnstableApiUsage", "DataFlowIssue"})
