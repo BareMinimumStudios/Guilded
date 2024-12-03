@@ -255,7 +255,7 @@ public class Guild {
     }
 
     public int addRank(Rank rank) {
-        if (!this.ranks.contains(rank)) {
+        if (this.ranks.stream().noneMatch(currentRank -> currentRank.name().equals(rank.name()))) {
             this.ranks.add(rank);
             sortRanks();
             return 1;

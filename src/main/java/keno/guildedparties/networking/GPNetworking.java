@@ -480,7 +480,7 @@ public class GPNetworking {
     public static boolean isSenderHigherPriorityThanPlayer(ServerPlayerEntity sender,
                                                  String playerName) {
         Member senderData = sender.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
-        Rank playerData = GuildApi.getGuild(sender).orElseThrow().getRank(playerName);
+        Rank playerData = GuildApi.getGuild(sender).orElseThrow().getPlayerRank(playerName);
         boolean areThey = playerData.priority() > senderData.getRank().priority();
 
         if (!areThey) {
