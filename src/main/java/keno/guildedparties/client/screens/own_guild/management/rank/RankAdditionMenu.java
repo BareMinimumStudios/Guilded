@@ -61,6 +61,7 @@ public class RankAdditionMenu extends BaseUIModelScreen<FlowLayout> {
                     if (!this.hasSliderBeenMoved) {
                         this.rankPriority = MathUtil.denormalizeValues(this.rankPriority, 1d, 50d);
                     }
+
                     GPNetworking.GP_CHANNEL.clientHandle().send(new AddRankPacket(guildName, rankName, (int) rankPriority));
                     this.client.setScreen(null);
                 });
