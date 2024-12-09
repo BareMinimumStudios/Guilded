@@ -29,19 +29,19 @@ public class GPNetworking {
     public static final OwoNetChannel GP_CHANNEL = OwoNetChannel.create(GuildedParties.GPLoc("gp_channel"));
     // This is currently unused, but will be once guild shops are added
     public static final OwoNetChannel GP_SHOPS_CHANNEL = OwoNetChannel.create(GuildedParties.GPLoc("gp_shops_channel"));
+    //TODO Move GCs to their own chat menu
+    public static final OwoNetChannel GP_CHAT_CHANNEL = OwoNetChannel.create(GuildedParties.GPLoc("gp_chat_channel"));
 
     public static void init() {
-        GP_CHANNEL.registerClientboundDeferred(GuildedMenuPacket.class, GuildedMenuPacket.endec.structOf("open_guilded_menu_packet"));
+        GP_CHANNEL.registerClientboundDeferred(GuildedMenuPacket.class, GuildedMenuPacket.endec);
 
-        GP_CHANNEL.registerClientboundDeferred(OwnGuildMenuPacket.class, OwnGuildMenuPacket.endec.structOf("own_guild_menu_packet"));
+        GP_CHANNEL.registerClientboundDeferred(OwnGuildMenuPacket.class, OwnGuildMenuPacket.endec);
 
         GP_CHANNEL.registerClientboundDeferred(InvitePlayersMenuPacket.class);
 
-        GP_CHANNEL.registerClientboundDeferred(GuildSettingsMenuPacket.class,
-                GuildSettingsMenuPacket.endec.structOf("guild_settings_menu"));
+        GP_CHANNEL.registerClientboundDeferred(GuildSettingsMenuPacket.class, GuildSettingsMenuPacket.endec);
 
-        GP_CHANNEL.registerClientboundDeferred(ViewGuildsPacket.class,
-                ViewGuildsPacket.endec.structOf("view_guilds"));
+        GP_CHANNEL.registerClientboundDeferred(ViewGuildsPacket.class, ViewGuildsPacket.endec);
 
         GP_CHANNEL.registerClientboundDeferred(KickedFromMenuPacket.class);
 
@@ -111,7 +111,7 @@ public class GPNetworking {
             }
         });
 
-        GP_CHANNEL.registerServerbound(ChangePlayerRankPacket.class, ChangePlayerRankPacket.endec.structOf("change_player_rank"), (handler, access) -> {
+        GP_CHANNEL.registerServerbound(ChangePlayerRankPacket.class, ChangePlayerRankPacket.endec, (handler, access) -> {
             MinecraftServer server = access.runtime();
             ServerPlayerEntity sender = access.player();
 
@@ -251,7 +251,7 @@ public class GPNetworking {
             }
         });
 
-        GP_CHANNEL.registerServerbound(RemoveRankPacket.class, RemoveRankPacket.endec.structOf("remove_rank_packet"), (handler, access)
+        GP_CHANNEL.registerServerbound(RemoveRankPacket.class, RemoveRankPacket.endec, (handler, access)
                 -> {
             MinecraftServer server = access.runtime();
             ServerPlayerEntity sender = access.player();
@@ -290,7 +290,7 @@ public class GPNetworking {
             }
         });
 
-        GP_CHANNEL.registerServerbound(ModifyRankPacket.class, ModifyRankPacket.endec.structOf("modify_rank_packet"), (handler, access) -> {
+        GP_CHANNEL.registerServerbound(ModifyRankPacket.class, ModifyRankPacket.endec, (handler, access) -> {
             MinecraftServer server = access.runtime();
             ServerPlayerEntity player = access.player();
             GuildSettings settings = GuildApi.getSettings(server, handler.guildName());

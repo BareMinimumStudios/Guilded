@@ -74,10 +74,10 @@ processResources {
 	inputs.property "mod_version", project.version
 	inputs.property "minecraft", stonecutter.current.version
 
+	def map = [mod_version: project.version, minecraft: stonecutter.current.version]
 
 	filesMatching("fabric.mod.json") {
-		expand "mod_version": project.version
-		expand "minecraft": stonecutter.current.version
+		expand map
 	}
 }
 
