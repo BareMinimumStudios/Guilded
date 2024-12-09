@@ -1,6 +1,7 @@
 plugins {
 	id 'fabric-loom' version '1.8-SNAPSHOT'
 	id 'maven-publish'
+	id "me.modmuss50.mod-publish-plugin" version "0.8.1"
 }
 
 version = property("mod_version")
@@ -98,6 +99,30 @@ java {
 jar {
 	from("LICENSE") {
 		rename { "${it}_${project.base.archivesName.get()}"}
+	}
+}
+
+publishMods {
+	file = remapJar.archiveFile
+	type = ALPHA
+	modLoaders.add("fabric")
+
+	displayName = "${archives_base_name}-${project.version}-${stonecutter.current.version}"
+
+	modrinth {
+		accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+		projectId = "lGV5ilon"
+		minecraftVersions.add("${stonecutter.current.version}")
+
+		requires("owo-lib", "fabric-api")
+	}
+
+	curseforge {
+		accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+		projectId = "1149661"
+		minecraftVersions.add("${stonecutter.current.version}")
+
+		requires("owo-lib", "fabric-api")
 	}
 }
 
