@@ -10,8 +10,8 @@ import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 //? if < 1.21.3 {
- import net.minecraft.util.profiler.Profiler;
-//?}
+ /*import net.minecraft.util.profiler.Profiler;
+*///?}
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -48,18 +48,18 @@ public class GuildResourceListener implements SimpleResourceReloadListener<Map<S
     }
 
     //? if >=1.21.3 {
-    /*@Override
+    @Override
     public CompletableFuture<Map<String, Guild>> load(ResourceManager manager, Executor executor) {
         return loadData(manager, executor);
     }
-    *///?}
+    //?}
 
     //? if >=1.21.3 {
-    /*@Override
+    @Override
     public CompletableFuture<Void> apply(Map<String, Guild> data, ResourceManager manager, Executor executor) {
         return applyData(data, executor);
     }
-    *///?}
+    //?}
 
     @Override
     public Identifier getFabricId() {
@@ -67,16 +67,16 @@ public class GuildResourceListener implements SimpleResourceReloadListener<Map<S
     }
 
     //? if <1.21.3 {
-    @Override
+    /*@Override
     public CompletableFuture<Map<String, Guild>> load(ResourceManager resourceManager, Profiler profiler, Executor executor) {
         return loadData(resourceManager, executor);
     }
-    //?}
+    *///?}
 
     //? if <1.21.3 {
-    @Override
+    /*@Override
     public CompletableFuture<Void> apply(Map<String, Guild> stringGuildMap, ResourceManager resourceManager, Profiler profiler, Executor executor) {
         return applyData(stringGuildMap, executor);
     }
-     //?}
+     *///?}
 }
