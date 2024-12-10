@@ -469,6 +469,12 @@ public class GPNetworking {
                     return;
                 }
 
+                if (GuildApi.getSettings(player.getServer(), guildName).isPrivate()) {
+                    player.sendMessageToClient(Text.translatable("guildedparties.guild_is_private",
+                            guildName), false);
+                    return;
+                }
+
                 GuildApi.addPlayerToGuild(player, guildName);
                 GP_CHANNEL.serverHandle(player).send(new KickedFromMenuPacket());
             }
