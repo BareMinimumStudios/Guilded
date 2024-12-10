@@ -12,4 +12,7 @@ public class GPConfigModel {
     @RestartRequired
     @Sync(Option.SyncMode.OVERRIDE_CLIENT)
     public boolean enableServerCommands = false;
+
+    @Sync(Option.SyncMode.INFORM_SERVER)
+    public String guildToQuickJoin = "";
 }

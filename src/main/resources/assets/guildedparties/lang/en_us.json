@@ -116,10 +116,8 @@
     "' has ",
     {"text": "disbanded", "color": "red"}
   ],
-  "text.config.gp-config.option.guildToAutoJoin": "Guild To Auto-join",
-  "text.config.gp-config.option.guildToAutoJoin.tooltip": "Lets you auto-join a guild on a server, if present. \n(You will be a recruit)",
-  "text.config.gp-config.option.wantsToAutoJoinGuild": "Should Auto-Join guild",
-  "text.config.gp-config.option.wantsToAutoJoinGuild.tooltip": "Determines if the player wants to auto-join a \nclient-referenced guild (see 'Guild To Auto-join')",
+  "text.config.gp-config.option.guildToQuickJoin": "Guild To quick-join",
+  "text.config.gp-config.option.guildToQuickJoin.tooltip": "Lets you quick-join a guild on a server, if present. \nOnce set, press the quick-join button in the guilded menu(You will be a recruit)",
   "guildedparties.guild_was_created": [
     "The guild '",
     {"index": 0},
@@ -147,5 +145,7 @@
     "' has been changed successfully"
   ],
   "guildedparties.banned": "You were banned from this guild",
-  "guildedparties.player_is_banned": "This player was banned from the guild"
+  "guildedparties.player_is_banned": "This player was banned from the guild",
+  "gui.guildedparties.quick_join": "Quick-Join",
+  "guildedparties.guild_doesnt_exist": "This guild doesn't exist"
 }

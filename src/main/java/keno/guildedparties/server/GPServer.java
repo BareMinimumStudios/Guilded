@@ -1,7 +1,6 @@
 package keno.guildedparties.server;
 
 import keno.guildedparties.GuildedParties;
-import keno.guildedparties.config.GPServerConfig;
 import keno.guildedparties.server.commands.GPCommandRegistry;
 import keno.guildedparties.server.compat.ServerGuildedCompatEntrypoint;
 import net.fabricmc.api.DedicatedServerModInitializer;
@@ -13,15 +12,13 @@ import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import java.util.List;
 
 public class GPServer implements DedicatedServerModInitializer {
-    public static final GPServerConfig CONFIG = GPServerConfig.createAndLoad();
-
     @Override
     public void onInitializeServer() {
         ServerPlayConnectionEvents.JOIN.register(GuildedParties::syncAndInitializePlayerData);
 
         ServerMessageDecoratorEvent.EVENT.register(ServerMessageDecoratorEvent.STYLING_PHASE, GuildedParties::addGuildNote);
 
-        GPCommandRegistry.init(true);
+        GPCommandRegistry.init();
         initializeCompatEntrypoint();
     }
 

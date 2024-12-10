@@ -51,7 +51,7 @@ public class GuildedParties implements ModInitializer {
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new GuildSettingsResourceListener());
 		
 		GPAttachmentTypes.init();
-		GPCommandRegistry.init(false);
+		GPCommandRegistry.init();
 
 		GPNetworking.init();
 
@@ -60,6 +60,7 @@ public class GuildedParties implements ModInitializer {
 
 		ServerMessageDecoratorEvent.EVENT.register(ServerMessageDecoratorEvent.STYLING_PHASE, GuildedParties::addGuildNote);
 
+		// This lets 3rd-party mods add compatibility to Guilded Parties more simplistically
 		initializeCompatEntrypoint();
 	}
 

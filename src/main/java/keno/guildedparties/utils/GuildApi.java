@@ -78,6 +78,16 @@ public class GuildApi {
         return Optional.of(state.getGuild(guildName));
     }
 
+    public static boolean doesGuildExist(MinecraftServer server, String name) {
+        StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
+
+        return state.hasGuild(name);
+    }
+
+    public static boolean doesGuildExist(ServerPlayerEntity player, String name) {
+        return doesGuildExist(player.getServer(), name);
+    }
+
     /** Overload of GuildUtils#getGuild that uses a ServerPlayerEntity instead for simplicity
      * @param player The player to retrieve a guild object from, via their Member data
      * @see Member
@@ -104,5 +114,10 @@ public class GuildApi {
         StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
 
         return state.getBanlist(guildName);
+    }
+
+    public static void addPlayerToGuild(ServerPlayerEntity player, String guildName) {
+        modifyGuildPersistentState(player.getServer(), state ->
+                state.getGuild(guildName).addPlayerToGuild(player, "Recruit"));
     }
 }

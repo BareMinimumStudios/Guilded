@@ -1,6 +1,7 @@
 package keno.guildedparties.networking;
 
 
+import io.wispforest.owo.config.ConfigSynchronizer;
 import io.wispforest.owo.network.OwoNetChannel;
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.client.screens.view_guilds.ViewGuildsMenu;
@@ -18,10 +19,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /** We will be using OwoLib's networking API due to the limitation and complexity of FAPI's networking */
 @SuppressWarnings({"UnstableApiUsage", "DataFlowIssue"})
@@ -451,6 +449,28 @@ public class GPNetworking {
 
                 player.sendMessageToClient(Text.translatable("guildedparties.guild_description_changed",
                         handler.guildName()), false);
+            }
+        });
+
+        GP_CHANNEL.registerServerbound(QuickJoinPacket.class, (handler, access) -> {
+            var obj = ConfigSynchronizer.getClientOptions(access.player(), "gp-config")
+                    .get(GuildedParties.CONFIG.keys.guildToQuickJoin);
+
+            if (obj instanceof String guildName) {
+                ServerPlayerEntity player = access.player();
+
+                if (player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
+                    player.sendMessageToClient(Text.translatable("guildedparties.already_in_guild"), false);
+                    return;
+                }
+
+                if (!GuildApi.doesGuildExist(player, guildName)) {
+                    player.sendMessageToClient(Text.translatable("guildedparties.guild_doesnt_exist"), false);
+                    return;
+                }
+
+                GuildApi.addPlayerToGuild(player, guildName);
+                GP_CHANNEL.serverHandle(player).send(new KickedFromMenuPacket());
             }
         });
     }
