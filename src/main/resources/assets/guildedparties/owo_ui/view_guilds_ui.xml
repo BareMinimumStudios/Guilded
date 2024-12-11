@@ -11,7 +11,7 @@
                         <vertical method="fill">10</vertical>
                     </sizing>
 
-                    <positioning type="relative">10,5</positioning>
+                    <positioning type="relative">15,11</positioning>
                 </button>
 
                 <label>

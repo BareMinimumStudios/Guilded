@@ -5,6 +5,9 @@ import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.client.screens.ActionConfirmScreen;
+import keno.guildedparties.networking.GPNetworking;
+import keno.guildedparties.networking.packets.clientbound.ViewGuildsPacket;
+import keno.guildedparties.networking.packets.serverbound.GetGuildInfosPacket;
 import keno.guildedparties.networking.packets.serverbound.JoinGuildPacket;
 
 import java.util.Map;
@@ -32,6 +35,9 @@ public class ViewGuildMenu extends BaseUIModelScreen<FlowLayout> {
 
     @Override
     protected void build(FlowLayout flowLayout) {
+        flowLayout.childById(ButtonComponent.class, "back")
+                .onPress(button -> GPNetworking.GP_CHANNEL.clientHandle().send(new GetGuildInfosPacket()));
+
         flowLayout.childById(ButtonComponent.class, "join-button")
                 .active(!isInGuild && !isPrivate).onPress(button
                         -> this.client.setScreen(new ActionConfirmScreen<>("join this guild",
