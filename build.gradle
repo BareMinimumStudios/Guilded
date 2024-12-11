@@ -27,13 +27,6 @@ repositories {
 	maven { url 'https://maven.wispforest.io/releases/' }
 }
 
-sourceSets {
-	testmod {
-		runtimeClasspath += main.runtimeClasspath
-		compileClasspath += main.compileClasspath
-	}
-}
-
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${stonecutter.current.project}"
@@ -44,30 +37,12 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${property('fabric_version')}"
 	annotationProcessor(modImplementation "io.wispforest:owo-lib:${property('owo_version')}")
 	include "io.wispforest:owo-sentinel:${property('owo_version')}"
-
-	testmodImplementation sourceSets.main.output
-	testmodAnnotationProcessor sourceSets.main.output
 }
 
 loom {
 	runConfigs.all {
 		ideConfigGenerated true // Run configurations are not created for subprojects by default
 		runDir "../../run" // Use a shared run folder and create separate worlds
-	}
-	runs {
-		testmodClient {
-			client()
-			ideConfigGenerated project.rootProject == project
-			name = "Testmod Client"
-			source sourceSets.testmod
-		}
-
-		testmodServer {
-			server()
-			ideConfigGenerated project.rootProject == project
-			name = "Testmod Server"
-			source sourceSets.testmod
-		}
 	}
 }
 
@@ -130,7 +105,7 @@ publishMods {
 publishing {
 	publications {
 		create("mavenJava", MavenPublication) {
-			artifactId = project.archives_base_name
+			artifactId = "${project.archives_base_name}-${project.version}-${stonecutter.current.version}"
 			from components.java
 		}
 	}
