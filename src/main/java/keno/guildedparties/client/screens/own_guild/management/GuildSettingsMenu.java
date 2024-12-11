@@ -24,15 +24,10 @@ public class GuildSettingsMenu extends BaseUIModelScreen<FlowLayout> {
         this.guildName = guildName;
 
         this.isGuildPrivate = currentSettings.isPrivate();
-        // Because of how values are handled in discrete sliders, we need to normalize our setting values before setting them as defaults
-        this.managePlayerRankPriority = normalizeValues(currentSettings.managePlayerRankPriority());
-        this.managePlayerPriority = normalizeValues(currentSettings.managePlayerPriority());
-        this.manageGuildPriority = normalizeValues(currentSettings.manageGuildPriority());
-        this.invitePlayersPriority = normalizeValues(currentSettings.invitePlayersPriority());
-    }
-
-    private static double normalizeValues(int value) {
-        return MathUtil.normalizeValues(value, 1, 50);
+        this.managePlayerRankPriority = currentSettings.managePlayerRankPriority();
+        this.managePlayerPriority = currentSettings.managePlayerPriority();
+        this.manageGuildPriority = currentSettings.manageGuildPriority();
+        this.invitePlayersPriority = currentSettings.invitePlayersPriority();
     }
 
     @Override
@@ -42,20 +37,20 @@ public class GuildSettingsMenu extends BaseUIModelScreen<FlowLayout> {
                 .subscribe(changed -> this.isGuildPrivate = !this.isGuildPrivate);
 
         flowLayout.childById(DiscreteSliderComponent.class, "player-rank-priority-slider")
-                .value(this.managePlayerRankPriority).onChanged()
-                .subscribe(value -> this.managePlayerRankPriority = (int) value);
+                .setFromDiscreteValue(this.managePlayerRankPriority).onChanged()
+                .subscribe(value -> this.managePlayerRankPriority = value);
 
         flowLayout.childById(DiscreteSliderComponent.class, "manage-player-priority-slider")
-                .value(this.managePlayerPriority).onChanged()
-                .subscribe(value -> this.managePlayerPriority = (int) value);
+                .setFromDiscreteValue(this.managePlayerPriority).onChanged()
+                .subscribe(value -> this.managePlayerPriority = value);
 
         flowLayout.childById(DiscreteSliderComponent.class, "manage-guild-priority-slider")
-                .value(this.manageGuildPriority).onChanged()
-                .subscribe(value -> this.manageGuildPriority = (int) value);
+                .setFromDiscreteValue(this.manageGuildPriority).onChanged()
+                .subscribe(value -> this.manageGuildPriority = value);
 
         flowLayout.childById(DiscreteSliderComponent.class, "invite-players-priority-slider")
-                .value(this.invitePlayersPriority).onChanged()
-                .subscribe(value -> this.invitePlayersPriority = (int) value);
+                .setFromDiscreteValue(this.invitePlayersPriority).onChanged()
+                .subscribe(value -> this.invitePlayersPriority = value);
 
         flowLayout.childById(ButtonComponent.class, "confirm-button")
                 .onPress(button -> {

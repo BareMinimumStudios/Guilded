@@ -148,5 +148,7 @@
   "guildedparties.player_is_banned": "This player was banned from the guild",
   "gui.guildedparties.quick_join": "Quick-Join",
   "guildedparties.guild_doesnt_exist": "This guild doesn't exist",
-  "gui.guildedparties.back": "Back"
+  "gui.guildedparties.back": "Back",
+  "gui.guildedparties.guild_name": "Guild name",
+  "gui.guildedparties.leader_role_name": "Leader role name"
 }

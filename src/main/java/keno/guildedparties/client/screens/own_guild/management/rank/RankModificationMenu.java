@@ -26,6 +26,8 @@ public class RankModificationMenu extends BaseUIModelScreen<FlowLayout> {
     private int newRankPriority;
     private String newRankName = "No rank selected";
 
+    private boolean hasRankPriorityChanged = false;
+
     public RankModificationMenu(String guildName, List<Rank> ranks) {
         super(FlowLayout.class, DataSource.asset(GuildedParties.GPLoc("rank_modification_ui")));
         this.guildName = guildName;
@@ -40,12 +42,21 @@ public class RankModificationMenu extends BaseUIModelScreen<FlowLayout> {
 
         flowLayout.childById(DiscreteSliderComponent.class, "rank-priority")
                 .value(1)
-                .onChanged().subscribe(value -> this.newRankPriority = (int) value);
+                .onChanged().subscribe(value -> {
+                    this.newRankPriority = (int) value;
+                    this.hasRankPriorityChanged = true;
+                });
 
         flowLayout.childById(ButtonComponent.class, "confirm-button")
                 .active(false)
-                .onPress(button -> this.client.setScreen(new ActionConfirmScreen<>("modify this rank",
-                        new ModifyRankPacket(this.guildName, selectedRank, new Rank(this.newRankName, this.newRankPriority)))));
+                .onPress(button -> {
+                    if (this.hasRankPriorityChanged) {
+                        this.newRankPriority = (int) MathUtil.denormalizeValues(this.newRankPriority, 1, 50);
+                    }
+
+                    this.client.setScreen(new ActionConfirmScreen<>("modify this rank",
+                            new ModifyRankPacket(this.guildName, selectedRank, new Rank(this.newRankName, this.newRankPriority))));
+                });
     }
 
     @Override
@@ -74,6 +85,8 @@ public class RankModificationMenu extends BaseUIModelScreen<FlowLayout> {
         element.childById(ButtonComponent.class, "select-rank")
                 .onPress(button -> {
                     this.selectedRank = rank;
+                    this.hasRankPriorityChanged = false;
+
                     this.uiAdapter.rootComponent.forEachDescendant(component -> {
                         if (component instanceof ButtonComponent buttonComponent) {
                             buttonComponent.active(true);
@@ -84,7 +97,7 @@ public class RankModificationMenu extends BaseUIModelScreen<FlowLayout> {
                                     .text(this.selectedRank.name());
 
                     this.uiAdapter.rootComponent.childById(DiscreteSliderComponent.class, "rank-priority")
-                                    .value(MathUtil.normalizeValues(this.selectedRank.priority(), 1, 50));
+                                    .setFromDiscreteValue(this.selectedRank.priority());
 
                     button.active(false);
                 });
