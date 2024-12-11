@@ -5,6 +5,21 @@
             <children>
                 <flow-layout direction="vertical">
                     <children>
+                        <button id="back">
+                            <text translate="true">gui.guildedparties.back</text>
+
+                            <positioning type="layout">1,0</positioning>
+
+                            <sizing>
+                                <vertical method="fill">10</vertical>
+                                <horizontal method="fill">10</horizontal>
+                            </sizing>
+
+                            <margins>
+                                <bottom>4</bottom>
+                            </margins>
+                        </button>
+
                         <text-box id="guild-name">
                             <text/>
 
@@ -32,6 +47,15 @@
                             </margins>
                         </text-box>
 
+                        <text-area id="description">
+                            <sizing>
+                                <horizontal method="fill">100</horizontal>
+                                <vertical method="content">1</vertical>
+                            </sizing>
+
+                            <max-lines>10</max-lines>
+                        </text-area>
+
                         <button id="confirm-button">
                             <text translate="true">gui.guildedparties.confirm</text>
 
@@ -45,6 +69,10 @@
                             </margins>
                         </button>
                     </children>
+
+                    <surface>
+                        <panel dark="false"/>
+                    </surface>
 
                     <padding>
                         <all>5</all>

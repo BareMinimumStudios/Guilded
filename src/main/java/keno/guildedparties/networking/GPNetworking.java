@@ -370,7 +370,7 @@ public class GPNetworking {
                     String username = player.getGameProfile().getName();
                     Map<String, Rank> playerMap = Map.of(username, leadershipRank);
                     List<Rank> ranks = List.of(leadershipRank);
-                    Guild guild = new Guild(guildName, playerMap, ranks, "none");
+                    Guild guild = new Guild(guildName, playerMap, ranks, handler.description());
 
                     GuildApi.modifyGuildPersistentState(server, state -> {
                         state.addGuild(guild);
