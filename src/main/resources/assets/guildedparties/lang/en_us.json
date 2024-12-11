@@ -147,5 +147,6 @@
   "guildedparties.banned": "You were banned from this guild",
   "guildedparties.player_is_banned": "This player was banned from the guild",
   "gui.guildedparties.quick_join": "Quick-Join",
-  "guildedparties.guild_doesnt_exist": "This guild doesn't exist"
+  "guildedparties.guild_doesnt_exist": "This guild doesn't exist",
+  "gui.guildedparties.back": "Back"
 }

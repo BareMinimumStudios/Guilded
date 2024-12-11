@@ -6,6 +6,7 @@ import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
 import keno.guildedparties.GuildedParties;
+import keno.guildedparties.client.screens.GuildedMenuScreen;
 
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,8 @@ public class ViewGuildsMenu extends BaseUIModelScreen<FlowLayout> {
 
     @Override
     protected void build(FlowLayout rootComponent) {
-
+        rootComponent.childById(ButtonComponent.class, "back")
+                .onPress(button -> this.client.setScreen(new GuildedMenuScreen(isPlayerInGuild)));
     }
 
     @Override
