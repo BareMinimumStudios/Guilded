@@ -51,7 +51,7 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
                 .alignment(HorizontalAlignment.CENTER, VerticalAlignment.CENTER)
                 .sizing(Sizing.fill(100));
 
-        this.container.child(Containers.verticalScroll(Sizing.fill(50), Sizing.fill(50), this.playerContainer)
+        this.container.child(Containers.verticalScroll(Sizing.fill(50), Sizing.fill(100), this.playerContainer)
                 .surface(Surface.VANILLA_TRANSLUCENT).alignment(HorizontalAlignment.RIGHT, VerticalAlignment.CENTER)
                 .positioning(Positioning.relative(100, 100)));
     }
@@ -75,8 +75,6 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
                 this.playerContainer.child(getGuildmateElement(this.model, username, this.players.get(username)));
             }
 
-            this.container.child(getGuildSettingsElement(this.model));
-
             this.elementsLoaded = true;
         }
     }
@@ -94,6 +92,17 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
         layout.childById(ButtonComponent.class, "invite-button").onPress(button
                 -> GPNetworking.GP_CHANNEL.clientHandle().send(new GetInvitablePlayersPacket()));
 
+        layout.childById(ButtonComponent.class, "settings-button")
+                .active(this.member.getRank().isCoLeader())
+                .onPress(button
+                        -> GPNetworking.GP_CHANNEL.clientHandle().send(new GetGuildSettingsPacket(this.member.getGuildKey())));
+
+        layout.childById(ButtonComponent.class, "management-button")
+                .active(this.member.getRank().isCoLeader())
+                .onPress(button
+                        -> this.client.setScreen(new GuildManagementMenu(this.member.getGuildKey(), this.players,
+                        this.ranks, this.summary)));
+
         return layout;
     }
 
@@ -107,23 +116,5 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
                         username, playerRank)));
 
         return guildmateElement;
-    }
-
-    public FlowLayout getGuildSettingsElement(UIModel model) {
-        FlowLayout guildSettingsElement = model.expandTemplate(FlowLayout.class, "guild-settings",
-                Map.of());
-
-        guildSettingsElement.childById(ButtonComponent.class, "settings-button")
-                .active(this.member.getRank().isCoLeader())
-                .onPress(button
-                        -> GPNetworking.GP_CHANNEL.clientHandle().send(new GetGuildSettingsPacket(this.member.getGuildKey())));
-
-        guildSettingsElement.childById(ButtonComponent.class, "management-button")
-                .active(this.member.getRank().isCoLeader())
-                .onPress(button
-                        -> this.client.setScreen(new GuildManagementMenu(this.member.getGuildKey(), this.players,
-                            this.ranks, this.summary)));
-
-        return guildSettingsElement;
     }
 }
