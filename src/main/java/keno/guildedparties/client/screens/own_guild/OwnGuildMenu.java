@@ -29,8 +29,8 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
     private final String summary;
     private final boolean customTextures;
 
-    // If the guild has custom textures, we pre-emptively create the identifier
-    private final Identifier textureId;
+    // Setup surface
+    private final Surface surface;
 
     private boolean elementsLoaded = false;
     private final FlowLayout container = Containers
@@ -46,9 +46,11 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
         this.players = players;
         this.ranks = ranks;
         this.summary = description;
+
         this.customTextures = customTextures;
-        this.textureId = this.customTextures ? GuildedParties.GPLoc(member.getGuildKey()
+        Identifier textureId = this.customTextures ? GuildedParties.GPLoc(member.getGuildKey()
                 .strip().toLowerCase().replace(" ", "")): Identifier.of("");
+        this.surface = customTextures ? GPSurfaces.createCustomSurface(textureId) : Surface.PANEL;
     }
 
     @Override
@@ -75,12 +77,12 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
 
         if (!this.elementsLoaded) {
             this.uiAdapter.rootComponent.child(this.container
-                    .surface(this.customTextures ? GPSurfaces.createCustomSurface(this.textureId) : Surface.PANEL)
+                    .surface(surface)
                     .alignment(HorizontalAlignment.CENTER, VerticalAlignment.CENTER)
-                    .sizing(Sizing.fill(90))
-                    .margins(Insets.of(10)));
+                    .padding(Insets.of(4))
+                    .sizing(Sizing.fill(90)));
 
-            this.container.child(getGuildDescriptionElement(this.model));
+            this.container.child(getGuildDescriptionElement(this.model).surface(surface));
 
             for (String username : this.players.keySet()) {
                 this.playerContainer.child(getGuildmateElement(this.model, username, this.players.get(username)));

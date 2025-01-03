@@ -123,10 +123,6 @@
 
                 <vertical-alignment>center</vertical-alignment>
                 <horizontal-alignment>left</horizontal-alignment>
-
-                <surface>
-                    <panel dark="false"/>
-                </surface>
             </flow-layout>
         </template>
 

@@ -3,7 +3,6 @@ package keno.guildedparties.client.screens.own_guild.management.rank;
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.TextBoxComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
-import io.wispforest.owo.ui.core.Surface;
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.data.guilds.Rank;
 import net.minecraft.client.resource.language.I18n;
