@@ -9,6 +9,8 @@
                             <label>
                                 <text translate="true">gui.guildedparties.is_guild_private</text>
 
+                                <color>black</color>
+
                                 <margins>
                                     <bottom>5</bottom>
                                 </margins>
@@ -28,6 +30,8 @@
 
                             <label>
                                 <text translate="true">gui.guildedparties.manage_player_rank_priority</text>
+
+                                <color>black</color>
 
                                 <margins>
                                     <top>5</top>
@@ -50,6 +54,8 @@
                             <label>
                                 <text translate="true">gui.guildedparties.manage_player_priority</text>
 
+                                <color>black</color>
+
                                 <margins>
                                     <top>5</top>
                                     <bottom>5</bottom>
@@ -71,6 +77,8 @@
                             <label>
                                 <text translate="true">gui.guildedparties.manage_guild_priority</text>
 
+                                <color>black</color>
+
                                 <margins>
                                     <top>5</top>
                                     <bottom>5</bottom>
@@ -91,6 +99,8 @@
 
                             <label>
                                 <text translate="true">gui.guildedparties.invite_players_priority</text>
+
+                                <color>black</color>
 
                                 <margins>
                                     <top>5</top>

@@ -9,7 +9,6 @@ import keno.guildedparties.GuildedParties;
 import keno.guildedparties.client.screens.ActionConfirmScreen;
 import keno.guildedparties.data.guilds.GuildSettings;
 import keno.guildedparties.networking.packets.serverbound.ChangeGuildSettingsPacket;
-import keno.guildedparties.utils.MathUtil;
 
 public class GuildSettingsMenu extends BaseUIModelScreen<FlowLayout> {
     private final String guildName;
@@ -18,6 +17,7 @@ public class GuildSettingsMenu extends BaseUIModelScreen<FlowLayout> {
     private double managePlayerPriority;
     private double manageGuildPriority;
     private double invitePlayersPriority;
+    private final boolean hasCustomTextures;
 
     public GuildSettingsMenu(String guildName, GuildSettings currentSettings) {
         super(FlowLayout.class, DataSource.asset(GuildedParties.GPLoc("settings_menu_ui")));
@@ -28,6 +28,7 @@ public class GuildSettingsMenu extends BaseUIModelScreen<FlowLayout> {
         this.managePlayerPriority = currentSettings.managePlayerPriority();
         this.manageGuildPriority = currentSettings.manageGuildPriority();
         this.invitePlayersPriority = currentSettings.invitePlayersPriority();
+        this.hasCustomTextures = currentSettings.hasCustomTextures();
     }
 
     @Override
@@ -56,7 +57,8 @@ public class GuildSettingsMenu extends BaseUIModelScreen<FlowLayout> {
                 .onPress(button -> {
                     GuildSettings newSettings = new GuildSettings(this.isGuildPrivate,
                             (int) this.managePlayerRankPriority, (int) this.managePlayerPriority,
-                            (int) this.manageGuildPriority, (int) this.invitePlayersPriority);
+                            (int) this.manageGuildPriority, (int) this.invitePlayersPriority,
+                            this.hasCustomTextures);
 
                     this.client.setScreen(new ActionConfirmScreen<>("change the guild's settings",
                             new ChangeGuildSettingsPacket(this.guildName, newSettings)));

@@ -57,7 +57,7 @@ public class GPNetworking {
                 Member member = player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
 
                 Guild guild = GuildApi.getGuild(player).orElseThrow();
-                GP_CHANNEL.serverHandle(player).send(OwnGuildMenuPacket.createFromGuild(member, guild));
+                GP_CHANNEL.serverHandle(player).send(OwnGuildMenuPacket.createFromGuild(access.runtime(), member, guild));
             } else {
                 player.sendMessageToClient(Text.translatable("guildedparties.not_in_guild"), true);
             }
@@ -174,7 +174,11 @@ public class GPNetworking {
                     }
                 }
 
-                GP_CHANNEL.serverHandle(sender).send(new InvitePlayersMenuPacket(invitablePlayersUsernames));
+                if (!invitablePlayersUsernames.isEmpty()) {
+                    GP_CHANNEL.serverHandle(sender).send(new InvitePlayersMenuPacket(invitablePlayersUsernames));
+                } else {
+                    sender.sendMessageToClient(Text.translatable("guildedparties.no_invitable_players"), false);
+                }
             }
         });
 
@@ -425,7 +429,8 @@ public class GPNetworking {
 
                     player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, new Member(handler.guildName(), new Rank("Recruit", 50)));
 
-                    GP_CHANNEL.serverHandle(player).send(OwnGuildMenuPacket.createFromGuild(player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT),
+                    GP_CHANNEL.serverHandle(player).send(OwnGuildMenuPacket.createFromGuild(access.runtime(),
+                            player.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT),
                             GuildApi.getGuild(server, handler.guildName()).orElseThrow()));
                 } else {
                     player.sendMessageToClient(Text.translatable("guildedparties.banned"), true);

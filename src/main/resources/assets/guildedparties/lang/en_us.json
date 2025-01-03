@@ -150,5 +150,7 @@
   "guildedparties.guild_doesnt_exist": "This guild doesn't exist",
   "gui.guildedparties.back": "Back",
   "gui.guildedparties.guild_name": "Guild name",
-  "gui.guildedparties.leader_role_name": "Leader role name"
+  "gui.guildedparties.leader_role_name": "Leader role name",
+  "guildedparties.no_invitable_players": "No invitable players were found",
+  "gui.guildedparties.rank_name": "Rank name"
 }

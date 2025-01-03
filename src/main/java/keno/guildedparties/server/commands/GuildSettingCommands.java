@@ -28,7 +28,8 @@ public class GuildSettingCommands {
                     settings.managePlayerRankPriority(),
                     settings.managePlayerPriority(),
                     settings.manageGuildPriority(),
-                    settings.invitePlayersPriority()), member.getGuildKey());
+                    settings.invitePlayersPriority(),
+                    settings.hasCustomTextures()), member.getGuildKey());
             state.markDirty();
             String accessibility = isPrivate ? "private" : "public";
             player.sendMessageToClient(Text.of("Your guild is now " + accessibility), true);
@@ -49,7 +50,11 @@ public class GuildSettingCommands {
             GuildSettings settings = state.getSettings(member.getGuildKey());
             int managePlayerRankPriority = context.getArgument("managePlayerRankPriority", Integer.class);
             state.addSettings(new GuildSettings(settings.isPrivate(),
-                    managePlayerRankPriority, settings.managePlayerPriority(), settings.manageGuildPriority(), settings.invitePlayersPriority()),
+                    managePlayerRankPriority,
+                            settings.managePlayerPriority(),
+                            settings.manageGuildPriority(),
+                            settings.invitePlayersPriority(),
+                            settings.hasCustomTextures()),
                     member.getGuildKey());
             state.markDirty();
             player.sendMessageToClient(Text.of("Priority to manage player ranks is now %d".formatted(managePlayerRankPriority)), true);

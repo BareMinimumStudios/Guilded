@@ -10,13 +10,15 @@ public record GuildSettings(boolean isPrivate,
                             int managePlayerRankPriority,
                             int managePlayerPriority,
                             int manageGuildPriority,
-                            int invitePlayersPriority) {
+                            int invitePlayersPriority,
+                            boolean hasCustomTextures) {
     public static Codec<GuildSettings> codec = RecordCodecBuilder.create(instance -> instance.group(
             Codec.BOOL.stable().optionalFieldOf("isPrivate", false).forGetter(GuildSettings::isPrivate),
             Codec.INT.stable().optionalFieldOf("managePlayerRanks", 5).forGetter(GuildSettings::managePlayerRankPriority),
             Codec.INT.stable().optionalFieldOf("managePlayers", 3).forGetter(GuildSettings::managePlayerPriority),
             Codec.INT.stable().optionalFieldOf("manageGuild", 3).forGetter(GuildSettings::manageGuildPriority),
-            Codec.INT.stable().optionalFieldOf("invitePlayers", 5).forGetter(GuildSettings::invitePlayersPriority)
+            Codec.INT.stable().optionalFieldOf("invitePlayers", 5).forGetter(GuildSettings::invitePlayersPriority),
+            Codec.BOOL.stable().optionalFieldOf("hasCustomTextures", false).forGetter(GuildSettings::hasCustomTextures)
     ).apply(instance, GuildSettings::new));
 
     public static Endec<GuildSettings> endec = StructEndecBuilder.of(
@@ -25,9 +27,10 @@ public record GuildSettings(boolean isPrivate,
         Endec.INT.optionalFieldOf("managePlayers", GuildSettings::managePlayerPriority, 3),
         Endec.INT.optionalFieldOf("manageGuild", GuildSettings::manageGuildPriority, 3),
         Endec.INT.optionalFieldOf("invitePlayers", GuildSettings::invitePlayersPriority, 5),
+        Endec.BOOLEAN.optionalFieldOf("hasCustomTextures", GuildSettings::hasCustomTextures, false),
         GuildSettings::new);
 
     public static GuildSettings getDefaultSettings() {
-        return new GuildSettings(false, 5, 3, 3, 5);
+        return new GuildSettings(false, 5, 3, 3, 5, false);
     }
 }

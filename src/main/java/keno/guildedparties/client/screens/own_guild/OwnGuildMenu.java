@@ -7,6 +7,7 @@ import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
 import io.wispforest.owo.ui.parsing.UIModel;
 import keno.guildedparties.GuildedParties;
+import keno.guildedparties.client.custom.GPSurfaces;
 import keno.guildedparties.client.screens.ActionConfirmScreen;
 import keno.guildedparties.client.screens.own_guild.management.GuildManagementMenu;
 import keno.guildedparties.data.guilds.Rank;
@@ -15,6 +16,7 @@ import keno.guildedparties.networking.GPNetworking;
 import keno.guildedparties.networking.packets.serverbound.GetGuildSettingsPacket;
 import keno.guildedparties.networking.packets.serverbound.GetInvitablePlayersPacket;
 import keno.guildedparties.networking.packets.serverbound.LeaveGuildPacket;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -25,6 +27,10 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
     private final Map<String, Rank> players;
     private final List<Rank> ranks;
     private final String summary;
+    private final boolean customTextures;
+
+    // If the guild has custom textures, we pre-emptively create the identifier
+    private final Identifier textureId;
 
     private boolean elementsLoaded = false;
     private final FlowLayout container = Containers
@@ -32,12 +38,17 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
 
     private FlowLayout playerContainer = Containers.verticalFlow(Sizing.content(), Sizing.content());
 
-    public OwnGuildMenu(Member member, Map<String, Rank> players, List<Rank> ranks, String description) {
+    public OwnGuildMenu(Member member, Map<String, Rank> players,
+                        List<Rank> ranks, String description,
+                        boolean customTextures) {
         super(FlowLayout.class, DataSource.asset(GuildedParties.GPLoc("own_guild_ui")));
         this.member = member;
         this.players = players;
         this.ranks = ranks;
         this.summary = description;
+        this.customTextures = customTextures;
+        this.textureId = this.customTextures ? GuildedParties.GPLoc(member.getGuildKey()
+                .strip().toLowerCase().replace(" ", "")): Identifier.of("");
     }
 
     @Override
@@ -64,7 +75,7 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
 
         if (!this.elementsLoaded) {
             this.uiAdapter.rootComponent.child(this.container
-                    .surface(Surface.DARK_PANEL)
+                    .surface(this.customTextures ? GPSurfaces.createCustomSurface(this.textureId) : Surface.PANEL)
                     .alignment(HorizontalAlignment.CENTER, VerticalAlignment.CENTER)
                     .sizing(Sizing.fill(90))
                     .margins(Insets.of(10)));

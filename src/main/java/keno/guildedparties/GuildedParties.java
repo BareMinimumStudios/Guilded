@@ -53,6 +53,13 @@ public class GuildedParties implements ModInitializer {
 		GPAttachmentTypes.init();
 		GPCommandRegistry.init();
 
+		// Will implement after 1.20.1 port is developed
+		/* if (CONFIG.enableDefaultGuildEvents()) {
+				GPBlocks.init();
+				GPBlockEntities.init();
+				GPItems.init();
+		} */
+
 		GPNetworking.init();
 
 		ServerLifecycleEvents.SERVER_STARTED.register(GuildedParties::fillPersistentState);
@@ -109,7 +116,7 @@ public class GuildedParties implements ModInitializer {
 					settings = guildSettings.get(file_name);
 				} else {
 					GuildedParties.LOGGER.warn("Guild {} lacks a settings json, generating a default. \nIf one is present, the file name must be the same as the guild json", guild.getName());
-					settings = new GuildSettings(false, 5, 3, 3, 5);
+					settings = GuildSettings.getDefaultSettings();
 				}
 				state.addSettings(settings, guild.getName());
 			}

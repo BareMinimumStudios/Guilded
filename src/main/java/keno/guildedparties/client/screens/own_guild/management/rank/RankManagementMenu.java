@@ -1,10 +1,12 @@
 package keno.guildedparties.client.screens.own_guild.management.rank;
 
 import io.wispforest.owo.ui.base.BaseUIModelScreen;
-import io.wispforest.owo.ui.component.ButtonComponent;
+import io.wispforest.owo.ui.component.TextBoxComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
+import io.wispforest.owo.ui.core.Surface;
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.data.guilds.Rank;
+import net.minecraft.client.resource.language.I18n;
 
 import java.util.List;
 
@@ -20,11 +22,14 @@ public class RankManagementMenu extends BaseUIModelScreen<FlowLayout> {
 
     @Override
     protected void build(FlowLayout flowLayout) {
-        flowLayout.childById(ButtonComponent.class, "add-rank")
-                .onPress(button -> this.client.setScreen(new RankAdditionMenu(this.guildName, this.ranks)));
-        flowLayout.childById(ButtonComponent.class, "remove-rank")
-                .onPress(button -> this.client.setScreen(new RankRemovalMenu(this.guildName, this.ranks)));
-        flowLayout.childById(ButtonComponent.class, "modify-rank")
-                .onPress(button -> this.client.setScreen(new RankModificationMenu(this.guildName, this.ranks)));
+        flowLayout.childById(TextBoxComponent.class, "rank-name")
+                .text(textBoxDefault());
+    }
+
+    public String textBoxDefault() {
+        if (I18n.hasTranslation("gui.guildedparties.rank_name")) {
+            return I18n.translate("gui.guildedparties.rank_name");
+        }
+        return "Rank name";
     }
 }

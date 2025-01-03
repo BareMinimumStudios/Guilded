@@ -43,7 +43,7 @@ public class StateSaverAndLoader extends PersistentState {
             if (guildSettingsMap.containsKey(key)) {
                 settings = GuildSettings.codec.encodeStart(NbtOps.INSTANCE, getSettings(key)).resultOrPartial(GuildedParties.LOGGER::error).orElseThrow();
             } else {
-                GuildSettings guildSettings = new GuildSettings(false, 5, 3, 3, 5);
+                GuildSettings guildSettings = GuildSettings.getDefaultSettings();
                 settings = GuildSettings.codec.encodeStart(NbtOps.INSTANCE, guildSettings).resultOrPartial(GuildedParties.LOGGER::error).orElseThrow();
             }
             nbt.put(key, guild);
