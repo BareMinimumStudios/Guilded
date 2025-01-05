@@ -152,5 +152,20 @@
   "gui.guildedparties.guild_name": "Guild name",
   "gui.guildedparties.leader_role_name": "Leader role name",
   "guildedparties.no_invitable_players": "No invitable players were found",
-  "gui.guildedparties.rank_name": "Rank name"
+  "gui.guildedparties.rank_name": "Rank name",
+  "gui.guildedparties.rank_priority": [
+    "Priority: ",
+    {"index": 0}
+  ],
+  "guildedparties.cannot_remove_rank": [
+    "Cannot remove the rank '",
+    {"index": 0},
+    "' due to either not existing, or being an mandatory rank"
+  ],
+  "guildedparties.cannot_modify": [
+    "Cannot modify the rank '",
+    {"index": 0},
+    "' due to either not existing, or being a mandatory rank"
+  ],
+  "gui.guildedparties.changes_may_not_show": "Changes such as rank addition or modification won't show up til you reopen this menu."
 }

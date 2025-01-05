@@ -142,7 +142,7 @@
                             <horizontal method="content">1</horizontal>
                         </sizing>
 
-                        <positioning type="relative">2,5</positioning>
+                        <positioning type="relative">0,0</positioning>
                     </label>
 
                     <label>
@@ -157,7 +157,7 @@
                             <vertical method="content">1</vertical>
                             <horizontal method="content">1</horizontal>
                         </sizing>
-                        <positioning type="relative">2,90</positioning>
+                        <positioning type="relative">0,100</positioning>
                     </label>
 
                     <button id="view-guildmate-button">
@@ -181,6 +181,10 @@
 
                     </button>
                 </children>
+
+                <padding>
+                    <all>5</all>
+                </padding>
 
                 <sizing>
                     <horizontal method="fill">100</horizontal>

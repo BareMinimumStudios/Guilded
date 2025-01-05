@@ -237,24 +237,28 @@ public class GPNetworking {
             GP_CHANNEL.serverHandle(sender).send(new GuildSettingsMenuPacket(handler.guildName(), settings));
         });
 
-        GP_CHANNEL.registerServerbound(AddRankPacket.class, (handler, access) -> {
+        GP_CHANNEL.registerServerbound(AddRankPacket.class, AddRankPacket.ENDEC, (handler, access) -> {
             MinecraftServer server = access.runtime();
             ServerPlayerEntity sender = access.player();
 
             GuildSettings settings = GuildApi.getSettings(server, handler.guildName());
 
-            if (canSenderPerformAction(sender, settings.manageGuildPriority())) {
-                Rank rank = new Rank(handler.rankName(), handler.rankPriority());
+            Rank rank = handler.rank();
 
+            if (rank.isCoLeader() || rank.name().equals("Recruit")) {
+                access.player().sendMessageToClient(Text.translatable("guildedparties.rank_cannot_be_add"), false);
+                return;
+            }
+
+            if (canSenderPerformAction(sender, settings.manageGuildPriority())) {
                 GuildApi.modifyGuildPersistentState(server, state -> state.getGuild(handler.guildName()).addRank(rank));
 
                 sender.sendMessageToClient(Text.translatable("guildedparties.rank_added",
-                        handler.rankName()), false);
+                        rank.name()), false);
             }
         });
 
-        GP_CHANNEL.registerServerbound(RemoveRankPacket.class, RemoveRankPacket.endec, (handler, access)
-                -> {
+        GP_CHANNEL.registerServerbound(RemoveRankPacket.class, RemoveRankPacket.endec, (handler, access) -> {
             MinecraftServer server = access.runtime();
             ServerPlayerEntity sender = access.player();
 
@@ -297,20 +301,27 @@ public class GPNetworking {
             ServerPlayerEntity player = access.player();
             GuildSettings settings = GuildApi.getSettings(server, handler.guildName());
 
+            Rank oldRank = handler.oldRank();
+            Rank newRank = handler.newRank();
+
+            if (oldRank.isCoLeader() || oldRank.name().equals("Recruit")
+                    || newRank.isCoLeader() || newRank.name().equals("Recruit")) {
+                access.player().sendMessageToClient(Text.translatable("guildedparties.cannot_modify", oldRank.name()), false);
+            }
 
             if (canSenderPerformAction(player, settings.manageGuildPriority())) {
                 GuildApi.modifyGuildPersistentState(server, state -> {
                     Set<String> usernames = state.getGuild(handler.guildName()).getPlayers().keySet();
                     for (String username : usernames) {
-                        if (state.getGuild(handler.guildName()).getPlayerRank(username).equals(handler.oldRank())) {
-                            state.getGuild(handler.guildName()).changeMemberRank(server, username, handler.newRank());
+                        if (state.getGuild(handler.guildName()).getPlayerRank(username).equals(oldRank)) {
+                            state.getGuild(handler.guildName()).changeMemberRank(server, username, newRank);
                         }
                     }
-                    state.getGuild(handler.guildName()).removeRank(handler.oldRank().name());
-                    state.getGuild(handler.guildName()).addRank(handler.newRank());
+                    state.getGuild(handler.guildName()).removeRank(oldRank.name());
+                    state.getGuild(handler.guildName()).addRank(newRank);
                 });
 
-                access.player().sendMessageToClient(Text.translatable("guildedparties.rank_modified"), true);
+                access.player().sendMessageToClient(Text.translatable("guildedparties.rank_modified"), false);
             }
         });
 

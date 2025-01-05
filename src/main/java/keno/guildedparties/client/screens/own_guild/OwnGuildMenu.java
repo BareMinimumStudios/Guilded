@@ -49,7 +49,7 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
 
         this.customTextures = customTextures;
         Identifier textureId = this.customTextures ? GuildedParties.GPLoc(member.getGuildKey()
-                .strip().toLowerCase().replace(" ", "")): Identifier.of("");
+                .strip().toLowerCase().replace(" ", "_")): Identifier.of("");
         this.surface = customTextures ? GPSurfaces.createCustomSurface(textureId) : Surface.PANEL;
     }
 
@@ -65,7 +65,7 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
                 .sizing(Sizing.fill(100));
 
         this.container.child(Containers.verticalScroll(Sizing.fill(50), Sizing.fill(100), this.playerContainer)
-                .surface(Surface.VANILLA_TRANSLUCENT).alignment(HorizontalAlignment.RIGHT, VerticalAlignment.CENTER)
+                .surface(this.customTextures ? Surface.BLANK : Surface.VANILLA_TRANSLUCENT).alignment(HorizontalAlignment.RIGHT, VerticalAlignment.CENTER)
                 .positioning(Positioning.relative(100, 100)));
     }
 

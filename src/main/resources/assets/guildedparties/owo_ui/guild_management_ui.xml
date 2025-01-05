@@ -14,7 +14,7 @@
 
                             <sizing>
                                 <horizontal method="fill">100</horizontal>
-                                <vertical method="fill">30</vertical>
+                                <vertical method="fill">10</vertical>
                             </sizing>
                         </button>
 
@@ -28,7 +28,7 @@
 
                             <sizing>
                                 <horizontal method="fill">100</horizontal>
-                                <vertical method="fill">30</vertical>
+                                <vertical method="fill">10</vertical>
                             </sizing>
                         </button>
 
@@ -41,7 +41,7 @@
 
                             <sizing>
                                 <horizontal method="fill">100</horizontal>
-                                <vertical method="fill">30</vertical>
+                                <vertical method="fill">10</vertical>
                             </sizing>
                         </button>
                     </children>
