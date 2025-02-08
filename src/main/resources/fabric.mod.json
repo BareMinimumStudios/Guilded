@@ -11,15 +11,12 @@
 		"homepage": "https://fabricmc.net/",
 		"sources": "https://github.com/FabricMC/fabric-example-mod"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/guildedparties/guilded.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
 			"keno.guildedparties.Guilded"
-		],
-		"fabric-datagen": [
-			"keno.guildedparties.GuildedDataGenerator"
 		]
 	},
 	"mixins": [
