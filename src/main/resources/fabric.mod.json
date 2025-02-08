@@ -1,42 +1,37 @@
 {
 	"schemaVersion": 1,
 	"id": "guildedparties",
-	"version": "${mod_version}+${minecraft}",
+	"version": "${version}",
 	"name": "Guilded",
-	"description": "A faction mod for the user and developer",
+	"description": "This is an example description! Tell everyone what your mod is about!",
 	"authors": [
-		"Keno"
+		"Me!"
 	],
 	"contact": {
-		"sources": "https://github.com/XeroTheProtogen/GuildedParties"
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
 	},
-	"license": "MIT for code, ARR for assets",
+	"license": "CC0-1.0",
 	"icon": "assets/guildedparties/guilded.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"keno.guildedparties.GuildedParties"
+			"keno.guildedparties.Guilded"
 		],
 		"fabric-datagen": [
-			"keno.guildedparties.GuildedPartiesDataGenerator"
-		],
-		"server": [
-			"keno.guildedparties.server.GPServer"
-		],
-		"client": [
-			"keno.guildedparties.client.GPClient"
-		],
-		"guilded": [
-			"keno.guildedparties.compat.GPGuildedCompat"
+			"keno.guildedparties.GuildedDataGenerator"
 		]
 	},
 	"mixins": [
 		"guildedparties.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.16.9",
-		"minecraft": "~${minecraft}",
-		"java": ">=21",
-		"fabric-api": ">=0.107.3+1.21.3"
+		"fabricloader": ">=0.16.10",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
 	}
 }

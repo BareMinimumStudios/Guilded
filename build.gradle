@@ -1,10 +1,9 @@
 plugins {
-	id 'fabric-loom' version '1.8-SNAPSHOT'
+	id 'fabric-loom' version '1.9-SNAPSHOT'
 	id 'maven-publish'
-	id "me.modmuss50.mod-publish-plugin" version "0.8.1"
 }
 
-version = property("mod_version")
+version = project.mod_version
 group = project.maven_group
 
 base {
@@ -20,45 +19,32 @@ repositories {
 }
 
 fabricApi {
-	configureDataGeneration()
-}
-
-repositories {
-	maven { url 'https://maven.wispforest.io/releases/' }
+	configureDataGeneration {
+		client = true
+	}
 }
 
 dependencies {
 	// To change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${stonecutter.current.project}"
-	mappings "net.fabricmc:yarn:${property('yarn_mappings')}:v2"
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${property('fabric_version')}"
-	annotationProcessor(modImplementation "io.wispforest:owo-lib:${property('owo_version')}")
-	include "io.wispforest:owo-sentinel:${property('owo_version')}"
-}
-
-loom {
-	runConfigs.all {
-		ideConfigGenerated true // Run configurations are not created for subprojects by default
-		runDir "../../run" // Use a shared run folder and create separate worlds
-	}
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	
 }
 
 processResources {
-	inputs.property "mod_version", project.version
-	inputs.property "minecraft", stonecutter.current.version
-
-	def map = [mod_version: project.version, minecraft: stonecutter.current.version]
+	inputs.property "version", project.version
 
 	filesMatching("fabric.mod.json") {
-		expand map
+		expand "version": project.version
 	}
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 21
+	it.options.release = 17
 }
 
 java {
@@ -67,8 +53,8 @@ java {
 	// If you remove this line, sources will not be generated.
 	withSourcesJar()
 
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
 }
 
 jar {
@@ -77,35 +63,11 @@ jar {
 	}
 }
 
-publishMods {
-	file = remapJar.archiveFile
-	type = ALPHA
-	modLoaders.add("fabric")
-
-	displayName = "${archives_base_name}-${project.version}-${stonecutter.current.version}"
-
-	modrinth {
-		accessToken = providers.environmentVariable("MODRINTH_TOKEN")
-		projectId = "lGV5ilon"
-		minecraftVersions.add("${stonecutter.current.version}")
-
-		requires("owo-lib", "fabric-api")
-	}
-
-	curseforge {
-		accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
-		projectId = "1149661"
-		minecraftVersions.add("${stonecutter.current.version}")
-
-		requires("owo-lib", "fabric-api")
-	}
-}
-
 // configure the maven publication
 publishing {
 	publications {
 		create("mavenJava", MavenPublication) {
-			artifactId = "${project.archives_base_name}-${project.version}-${stonecutter.current.version}"
+			artifactId = project.archives_base_name
 			from components.java
 		}
 	}
