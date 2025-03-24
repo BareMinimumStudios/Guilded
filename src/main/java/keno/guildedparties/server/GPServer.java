@@ -14,11 +14,6 @@ import java.util.List;
 public class GPServer implements DedicatedServerModInitializer {
     @Override
     public void onInitializeServer() {
-        ServerPlayConnectionEvents.JOIN.register(GuildedParties::syncAndInitializePlayerData);
-
-        ServerMessageDecoratorEvent.EVENT.register(ServerMessageDecoratorEvent.STYLING_PHASE, GuildedParties::addGuildNote);
-
-        GPCommandRegistry.init();
         initializeCompatEntrypoint();
     }
 
