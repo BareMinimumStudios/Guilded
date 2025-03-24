@@ -93,13 +93,13 @@ publishMods {
 		requires("owo-lib", "fabric-api")
 	}
 
-	curseforge {
+	/* curseforge {
 		accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
 		projectId = "1149661"
 		minecraftVersions.add("${stonecutter.current.version}")
 
 		requires("owo-lib", "fabric-api")
-	}
+	} */
 }
 
 // configure the maven publication
