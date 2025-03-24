@@ -1,7 +1,7 @@
 plugins {
 	id 'fabric-loom' version '1.8-SNAPSHOT'
 	id 'maven-publish'
-	id "me.modmuss50.mod-publish-plugin" version "0.8.1"
+	id "me.modmuss50.mod-publish-plugin" version "0.8.4"
 }
 
 version = property("mod_version")
@@ -82,7 +82,8 @@ publishMods {
 	type = ALPHA
 	modLoaders.add("fabric")
 
-	displayName = "${archives_base_name}-${project.version}-${stonecutter.current.version}"
+	displayName = "Guilded ${project.version}-${stonecutter.current.version}"
+	changelog = providers.fileContents(layout.projectDirectory.file("CHANGELOGS.md")).asText.orElse("No Changelog")
 
 	modrinth {
 		accessToken = providers.environmentVariable("MODRINTH_TOKEN")
