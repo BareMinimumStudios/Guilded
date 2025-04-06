@@ -3,23 +3,38 @@
 	"id": "guildedparties",
 	"version": "${version}",
 	"name": "Guilded",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "A faction mod for the user and developer",
 	"authors": [
-		"Me!"
+		"Keno"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
 		"sources": "https://github.com/FabricMC/fabric-example-mod"
 	},
-	"license": "CC0-1.0",
+	"license": "Assets ARR, Code MIT",
 	"icon": "assets/guildedparties/guilded.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"keno.guildedparties.Guilded"
+          "keno.guildedparties.GuildedParties"
 		],
-		"fabric-datagen": [
-			"keno.guildedparties.GuildedDataGenerator"
+		"cardinal-components": [
+			"keno.guildedparties.api.data.GPComponents"
+		],
+		"server": [
+			"keno.guildedparties.api.server.GPServer"
+		],
+		"client": [
+			"keno.guildedparties.api.client.GPClient"
+		],
+		"guilded": [
+			"keno.guildedparties.api.compat.GPGuildedCompat"
+		]
+	},
+	"custom": {
+		"cardinal-components": [
+			"guildedparties:invite",
+			"guildedparties:member"
 		]
 	},
 	"mixins": [
@@ -30,8 +45,5 @@
 		"minecraft": "~1.20.1",
 		"java": ">=17",
 		"fabric-api": "*"
-	},
-	"suggests": {
-		"another-mod": "*"
 	}
 }

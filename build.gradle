@@ -16,6 +16,19 @@ repositories {
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
+	mavenCentral()
+	maven { url 'https://maven.wispforest.io' }
+	maven {
+		name = "Ladysnake"
+		url = 'https://maven.ladysnake.org/releases'
+	}
+	maven {
+		name = "Modrinth"
+		url = "https://api.modrinth.com/maven"
+		content {
+			includeGroup "maven.modrinth"
+		}
+	}
 }
 
 fabricApi {
@@ -32,7 +45,26 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	
+
+	// Dependencies
+
+	// OwOLib
+	modImplementation "io.wispforest:owo-lib:${project.owo_version}"
+	annotationProcessor "io.wispforest:owo-lib:${project.owo_version}"
+
+	include "io.wispforest:owo-sentinel:${project.owo_version}"
+
+	// Endecs
+	include(modImplementation("io.wispforest:endec:${project.endec_version}"))
+	include(modImplementation("io.wispforest.endec:gson:${project.endec_gson_version}"))
+	include(modImplementation("io.wispforest.endec:netty:${project.endec_netty_version}"))
+
+	// Cardinal
+	include(modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}"))
+	include(modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}"))
+
+	// Data Attributes
+	include(modImplementation("maven.modrinth:data-attributes-directors-cut:${project.data_attributes}"))
 }
 
 processResources {
