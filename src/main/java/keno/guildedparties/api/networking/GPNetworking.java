@@ -8,6 +8,7 @@ import keno.guildedparties.api.data.GPComponents;
 import keno.guildedparties.api.data.Rank;
 import keno.guildedparties.api.data.guilds.Guild;
 import keno.guildedparties.api.data.guilds.GuildSettings;
+import keno.guildedparties.api.data.player.Invite;
 import keno.guildedparties.api.data.player.Member;
 import keno.guildedparties.api.networking.packets.ProcessType;
 import keno.guildedparties.api.networking.packets.clientbound.*;
@@ -127,12 +128,116 @@ public class GPNetworking {
                         }
                     }
                 }
-                case SHOP, CHAT, default: GuildedParties.LOGGER.warn("Process type {} should not be used at the moment", type.asString());
+                case SHOP, CHAT, NONE, default: GuildedParties.LOGGER.warn("Process type {} should not be used at the moment", type.asString());
             }
         });
 
         GP_CHANNEL.registerServerbound(StrParamServerPacket.class, (packet, access) -> {
+            ProcessType type = ProcessType.valueOf(packet.type());
+            int flag = packet.flag();
+            MinecraftServer server = access.runtime();
+            ServerPlayerEntity sender = access.player();
+            boolean senderIsInGuild = doesPlayerHaveMemberData(sender);
+            String str = packet.str();
 
+            switch (type) {
+                case GUILD:
+                    switch (flag) {
+                        case 0: {
+                            if (senderIsInGuild) {
+                                if (isSenderLeader(sender)) {
+                                    GuildApi.modifyGuildPersistentState(server, state -> {
+                                        for (String username : state.getGuild(str).getPlayers().keySet()) {
+                                            ServerPlayerEntity member = server.getPlayerManager().getPlayer(username);
+                                            if (member != null) {
+                                                GPComponents.MEMBER_KEY.get(sender).changeMemberData(null);
+                                            }
+                                        }
+                                        state.removeGuild(str);
+                                    });
+
+                                    server.getPlayerManager().broadcast(Text.translatable("guildedparties.guild_disbanded",
+                                            str), false);
+                                } else {
+                                    sender.sendMessageToClient(Text.translatable("guildedparties.is_not_leader"), true);
+                                }
+                            }
+                        }
+                        case 1: {
+                            GuildSettings settings = GuildApi.getSettings(server, str);
+
+                            GP_CHANNEL.serverHandle(sender).send(new GuildSettingsMenuPacket(str, settings));
+                        }
+                        case 2: {
+                            if (senderIsInGuild) {
+                                Member senderData = GPComponents.MEMBER_KEY.get(sender).getMemberData();
+
+                                GuildSettings settings = GuildApi.getSettings(server, senderData.getGuildKey());
+
+                                if (canSenderPerformAction(sender, settings.invitePlayersPriority())) {
+                                    if (!GuildApi.getBanList(server, senderData.getGuildKey()).isPlayerBanned(str)) {
+                                        if (!GuildApi.getGuild(sender).orElseThrow().isPlayerInGuild(str)) {
+                                            ServerPlayerEntity player = server.getPlayerManager().getPlayer(str);
+                                            if (!doesPlayerHaveInviteData(player)) {
+                                                GPComponents.INVITE_KEY.get(player).setInvite(new Invite(senderData.getGuildKey(), sender.getGameProfile().getName()));
+
+                                                sender.sendMessageToClient(Text.translatable("guildedparties.invite_successful"), true);
+                                                player.sendMessageToClient(Text.translatable("guildedparties.invite_received",
+                                                        player.getGameProfile().getName(), senderData.getGuildKey()), false);
+                                            } else {
+                                                sender.sendMessageToClient(Text.translatable("guildedparties.has_invite_already"), true);
+                                            }
+                                        }
+                                    } else {
+                                        sender.sendMessageToClient(Text.translatable("guildedparties.player_is_banned"), true);
+                                    }
+                                }
+                            }
+                        }
+                        case 3: {
+                            if (!GuildApi.getSettings(server, str).isPrivate()) {
+                                if (!GuildApi.getBanList(server, str).isPlayerBanned(sender.getGameProfile().getName())) {
+                                    GuildApi.modifyGuildPersistentState(server, state
+                                            -> state.getGuild(str).addPlayerToGuild(sender, "Recruit"));
+
+                                    GPComponents.MEMBER_KEY.get(sender).changeMemberData(new Member(str, new Rank("Recruit", 50)));
+
+                                    Member member = GPComponents.MEMBER_KEY.get(sender).getMemberData();
+
+                                    GP_CHANNEL.serverHandle(server).send(OwnGuildMenuPacket.createFromGuild(access.runtime(),
+                                            member,
+                                            GuildApi.getGuild(server, str).orElseThrow()));
+                                } else {
+                                    sender.sendMessageToClient(Text.translatable("guildedparties.banned"), true);
+                                }
+                            } else {
+                                sender.sendMessageToClient(Text.translatable("guildedparties.guild_is_private",
+                                        str), true);
+                            }
+                        }
+                        case 4: {
+                            if (senderIsInGuild) {
+                                Member member = GPComponents.MEMBER_KEY.get(sender).getMemberData();
+                                if (member.getGuildKey().equals(str)) {
+                                    if (!isSenderLeader(sender)) {
+                                        GuildApi.modifyGuildPersistentState(server, state -> state.getGuild(str).removePlayerFromGuild(sender));
+
+                                        sender.sendMessageToClient(Text.translatable("guildedparties.leaving_successful"), true);
+                                        server.getPlayerManager().broadcast(Text.translatable("guildedparties.player_left_guild",
+                                                sender.getGameProfile().getName(), str), false);
+                                    } else {
+                                        sender.sendMessageToClient(Text.translatable("guildedparties.must_stand_down"), true);
+                                    }
+                                } else {
+                                    sender.sendMessageToClient(Text.translatable("guildedparties.not_in_guild"), true);
+                                }
+                            } else {
+                                sender.sendMessageToClient(Text.translatable("guildedparties.not_in_guild"), true);
+                            }
+                        }
+                    }
+                case SHOP, CHAT, NONE, default: GuildedParties.LOGGER.warn("Process type {} should not be used at the moment", type.asString());
+            }
         });
     }
 
@@ -181,5 +286,9 @@ public class GPNetworking {
 
     public static boolean doesPlayerHaveMemberData(ServerPlayerEntity player) {
         return GPComponents.MEMBER_KEY.get(player).hasMemberData();
+    }
+
+    public static boolean doesPlayerHaveInviteData(ServerPlayerEntity player) {
+        return GPComponents.INVITE_KEY.get(player).getInvite() != null;
     }
 }
