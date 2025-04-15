@@ -1,0 +1,44 @@
+<owo-ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/wisp-forest/owo-lib/1.20/owo-ui.xsd">
+    <templates>
+        <template name="confirm-element">
+            <flow-layout direction="vertical">
+                <children>
+                    <label>
+                        <text>Do you want to {{action}}?</text>
+
+                        <sizing>
+                            <vertical method="content">1</vertical>
+                            <horizontal method="content">1</horizontal>
+                        </sizing>
+
+                        <vertical-text-alignment>center</vertical-text-alignment>
+                        <horizontal-text-alignment>center</horizontal-text-alignment>
+
+                        <positioning type="relative">50,40</positioning>
+                    </label>
+
+                    <button id="confirm">
+                        <text translate="true">gui.guildedparties.confirm</text>
+
+                        <positioning type="relative">40,60</positioning>
+                    </button>
+
+                    <button id="cancel">
+                        <text translate="true">gui.guildedparties.cancel</text>
+
+                        <positioning type="relative">60,60</positioning>
+                    </button>
+                </children>
+
+                <sizing>
+                    <horizontal method="fill">100</horizontal>
+                    <vertical method="fill">100</vertical>
+                </sizing>
+
+                <horizontal-alignment>center</horizontal-alignment>
+                <vertical-alignment>center</vertical-alignment>
+            </flow-layout>
+        </template>
+    </templates>
+</owo-ui>
