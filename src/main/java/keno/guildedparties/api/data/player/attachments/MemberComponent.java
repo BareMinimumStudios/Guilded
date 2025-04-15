@@ -42,4 +42,8 @@ public class MemberComponent implements IMemberComponent {
         if (this.member != null)
             nbtCompound.put("member_data", Member.ENDEC.encodeFully(NbtSerializer::of, this.member));
     }
+
+    public boolean isCoLeader() {
+        return this.member.getRank().isCoLeader();
+    }
 }

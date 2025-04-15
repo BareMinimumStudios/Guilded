@@ -152,7 +152,7 @@ public class Guild {
     public void addPlayerToGuild(ServerPlayerEntity player, String rankName) {
         if (!players.containsKey(player.getGameProfile().getName())) {
             MemberComponent component = GPComponents.MEMBER_KEY.get(player);
-            if (component.hasMemberData()) {
+            if (!component.hasMemberData()) {
                 Rank playerRank = ranks.stream().filter(rank -> rank.name().equals(rankName)).findFirst().get();
                 players.put(player.getGameProfile().getName(), playerRank);
                 component.changeMemberData(new Member(this.name, playerRank));

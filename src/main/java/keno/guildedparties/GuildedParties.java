@@ -3,6 +3,7 @@ package keno.guildedparties;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import keno.guildedparties.api.compat.GuildedCompatEntrypoint;
+import keno.guildedparties.api.config.GPConfig;
 import keno.guildedparties.api.data.guilds.Guild;
 import keno.guildedparties.api.data.guilds.GuildBanList;
 import keno.guildedparties.api.data.guilds.GuildSettings;
@@ -32,7 +33,9 @@ public class GuildedParties implements ModInitializer {
 	// It is considered best practice to use your mod id as the logger's name.
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
 	public static final Gson GSON = new GsonBuilder().create();
+	public static final GPConfig CONFIG = GPConfig.createAndLoad();
 
 	@Override
 	public void onInitialize() {
