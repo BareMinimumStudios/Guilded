@@ -4,27 +4,38 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import keno.guildedparties.api.compat.GuildedCompatEntrypoint;
 import keno.guildedparties.api.config.GPConfig;
+import keno.guildedparties.api.data.GPComponents;
 import keno.guildedparties.api.data.guilds.Guild;
 import keno.guildedparties.api.data.guilds.GuildBanList;
 import keno.guildedparties.api.data.guilds.GuildSettings;
 import keno.guildedparties.api.data.listeners.GuildResourceListener;
 import keno.guildedparties.api.data.listeners.GuildSettingsResourceListener;
 import keno.guildedparties.api.data.listeners.HeardData;
+import keno.guildedparties.api.data.player.Member;
 import keno.guildedparties.api.networking.GPNetworking;
 import keno.guildedparties.api.server.StateSaverAndLoader;
+import keno.guildedparties.api.server.commands.GPCommandRegistry;
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.message.v1.ServerMessageDecoratorEvent;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.CompletableFuture;
 
 public class GuildedParties implements ModInitializer {
 	public static final String MOD_ID = "guildedparties";
@@ -45,10 +56,32 @@ public class GuildedParties implements ModInitializer {
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new GuildResourceListener());
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new GuildSettingsResourceListener());
 
+		CommandRegistrationCallback.EVENT.register((commandDispatcher, commandRegistryAccess, registrationEnvironment)
+				-> GPCommandRegistry.init(commandDispatcher, commandRegistryAccess, registrationEnvironment, false));
+
 		ServerLifecycleEvents.SERVER_STARTED.register(GuildedParties::fillPersistentState);
+		ServerPlayConnectionEvents.JOIN.register(GuildedParties::syncAndInitializePlayerData);
+
+		ServerMessageDecoratorEvent.EVENT.register(ServerMessageDecoratorEvent.STYLING_PHASE, GuildedParties::addGuildNote);
 
 		GPNetworking.init();
 		initializeCompatEntrypoint();
+	}
+
+	public static CompletableFuture<Text> addGuildNote(ServerPlayerEntity player, Text text) {
+		return CompletableFuture.supplyAsync(() -> {
+			if (player != null) {
+				if (GPNetworking.doesPlayerHaveMemberData(player)) {
+					boolean GCIsToggled = GPComponents.GC_KEY.get(player).isToggled();
+					if (!GCIsToggled) {
+						Member member = GPComponents.MEMBER_KEY.get(player).getMemberData();
+						Text note = Text.of("[%s] ".formatted(member.getGuildKey()));
+						return note.copy().append(text);
+					}
+				}
+			}
+			return text;
+		});
 	}
 
 	public void initializeCompatEntrypoint() {
@@ -91,6 +124,46 @@ public class GuildedParties implements ModInitializer {
 			}
 		}
 		state.markDirty();
+	}
+
+	/** Ensures player data and server data matches up */
+	public static void syncAndInitializePlayerData(ServerPlayNetworkHandler handler, PacketSender packetSender, MinecraftServer server) {
+		// Sync guild data to player attachment
+		StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
+		ServerPlayerEntity player = handler.getPlayer();
+		String username = player.getGameProfile().getName();
+		boolean isInGuild = false;
+
+
+		for (Guild guild : state.getGuilds().values()) {
+			if (state.doesGuildHaveBanlist(guild.getName())) {
+				if (state.getBanlist(guild.getName()).isPlayerBanned(username)) continue;
+			}
+
+			if (guild.getPlayers().containsKey(username)) {
+				isInGuild = true;
+				if (!GPNetworking.doesPlayerHaveMemberData(player)) {
+					GPComponents.MEMBER_KEY.get(player).changeMemberData(new Member(guild.getName(), guild.getPlayers().get(username)));
+					break;
+				}
+
+				Member data = GPComponents.MEMBER_KEY.get(player).getMemberData();
+				if (!data.getGuildKey().equals(guild.getName())) {
+					if (!guild.getRanks().contains(data.getRank())) {
+						guild.demoteMember(server, username);
+					} else {
+						GPComponents.MEMBER_KEY.get(player).changeMemberData(new Member(guild.getName(), data.getRank()));
+					}
+				}
+				break;
+			}
+		}
+
+		state.markDirty();
+
+		if (!isInGuild) {
+			GPComponents.MEMBER_KEY.get(player).changeMemberData(null);
+		}
 	}
 
 	public static Identifier modLoc(String path) {

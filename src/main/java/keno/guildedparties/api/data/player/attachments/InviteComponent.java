@@ -4,6 +4,7 @@ import com.bibireden.data_attributes.endec.nbt.NbtDeserializer;
 import com.bibireden.data_attributes.endec.nbt.NbtSerializer;
 import keno.guildedparties.api.data.player.Invite;
 import net.minecraft.nbt.NbtCompound;
+import org.jetbrains.annotations.Nullable;
 
 public class InviteComponent implements IInviteComponent {
     private Invite invite = null;
@@ -16,13 +17,17 @@ public class InviteComponent implements IInviteComponent {
 
     }
 
+    public boolean hasInvite() {
+        return this.invite != null;
+    }
+
     @Override
     public Invite getInvite() {
         return this.invite;
     }
 
     @Override
-    public void setInvite(Invite invite) {
+    public void setInvite(@Nullable Invite invite) {
         this.invite = invite;
     }
 

@@ -6,6 +6,8 @@ import keno.guildedparties.api.data.GPComponents;
 import keno.guildedparties.api.data.Rank;
 import keno.guildedparties.api.data.player.attachments.MemberComponent;
 import keno.guildedparties.api.data.player.Member;
+import keno.guildedparties.api.networking.GPNetworking;
+import keno.guildedparties.api.networking.packets.clientbound.KickedFromMenuPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -164,6 +166,18 @@ public class Guild {
         if (players.containsKey(player.getGameProfile().getName())) {
             players.remove(player.getGameProfile().getName());
             GPComponents.MEMBER_KEY.get(player).changeMemberData(null);
+            GPNetworking.GP_CHANNEL.serverHandle(player).send(new KickedFromMenuPacket());
+        }
+    }
+
+    public void removePlayerFromGuild(MinecraftServer server, String username) {
+        if (players.containsKey(username)) {
+            ServerPlayerEntity player = server.getPlayerManager().getPlayer(username);
+            players.remove(username);
+            if (player != null) {
+                GPComponents.MEMBER_KEY.get(player).changeMemberData(null);
+                GPNetworking.GP_CHANNEL.serverHandle(player).send(new KickedFromMenuPacket());
+            }
         }
     }
 

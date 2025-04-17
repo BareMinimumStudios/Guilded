@@ -2,6 +2,8 @@ package keno.guildedparties.api.networking.packets.clientbound;
 
 import io.wispforest.endec.StructEndec;
 import io.wispforest.endec.impl.StructEndecBuilder;
+import io.wispforest.owo.network.serialization.PacketBufSerializer;
+import keno.guildedparties.api.client.screens.own_guild.OwnGuildMenu;
 import keno.guildedparties.api.data.Rank;
 import keno.guildedparties.api.data.guilds.Guild;
 import keno.guildedparties.api.data.guilds.GuildSettings;
@@ -21,6 +23,8 @@ public record OwnGuildMenuPacket(Member member, Map<String, Rank> players,
             StructEndec.STRING.fieldOf("summary", OwnGuildMenuPacket::summary),
             StructEndec.BOOLEAN.fieldOf("has_textures", OwnGuildMenuPacket::hasCustomTextures),
             OwnGuildMenuPacket::new);
+
+    public static final PacketBufSerializer<OwnGuildMenuPacket> SERIALIZER = PacketBufSerializer.createRecordSerializer(OwnGuildMenuPacket.class);
 
     public static OwnGuildMenuPacket createFromGuild(MinecraftServer server, Member member, Guild guild) {
         GuildSettings settings = GuildApi.getSettings(server, member.getGuildKey());

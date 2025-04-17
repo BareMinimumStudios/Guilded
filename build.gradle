@@ -65,6 +65,7 @@ dependencies {
 
 	// Data Attributes
 	include(modImplementation("maven.modrinth:data-attributes-directors-cut:${project.data_attributes}"))
+	include(modImplementation("net.fabricmc:fabric-language-kotlin:1.9.5+kotlin.1.8.22"))
 }
 
 processResources {

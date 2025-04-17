@@ -28,8 +28,7 @@ public class StateSaverAndLoader extends PersistentState {
     public NbtCompound writeNbt(NbtCompound nbt) {
         StringBuilder keySet = new StringBuilder();
         List<String> keys = new ArrayList<>(guilds.keySet());
-        int lastKeyIndex = keys.size() - 1;
-        String lastKey = keys.get(lastKeyIndex);
+        String lastKey = keys.stream().reduce((first, second) -> second).orElse(null);
         for (String key : keys) {
             NbtElement guild = Guild.ENDEC.encodeFully(NbtSerializer::of, getGuild(key));
 

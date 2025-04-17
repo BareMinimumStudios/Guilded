@@ -34,7 +34,8 @@
 	"custom": {
 		"cardinal-components": [
 			"guildedparties:invite",
-			"guildedparties:member"
+			"guildedparties:member",
+			"guildedparties:gc_toggle"
 		]
 	},
 	"mixins": [
