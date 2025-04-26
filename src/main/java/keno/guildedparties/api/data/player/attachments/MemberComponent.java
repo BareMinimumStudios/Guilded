@@ -6,6 +6,7 @@ import keno.guildedparties.api.data.player.Member;
 import net.minecraft.nbt.NbtCompound;
 import org.jetbrains.annotations.Nullable;
 
+//TODO migrate to using offline-player-cache (After 1.20.1 is published)
 public class MemberComponent implements IMemberComponent {
     private Member member = null;
 

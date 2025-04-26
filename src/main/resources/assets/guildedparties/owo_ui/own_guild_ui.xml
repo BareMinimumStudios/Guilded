@@ -45,6 +45,10 @@
                             <max-width>200</max-width>
                         </label>
 
+                        <surface>
+                            <panel dark="true"/>
+                        </surface>
+
                         <positioning type="relative">0,25</positioning>
 
                         <sizing>

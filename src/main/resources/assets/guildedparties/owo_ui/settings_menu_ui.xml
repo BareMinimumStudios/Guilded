@@ -12,7 +12,7 @@
                                 <color>black</color>
 
                                 <margins>
-                                    <bottom>5</bottom>
+                                    <bottom>2</bottom>
                                 </margins>
                             </label>
 
@@ -23,8 +23,8 @@
                                 </sizing>
 
                                 <margins>
-                                    <top>5</top>
-                                    <bottom>5</bottom>
+                                    <top>2</top>
+                                    <bottom>2</bottom>
                                 </margins>
                             </small-checkbox>
 
@@ -34,20 +34,20 @@
                                 <color>black</color>
 
                                 <margins>
-                                    <top>5</top>
-                                    <bottom>5</bottom>
+                                    <top>2</top>
+                                    <bottom>2</bottom>
                                 </margins>
                             </label>
 
                             <discrete-slider id="player-rank-priority-slider" min="1" max="50">
                                 <sizing>
-                                    <vertical method="fill">10</vertical>
+                                    <vertical method="content">1</vertical>
                                     <horizontal method="fill">100</horizontal>
                                 </sizing>
 
                                 <margins>
-                                    <top>5</top>
-                                    <bottom>5</bottom>
+                                    <top>2</top>
+                                    <bottom>2</bottom>
                                 </margins>
                             </discrete-slider>
 
@@ -57,20 +57,20 @@
                                 <color>black</color>
 
                                 <margins>
-                                    <top>5</top>
-                                    <bottom>5</bottom>
+                                    <top>2</top>
+                                    <bottom>2</bottom>
                                 </margins>
                             </label>
 
                             <discrete-slider id="manage-player-priority-slider" min="1" max="50">
                                 <sizing>
-                                    <vertical method="fill">10</vertical>
+                                    <vertical method="content">1</vertical>
                                     <horizontal method="fill">100</horizontal>
                                 </sizing>
 
                                 <margins>
-                                    <top>5</top>
-                                    <bottom>5</bottom>
+                                    <top>2</top>
+                                    <bottom>2</bottom>
                                 </margins>
                             </discrete-slider>
 
@@ -80,20 +80,20 @@
                                 <color>black</color>
 
                                 <margins>
-                                    <top>5</top>
-                                    <bottom>5</bottom>
+                                    <top>2</top>
+                                    <bottom>2</bottom>
                                 </margins>
                             </label>
 
                             <discrete-slider id="manage-guild-priority-slider" min="1" max="50">
                                 <sizing>
-                                    <vertical method="fill">10</vertical>
+                                    <vertical method="content">1</vertical>
                                     <horizontal method="fill">100</horizontal>
                                 </sizing>
 
                                 <margins>
-                                    <top>5</top>
-                                    <bottom>5</bottom>
+                                    <top>2</top>
+                                    <bottom>2</bottom>
                                 </margins>
                             </discrete-slider>
 
@@ -103,20 +103,20 @@
                                 <color>black</color>
 
                                 <margins>
-                                    <top>5</top>
-                                    <bottom>5</bottom>
+                                    <top>2</top>
+                                    <bottom>2</bottom>
                                 </margins>
                             </label>
 
                             <discrete-slider id="invite-players-priority-slider" min="1" max="50">
                                 <sizing>
-                                    <vertical method="fill">10</vertical>
+                                    <vertical method="content">1</vertical>
                                     <horizontal method="fill">100</horizontal>
                                 </sizing>
 
                                 <margins>
-                                    <top>5</top>
-                                    <bottom>5</bottom>
+                                    <top>2</top>
+                                    <bottom>2</bottom>
                                 </margins>
                             </discrete-slider>
 
@@ -124,7 +124,7 @@
                                 <text translate="true">gui.guildedparties.confirm</text>
 
                                 <margins>
-                                    <top>5</top>
+                                    <top>4</top>
                                 </margins>
 
                                 <positioning type="relative">100,0</positioning>
@@ -150,7 +150,7 @@
                         <horizontal method="fill">50</horizontal>
                     </sizing>
 
-                    <positioning type="relative">50,0</positioning>
+                    <positioning type="relative">50,50</positioning>
 
                     <allow-overflow>true</allow-overflow>
                 </scroll>
