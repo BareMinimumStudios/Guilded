@@ -150,7 +150,7 @@
                         <horizontal method="fill">50</horizontal>
                     </sizing>
 
-                    <positioning type="relative">50,0</positioning>
+                    <positioning type="relative">50,50</positioning>
 
                     <allow-overflow>true</allow-overflow>
                 </scroll>

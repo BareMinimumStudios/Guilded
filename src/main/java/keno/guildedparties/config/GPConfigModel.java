@@ -15,4 +15,8 @@ public class GPConfigModel {
 
     @Sync(Option.SyncMode.INFORM_SERVER)
     public String guildToQuickJoin = "";
+
+    @RestartRequired
+    @Sync(Option.SyncMode.OVERRIDE_CLIENT)
+    public boolean enableGuildItems = true;
 }

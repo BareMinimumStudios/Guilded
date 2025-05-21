@@ -4,11 +4,14 @@ import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.guilds.Guild;
 import keno.guildedparties.data.guilds.GuildBanList;
 import keno.guildedparties.data.guilds.GuildSettings;
+import keno.guildedparties.data.guilds.items.GuildTagList;
+import keno.guildedparties.data.listeners.HeardData;
 import keno.guildedparties.data.player.Member;
 import keno.guildedparties.server.StateSaverAndLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -119,5 +122,23 @@ public class GuildApi {
     public static void addPlayerToGuild(ServerPlayerEntity player, String guildName) {
         modifyGuildPersistentState(player.getServer(), state ->
                 state.getGuild(guildName).addPlayerToGuild(player, "Recruit"));
+    }
+
+    public static Optional<GuildTagList> getGuildItems(@Nullable MinecraftServer server, String guildName) {
+        if (server != null) {
+            GuildTagList tagList = HeardData.getGuildItems().getOrDefault(guildName, null);
+            if (tagList != null) {
+                return Optional.of(tagList);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public static void addGuildItems(MinecraftServer server, GuildTagList items, String guildName) {
+        if (server != null) {
+            if (HeardData.getGuildItems().containsKey(guildName)) {
+                HeardData.getGuildItems().put(guildName, items);
+            }
+        }
     }
 }

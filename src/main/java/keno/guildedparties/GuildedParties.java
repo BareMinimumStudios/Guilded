@@ -8,15 +8,20 @@ import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.guilds.Guild;
 import keno.guildedparties.data.guilds.GuildBanList;
 import keno.guildedparties.data.guilds.GuildSettings;
+import keno.guildedparties.data.guilds.items.GPComponents;
+import keno.guildedparties.data.guilds.items.GuildTagList;
 import keno.guildedparties.data.listeners.GuildResourceListener;
 import keno.guildedparties.data.listeners.GuildSettingsResourceListener;
 import keno.guildedparties.data.listeners.HeardData;
 import keno.guildedparties.data.player.Member;
+import keno.guildedparties.events.GPItemEvents;
+import keno.guildedparties.events.GuildItemStorage;
 import keno.guildedparties.networking.GPNetworking;
 import keno.guildedparties.server.StateSaverAndLoader;
 import keno.guildedparties.server.commands.GPCommandRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents;
 import net.fabricmc.fabric.api.message.v1.ServerMessageDecoratorEvent;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -28,11 +33,13 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
 public class GuildedParties implements ModInitializer {
@@ -47,18 +54,16 @@ public class GuildedParties implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		GPComponents.init();
+		if (CONFIG.enableGuildItems()) {
+			handleGuildItems();
+		}
+
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new GuildResourceListener());
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new GuildSettingsResourceListener());
 		
 		GPAttachmentTypes.init();
 		GPCommandRegistry.init();
-
-		// Will implement after 1.20.1 port is developed
-		/* if (CONFIG.enableDefaultGuildEvents()) {
-				GPBlocks.init();
-				GPBlockEntities.init();
-				GPItems.init();
-		} */
 
 		GPNetworking.init();
 
@@ -69,6 +74,27 @@ public class GuildedParties implements ModInitializer {
 
 		// This lets 3rd-party mods add compatibility to Guilded Parties more simplistically
 		initializeCompatEntrypoint();
+	}
+
+	public void handleGuildItems() {
+		GPItemEvents.ADD.invoker().add(GuildItemStorage.instance());
+		GPItemEvents.MODIFY.invoker().modify(GuildItemStorage.instance());
+		LOGGER.info("applying guild item restrictions");
+		GuildItemStorage storage = GuildItemStorage.instance();
+		List<Pair<Identifier, GuildTagList>> list = storage.getLists();
+
+		final List<Identifier> ids = new ArrayList<>();
+
+		DefaultItemComponentEvents.MODIFY.register((ctx) -> ctx.modify(item -> {
+            list.stream().filter(pair -> pair.getRight().isGuildItem(item))
+					.distinct().forEach(pair -> ids.add(pair.getLeft()));
+
+            return !ids.isEmpty();
+        }, (builder, item) -> {
+			final List<Identifier> clone = List.copyOf(ids);
+            builder.add(GPComponents.GUILD_COMPONENT, clone);
+            ids.clear();
+        }));
 	}
 
 	public void initializeCompatEntrypoint() {

@@ -37,6 +37,7 @@
 		"fabricloader": ">=0.16.9",
 		"minecraft": "~${minecraft}",
 		"java": ">=21",
-		"fabric-api": ">=0.107.3+1.21.3"
+		"fabric-api": ">=0.107.3+1.21.3",
+		"owo": "*"
 	}
 }

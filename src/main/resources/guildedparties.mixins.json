@@ -3,6 +3,8 @@
   "package": "keno.guildedparties.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "PlayerInventoryMixin",
+    "server.ItemMixin",
     "server.ServerPlayerEntityMixin",
     "server.ServerPlayNetworkHandlerMixin"
   ],
