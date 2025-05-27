@@ -19,9 +19,9 @@ import java.util.Map;
 public record OwnGuildMenuPacket(Member member, Map<String, Rank> players,
                                  List<Rank> ranks, String summary, boolean hasCustomTextures) {
     public static StructEndec<OwnGuildMenuPacket> endec = StructEndecBuilder.of(
-            Member.endec.fieldOf("clientMember", OwnGuildMenuPacket::member),
-            Rank.endec.mapOf().fieldOf("players", OwnGuildMenuPacket::players),
-            Rank.endec.listOf().fieldOf("ranks", OwnGuildMenuPacket::ranks),
+            Member.ENDEC.fieldOf("clientMember", OwnGuildMenuPacket::member),
+            Rank.ENDEC.mapOf().fieldOf("players", OwnGuildMenuPacket::players),
+            Rank.ENDEC.listOf().fieldOf("ranks", OwnGuildMenuPacket::ranks),
             Endec.STRING.fieldOf("summary", OwnGuildMenuPacket::summary),
             Endec.BOOLEAN.fieldOf("has_textures", OwnGuildMenuPacket::hasCustomTextures),
             OwnGuildMenuPacket::new);

@@ -7,7 +7,7 @@ import keno.guildedparties.data.guilds.Rank;
 
 public record ChangePlayerRankPacket(Rank rank, String guildName, String username) {
     public static StructEndec<ChangePlayerRankPacket> endec = StructEndecBuilder.of(
-            Rank.endec.fieldOf("rank", ChangePlayerRankPacket::rank),
+            Rank.ENDEC.fieldOf("rank", ChangePlayerRankPacket::rank),
             Endec.STRING.fieldOf("guildName", ChangePlayerRankPacket::guildName),
             Endec.STRING.fieldOf("username", ChangePlayerRankPacket::username),
             ChangePlayerRankPacket::new);

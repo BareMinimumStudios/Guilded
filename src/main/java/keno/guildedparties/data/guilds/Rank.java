@@ -9,12 +9,12 @@ import io.wispforest.endec.impl.StructEndecBuilder;
  * @see keno.guildedparties.data.player.Member Member
  * @see Guild */
 public record Rank(String name, int priority) {
-    public static final Codec<Rank> codec = RecordCodecBuilder.create(instance -> instance.group(
+    public static final Codec<Rank> CODEC = RecordCodecBuilder.create(instance -> instance.group(
        Codec.STRING.stable().fieldOf("rank_name").forGetter(Rank::name),
        Codec.INT.stable().fieldOf("rank_priority").forGetter(Rank::priority)
     ).apply(instance, Rank::new));
 
-    public static Endec<Rank> endec = StructEndecBuilder.of(
+    public static final Endec<Rank> ENDEC = StructEndecBuilder.of(
             Endec.STRING.fieldOf("rank_name", Rank::name),
             Endec.INT.fieldOf("rank_priority", Rank::priority),
             Rank::new);

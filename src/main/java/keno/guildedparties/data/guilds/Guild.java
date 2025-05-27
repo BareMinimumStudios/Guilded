@@ -24,15 +24,15 @@ public class Guild {
     public static final Codec<Guild> codec = RecordCodecBuilder.create(instance -> instance.group(
             Codec.STRING.stable().fieldOf("guild_name").forGetter(Guild::getName),
             Codec.pair(Codec.STRING.fieldOf("username").codec(),
-                    Rank.codec.fieldOf("rank").codec()).listOf().fieldOf("players").forGetter(Guild::encryptPlayerHashmap),
-            Rank.codec.stable().listOf().fieldOf("ranks").forGetter(Guild::getRanks),
+                    Rank.CODEC.fieldOf("rank").codec()).listOf().fieldOf("players").forGetter(Guild::encryptPlayerHashmap),
+            Rank.CODEC.stable().listOf().fieldOf("ranks").forGetter(Guild::getRanks),
             Codec.STRING.optionalFieldOf("description", "none").forGetter(Guild::getDescription)
     ).apply(instance, Guild::new));
 
     public static Endec<Guild> endec = StructEndecBuilder.of(
             Endec.STRING.fieldOf("guild_name", Guild::getName),
-            Rank.endec.mapOf().fieldOf("players", Guild::getPlayers),
-            Rank.endec.listOf().fieldOf("ranks", Guild::getRanks),
+            Rank.ENDEC.mapOf().fieldOf("players", Guild::getPlayers),
+            Rank.ENDEC.listOf().fieldOf("ranks", Guild::getRanks),
             Endec.STRING.fieldOf("description", Guild::getDescription),
             Guild::new);
 

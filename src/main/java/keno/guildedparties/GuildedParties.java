@@ -55,6 +55,7 @@ public class GuildedParties implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		GPComponents.init();
+
 		if (CONFIG.enableGuildItems()) {
 			handleGuildItems();
 		}

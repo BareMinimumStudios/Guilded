@@ -5,20 +5,23 @@ import keno.guildedparties.data.guilds.Guild;
 import keno.guildedparties.data.guilds.GuildBanList;
 import keno.guildedparties.data.guilds.GuildSettings;
 import keno.guildedparties.data.guilds.items.GuildTagList;
-import keno.guildedparties.data.listeners.HeardData;
 import keno.guildedparties.data.player.Member;
+import keno.guildedparties.events.GuildItemStorage;
 import keno.guildedparties.server.StateSaverAndLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.function.Consumer;
 
-/** Utility functions for guilds */
+/** Api for guilds, should be used on serverside only */
 @SuppressWarnings("UnstableApiUsage")
 public class GuildApi {
+    /** performs the {@code guildConsumer} lambda on all guilds in the server
+     * @param guildConsumer the lambda performed on all guilds **/
     public static void forEachGuildInServer(MinecraftServer server, Consumer<Guild> guildConsumer) {
         StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
         state.getGuilds().values().forEach(guildConsumer);
@@ -35,8 +38,9 @@ public class GuildApi {
         state.markDirty();
     }
 
-    /** A static method to send a message to all players in a guild
-     * @see GuildApi GuildUtils for overloads
+    /** Send a message to all players in a guild.
+     * See the overloads {@link #broadcastToGuildmates(MinecraftServer, Guild, String)} and
+     * {@link #broadcastToGuildmates(MinecraftServer, String, ServerPlayerEntity)}
      * */
     public static void broadcastToGuildmates(MinecraftServer server, Guild guild, Text text) {
         Text message = Text.of("[GC] ").copy().append(text).withColor(0xffffcc00);
@@ -65,14 +69,13 @@ public class GuildApi {
         }
     }
 
-    /** A method that can retrieve an optional containing a guild for you,
-     * avoiding having to repeatedly write boilerplate for guild evaluation and assessment
+    /** Retrieves an optional containing a guild
      * @param guildName The name of the guild you're retrieving, sometimes called a "guildKey" internally
      * @return Optional that will contain a guild object, or be empty if the guild isn't found
      * @see Member
      * @see Guild
-     * @see GuildApi#modifyGuildPersistentState(MinecraftServer, StateHandler) modifyGuildPersistentState
-     * for modifying guild data
+     * @see GuildApi#modifyGuildPersistentState(MinecraftServer, StateHandler) modifying guild data safely
+     * @see GuildApi#getGuild(ServerPlayerEntity)
      * */
     public static Optional<Guild> getGuild(MinecraftServer server, String guildName) {
         StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
@@ -81,6 +84,11 @@ public class GuildApi {
         return Optional.of(state.getGuild(guildName));
     }
 
+    /** Checks if a guild exists
+     * see {@link #doesGuildExist(ServerPlayerEntity, String)}
+     * @param name the guild's name
+     * @return if the guild exists or not
+     */
     public static boolean doesGuildExist(MinecraftServer server, String name) {
         StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
 
@@ -91,12 +99,7 @@ public class GuildApi {
         return doesGuildExist(player.getServer(), name);
     }
 
-    /** Overload of GuildUtils#getGuild that uses a ServerPlayerEntity instead for simplicity
-     * @param player The player to retrieve a guild object from, via their Member data
-     * @see Member
-     * @see Guild
-     * @see GuildApi#getGuild(MinecraftServer, String)
-     * */
+    /** @see GuildApi#getGuild(MinecraftServer, String) **/
     public static Optional<Guild> getGuild(ServerPlayerEntity player) {
         if (player == null || !player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) return Optional.empty();
 
@@ -105,6 +108,9 @@ public class GuildApi {
         return getGuild(server, member.getGuildKey());
     }
 
+    /** Gets a guild's server-side settings
+     * @param guildName the guild's name
+     * @return the guild's settings **/
     public static GuildSettings getSettings(MinecraftServer server, String guildName) {
         StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
 
@@ -113,32 +119,29 @@ public class GuildApi {
         return state.getSettings(guildName);
     }
 
+    /** Gets a guild's banlist
+     * @param guildName guild's name
+     * @return the guild's banlist
+     */
     public static GuildBanList getBanList(MinecraftServer server, String guildName) {
         StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
 
         return state.getBanlist(guildName);
     }
 
-    public static void addPlayerToGuild(ServerPlayerEntity player, String guildName) {
-        modifyGuildPersistentState(player.getServer(), state ->
-                state.getGuild(guildName).addPlayerToGuild(player, "Recruit"));
-    }
-
-    public static Optional<GuildTagList> getGuildItems(@Nullable MinecraftServer server, String guildName) {
+    /**
+     *
+     * @param guildId
+     * @return the guild's taglist, containing the guild-specific
+     */
+    public static Optional<GuildTagList> getGuildItems(@Nullable MinecraftServer server, Identifier guildId) {
         if (server != null) {
-            GuildTagList tagList = HeardData.getGuildItems().getOrDefault(guildName, null);
-            if (tagList != null) {
-                return Optional.of(tagList);
+            GuildItemStorage storage = GuildItemStorage.instance();
+            GuildTagList list = storage.getGuildTagList(guildId);
+            if (list != null) {
+                return Optional.of(list);
             }
         }
         return Optional.empty();
-    }
-
-    public static void addGuildItems(MinecraftServer server, GuildTagList items, String guildName) {
-        if (server != null) {
-            if (HeardData.getGuildItems().containsKey(guildName)) {
-                HeardData.getGuildItems().put(guildName, items);
-            }
-        }
     }
 }

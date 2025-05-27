@@ -15,6 +15,7 @@ import keno.guildedparties.data.player.Member;
 import keno.guildedparties.networking.packets.clientbound.*;
 import keno.guildedparties.networking.packets.serverbound.*;
 import keno.guildedparties.utils.GuildApi;
+import keno.guildedparties.utils.GuildServerPlayerApi;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -491,7 +492,7 @@ public class GPNetworking {
                     return;
                 }
 
-                GuildApi.addPlayerToGuild(player, guildName);
+                GuildServerPlayerApi.addPlayerToGuild(player, guildName);
                 GP_CHANNEL.serverHandle(player).send(new KickedFromMenuPacket());
             }
         });
