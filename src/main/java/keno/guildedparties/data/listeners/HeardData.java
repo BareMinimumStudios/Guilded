@@ -2,8 +2,6 @@ package keno.guildedparties.data.listeners;
 
 import keno.guildedparties.data.guilds.Guild;
 import keno.guildedparties.data.guilds.GuildSettings;
-import keno.guildedparties.data.guilds.items.GuildTagList;
-import keno.guildedparties.events.GuildItemStorage;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,7 +1,7 @@
 package keno.guildedparties.events;
 
 import keno.guildedparties.GuildedParties;
-import keno.guildedparties.data.guilds.items.GuildTagList;
+import keno.guildedparties.data.guilds.items.GuildItemList;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 
@@ -10,16 +10,16 @@ import java.util.*;
 public class GuildItemStorage {
     private static GuildItemStorage INSTANCE;
 
-    private final Map<Identifier, GuildTagList> guildItems;
+    private final Map<Identifier, GuildItemList> guildItems;
     private boolean freezeAddition = false;
     private boolean freezeModification = false;
     private boolean lockStorage = false;
 
-    private GuildItemStorage(Map<Identifier, GuildTagList> guildItems) {
+    private GuildItemStorage(Map<Identifier, GuildItemList> guildItems) {
         this.guildItems = guildItems;
     }
 
-    public void addGuildTagList(Identifier guild, GuildTagList list) {
+    public void addGuildTagList(Identifier guild, GuildItemList list) {
         if (!lockStorage) {
             if (!freezeAddition) {
                 if (!guildItems.containsKey(guild)) guildItems.put(guild, list);
@@ -27,19 +27,19 @@ public class GuildItemStorage {
         }
     }
 
-    public void modifyGuildTagList(Identifier guild, GuildTagList list, int flag) {
+    public void modifyGuildTagList(Identifier guild, GuildItemList list, int flag) {
         if (!lockStorage) {
             if (!freezeModification) {
                 if (guildItems.containsKey(guild)) {
-                    if (flag == 0) guildItems.get(guild).addTags(list);
-                    else if (flag == 1) guildItems.get(guild).subtractTags(list);
+                    if (flag == 0) guildItems.get(guild).addIds(list);
+                    else if (flag == 1) guildItems.get(guild).subtractIds(list);
                     else throw new IllegalStateException("Invalid flag: " + flag);
                 }
             }
         }
     }
 
-    public GuildTagList getGuildTagList(Identifier guild) {
+    public GuildItemList getGuildTagList(Identifier guild) {
         if (!guildItems.containsKey(guild)) {
             GuildedParties.LOGGER.warn("This guild does not have a tag list: {}", guild);
             return null;
@@ -47,9 +47,9 @@ public class GuildItemStorage {
         return guildItems.get(guild);
     }
 
-    public List<Pair<Identifier, GuildTagList>> getLists() {
+    public List<Pair<Identifier, GuildItemList>> getLists() {
         Set<Identifier> ids = guildItems.keySet();
-        List<Pair<Identifier, GuildTagList>> list = new ArrayList<>();
+        List<Pair<Identifier, GuildItemList>> list = new ArrayList<>();
         for (Identifier id : ids) {
             list.add(new Pair<>(id, guildItems.get(id)));
         }

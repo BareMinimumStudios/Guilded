@@ -9,7 +9,7 @@ import keno.guildedparties.data.guilds.Guild;
 import keno.guildedparties.data.guilds.GuildBanList;
 import keno.guildedparties.data.guilds.GuildSettings;
 import keno.guildedparties.data.guilds.items.GPComponents;
-import keno.guildedparties.data.guilds.items.GuildTagList;
+import keno.guildedparties.data.guilds.items.GuildItemList;
 import keno.guildedparties.data.listeners.GuildResourceListener;
 import keno.guildedparties.data.listeners.GuildSettingsResourceListener;
 import keno.guildedparties.data.listeners.HeardData;
@@ -82,7 +82,7 @@ public class GuildedParties implements ModInitializer {
 		GPItemEvents.MODIFY.invoker().modify(GuildItemStorage.instance());
 		LOGGER.info("applying guild item restrictions");
 		GuildItemStorage storage = GuildItemStorage.instance();
-		List<Pair<Identifier, GuildTagList>> list = storage.getLists();
+		List<Pair<Identifier, GuildItemList>> list = storage.getLists();
 
 		final List<Identifier> ids = new ArrayList<>();
 

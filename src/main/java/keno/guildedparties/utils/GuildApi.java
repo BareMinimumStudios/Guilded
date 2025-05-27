@@ -4,7 +4,7 @@ import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.guilds.Guild;
 import keno.guildedparties.data.guilds.GuildBanList;
 import keno.guildedparties.data.guilds.GuildSettings;
-import keno.guildedparties.data.guilds.items.GuildTagList;
+import keno.guildedparties.data.guilds.items.GuildItemList;
 import keno.guildedparties.data.player.Member;
 import keno.guildedparties.events.GuildItemStorage;
 import keno.guildedparties.server.StateSaverAndLoader;
@@ -134,10 +134,10 @@ public class GuildApi {
      * @param guildId
      * @return the guild's taglist, containing the guild-specific
      */
-    public static Optional<GuildTagList> getGuildItems(@Nullable MinecraftServer server, Identifier guildId) {
+    public static Optional<GuildItemList> getGuildItems(@Nullable MinecraftServer server, Identifier guildId) {
         if (server != null) {
             GuildItemStorage storage = GuildItemStorage.instance();
-            GuildTagList list = storage.getGuildTagList(guildId);
+            GuildItemList list = storage.getGuildTagList(guildId);
             if (list != null) {
                 return Optional.of(list);
             }
