@@ -37,7 +37,7 @@ public class Guild {
             Guild::new);
 
     private String name;
-    private HashMap<String, Rank> players = new HashMap<>();
+    private final HashMap<String, Rank> players = new HashMap<>();
     private final List<Rank> ranks = new ArrayList<>();
     private String description;
 
@@ -123,30 +123,13 @@ public class Guild {
 
             if (demotionRank == null) return 0;
             final Rank rank = demotionRank;
-            this.changeMemberRank(server, username, rank);
-            return 1;
+            return this.changeMemberRank(server, username, rank);
         }
         return 0;
     }
 
-    @Deprecated
     public int demoteMember(ServerPlayerEntity player) {
-        if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) return 0;
-        Rank originalRank = this.players.get(player.getGameProfile().getName());
-        Rank demotionRank = null;
-        for (Rank rank : this.ranks) {
-            if (rank.priority() > originalRank.priority()) {
-                if (demotionRank == null || rank.priority() < demotionRank.priority()) {
-                    demotionRank = rank;
-                }
-            }
-        }
-
-        if (demotionRank == null) return 0;
-        final Rank rank = demotionRank;
-        this.players.put(player.getGameProfile().getName(), rank);
-        player.modifyAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, member -> new Member(member.getGuildKey(), rank));
-        return 1;
+        return demoteMember(player.getServer(), player.getGameProfile().getName());
     }
 
     public int promoteMember(ServerPlayerEntity player) {
@@ -167,17 +150,21 @@ public class Guild {
 
             if (promotionRank == null) return 0;
             final Rank rank = promotionRank;
-            player.modifyAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, member -> new Member(member.getGuildKey(), rank));
-            this.players.put(username, rank);
-            return 1;
+            return changeMemberRank(player, rank);
         }
         return 0;
     }
 
-    /** Mod developers are highly recommended to use this for changing player ranks, since it avoids the need to filter through the rank list
-     * @param player The player you want to change the rank of
-     * @param rank The rank you're changing the player to
-     * @return 1 if successful, 0 if it fails*/
+    public int changeMemberRank(MinecraftServer server, String playerUsername, String rankName) {
+        Rank playerRank = ranks.stream().filter(rank -> rank.name().equals(rankName)).findFirst().orElseThrow();
+        return changeMemberRank(server, playerUsername, playerRank);
+    }
+
+    public int changeMemberRank(ServerPlayerEntity player, String rankName) {
+        Rank playerRank = ranks.stream().filter(rank -> rank.name().equals(rankName)).findFirst().orElseThrow();
+        return changeMemberRank(player, playerRank);
+    }
+
     public int changeMemberRank(ServerPlayerEntity player, Rank rank) {
         String username = player.getGameProfile().getName();
 
