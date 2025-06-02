@@ -130,8 +130,8 @@ public class GuildApi {
     }
 
     /**
-     *
-     * @param guildId
+     * Returns an optional containing a guild's item list, which defines what items are whitelisted to that guild
+     * @param guildId The guild's id
      * @return the guild's taglist, containing the guild-specific
      */
     public static Optional<GuildItemList> getGuildItems(@Nullable MinecraftServer server, Identifier guildId) {

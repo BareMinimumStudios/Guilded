@@ -8,15 +8,14 @@ import io.wispforest.endec.Endec;
 import io.wispforest.endec.impl.StructEndecBuilder;
 import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.player.Member;
+import keno.guildedparties.events.GuildPlayerEvents;
 import keno.guildedparties.networking.GPNetworking;
 import keno.guildedparties.networking.packets.clientbound.KickedFromMenuPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 /** The object that stores a guild's members, name, and ranks */
 @SuppressWarnings("UnstableApiUsage")
@@ -38,7 +37,7 @@ public class Guild {
 
     private String name;
     private final HashMap<String, Rank> players = new HashMap<>();
-    private final List<Rank> ranks = new ArrayList<>();
+    private List<Rank> ranks = new ArrayList<>();
     private String description;
 
     public Guild(String name, List<Pair<String, Rank>> playerList, List<Rank> ranks, String description) {
@@ -139,17 +138,17 @@ public class Guild {
 
         if (this.players.containsKey(username)) {
             Rank originalRank = this.players.get(username);
-            Rank promotionRank = null;
-            for (Rank rank : this.ranks) {
-                if (rank.priority() < originalRank.priority()) {
-                    if (promotionRank == null || rank.priority() > promotionRank.priority()) {
-                        promotionRank = rank;
-                    }
+            final AtomicReference<Rank> promotionRank = new AtomicReference<>();
+            this.ranks.stream().filter(rank -> rank.priority() < originalRank.priority())
+                    .forEach(rank -> {
+                if (promotionRank.get() == null || rank.priority() > promotionRank.get().priority()) {
+                    promotionRank.set(rank);
                 }
-            }
+            });
 
-            if (promotionRank == null) return 0;
-            final Rank rank = promotionRank;
+            if (promotionRank.get() == null) return 0;
+
+            final Rank rank = promotionRank.get();
             return changeMemberRank(player, rank);
         }
         return 0;
@@ -173,6 +172,7 @@ public class Guild {
         if (this.players.containsKey(username)) {
             this.players.put(username, rank);
             player.modifyAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, member -> new Member(member.getGuildKey(), rank));
+            GuildPlayerEvents.ON_RANK_CHANGE.invoker().onRankChange(player, rank, this);
             return 1;
         }
         return 0;
@@ -194,9 +194,12 @@ public class Guild {
     public void addPlayerToGuild(ServerPlayerEntity player, String rankName) {
         if (!players.containsKey(player.getGameProfile().getName())) {
             if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
-                Rank playerRank = ranks.stream().filter(rank -> rank.name().equals(rankName)).findFirst().get();
-                players.put(player.getGameProfile().getName(), playerRank);
-                player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, new Member(this.name, playerRank));
+                if (GuildPlayerEvents.CAN_JOIN_GUILD.invoker().canJoinGuild(player, this)) {
+                    Rank playerRank = ranks.stream().filter(rank -> rank.name().equals(rankName)).findFirst().get();
+                    players.put(player.getGameProfile().getName(), playerRank);
+                    player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, new Member(this.name, playerRank));
+                    GuildPlayerEvents.ON_GUILD_JOIN.invoker().onGuildJoin(player, this);
+                }
             }
         }
     }
@@ -204,7 +207,10 @@ public class Guild {
     public void removePlayerFromGuild(ServerPlayerEntity player) {
         if (players.containsKey(player.getGameProfile().getName())) {
             if (player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
-                players.remove(player.getGameProfile().getName());
+                String playerName = player.getGameProfile().getName();
+                Rank rankBeforeLeaving = players.get(playerName);
+                GuildPlayerEvents.ON_LEAVING_GUILD.invoker().onLeavingGuild(player, rankBeforeLeaving, this);
+                players.remove(playerName);
                 player.removeAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
             }
         }
@@ -227,16 +233,7 @@ public class Guild {
         // To ensure ranks are ordered correctly, this is to be executed whenever a rank is added or removed
         // Uses pseudocode for the insertion sort, since we aren't working with massive amounts of data.
         // We do this so finding a guild's ranks later is quicker, since we use a list to store them
-        for (int i = 1; i < this.ranks.size(); i++) {
-            Rank rank = ranks.get(i);
-            int key = rank.priority();
-            int j = i - 1;
-            while (j >= 0 && this.ranks.get(j).priority() > key) {
-                this.ranks.set(j + 1, this.ranks.get(j));
-                j = j - 1;
-            }
-            this.ranks.set(j + 1, rank);
-        }
+        this.ranks = this.ranks.stream().sorted(Comparator.comparingInt(Rank::priority)).toList();
     }
 
     public boolean isPlayerInGuild(String username) {

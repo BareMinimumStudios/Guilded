@@ -11,6 +11,7 @@ import keno.guildedparties.data.guilds.GuildBanList;
 import keno.guildedparties.data.guilds.GuildSettings;
 import keno.guildedparties.data.guilds.Rank;
 import keno.guildedparties.data.player.Member;
+import keno.guildedparties.events.GuildEvents;
 import keno.guildedparties.server.StateSaverAndLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
@@ -37,16 +38,19 @@ public class GuildManagementCommands {
                 Rank leaderRank = new Rank(leaderRankName, 1);
                 Pair<String, Rank> leader = new Pair<>(player.getName().getLiteralString(), leaderRank);
                 Guild guild = new Guild(guildName, List.of(leader), List.of(leaderRank), "none");
-                GuildSettings settings = GuildSettings.getDefaultSettings();
-                GuildBanList list = new GuildBanList(new ArrayList<>());
-                state.addGuild(guild);
-                state.addBanlist(list, guildName);
-                state.addSettings(settings, guildName);
-                state.markDirty();
-                player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, new Member(guildName, leaderRank));
-                server.getPlayerManager().broadcast(Text.of("New guild has been created by "
-                        + player.getGameProfile().getName() + ": " + guildName), false);
-                return 1;
+                if (GuildEvents.CAN_CREATE_GUILD.invoker().canCreateGuild(player, guild)) {
+                    GuildSettings settings = GuildSettings.getDefaultSettings();
+                    GuildBanList list = new GuildBanList(new ArrayList<>());
+                    state.addGuild(guild);
+                    state.addBanlist(list, guildName);
+                    state.addSettings(settings, guildName);
+                    state.markDirty();
+                    player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, new Member(guildName, leaderRank));
+                    server.getPlayerManager().broadcast(Text.of("New guild has been created by "
+                            + player.getGameProfile().getName() + ": " + guildName), false);
+                    GuildEvents.ON_GUILD_CREATION.invoker().onGuildCreation(player, guild);
+                    return 1;
+                }
             } else {
                 player.sendMessageToClient(Text.of("This guild already exists"), true);
             }
@@ -74,6 +78,7 @@ public class GuildManagementCommands {
                         guild.removePlayerFromGuild(player);
                     }
                 }
+                GuildEvents.ON_GUILD_CLOSURE.invoker().onGuildClosure(leader, guild);
                 state.removeGuild(member.getGuildKey());
                 server.getPlayerManager().broadcast(Text.of("The guild, " + guild.getName() + ", has been disbanded"), false);
                 return 1;

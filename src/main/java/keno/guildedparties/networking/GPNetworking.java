@@ -12,6 +12,7 @@ import keno.guildedparties.data.guilds.GuildSettings;
 import keno.guildedparties.data.guilds.Rank;
 import keno.guildedparties.data.player.Invite;
 import keno.guildedparties.data.player.Member;
+import keno.guildedparties.events.GuildEvents;
 import keno.guildedparties.networking.packets.clientbound.*;
 import keno.guildedparties.networking.packets.serverbound.*;
 import keno.guildedparties.utils.GuildApi;
@@ -363,6 +364,7 @@ public class GPNetworking {
                                 member.removeAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
                             }
                         }
+                        GuildEvents.ON_GUILD_CLOSURE.invoker().onGuildClosure(player, GuildApi.getGuild(player).orElseThrow());
                         state.removeGuild(handler.guildName());
                     });
 
@@ -388,16 +390,20 @@ public class GPNetworking {
                     List<Rank> ranks = List.of(leadershipRank);
                     Guild guild = new Guild(guildName, playerMap, ranks, handler.description());
 
-                    GuildApi.modifyGuildPersistentState(server, state -> {
-                        state.addGuild(guild);
-                        state.addSettings(GuildSettings.getDefaultSettings(), guildName);
-                        state.addBanlist(new GuildBanList(List.of()), guildName);
-                    });
+                    if (GuildEvents.CAN_CREATE_GUILD.invoker().canCreateGuild(player, guild)) {
+                        GuildApi.modifyGuildPersistentState(server, state -> {
+                            state.addGuild(guild);
+                            state.addSettings(GuildSettings.getDefaultSettings(), guildName);
+                            state.addBanlist(new GuildBanList(List.of()), guildName);
+                        });
 
-                    player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, new Member(guildName, leadershipRank));
+                        player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, new Member(guildName, leadershipRank));
 
-                    server.getPlayerManager().broadcast(Text.translatable("guildedparties.guild_was_created",
-                            handler.guildName(), username), false);
+                        server.getPlayerManager().broadcast(Text.translatable("guildedparties.guild_was_created",
+                                handler.guildName(), username), false);
+
+                        GuildEvents.ON_GUILD_CREATION.invoker().onGuildCreation(player, guild);
+                    }
                 } else {
                     player.sendMessageToClient(Text.translatable("guildedparties.already_in_guild"), true);
                 }

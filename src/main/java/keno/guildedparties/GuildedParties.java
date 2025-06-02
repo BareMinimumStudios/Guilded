@@ -14,7 +14,7 @@ import keno.guildedparties.data.listeners.GuildResourceListener;
 import keno.guildedparties.data.listeners.GuildSettingsResourceListener;
 import keno.guildedparties.data.listeners.HeardData;
 import keno.guildedparties.data.player.Member;
-import keno.guildedparties.events.GPItemEvents;
+import keno.guildedparties.events.GuildItemEvents;
 import keno.guildedparties.events.GuildItemStorage;
 import keno.guildedparties.networking.GPNetworking;
 import keno.guildedparties.server.StateSaverAndLoader;
@@ -78,8 +78,8 @@ public class GuildedParties implements ModInitializer {
 	}
 
 	public void handleGuildItems() {
-		GPItemEvents.ADD.invoker().add(GuildItemStorage.instance());
-		GPItemEvents.MODIFY.invoker().modify(GuildItemStorage.instance());
+		GuildItemEvents.ADD.invoker().add(GuildItemStorage.instance());
+		GuildItemEvents.MODIFY.invoker().modify(GuildItemStorage.instance());
 		LOGGER.info("applying guild item restrictions");
 		GuildItemStorage storage = GuildItemStorage.instance();
 		List<Pair<Identifier, GuildItemList>> list = storage.getLists();

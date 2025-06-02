@@ -3,9 +3,9 @@ package keno.guildedparties.events;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 
-public class GPItemEvents {
+public class GuildItemEvents {
     /// Use this event to create item whitelists to specific guilds only
-    public static Event<AddGuildItemsCallback> ADD = EventFactory.createArrayBacked(AddGuildItemsCallback.class,
+    public static final Event<AddGuildItemsCallback> ADD = EventFactory.createArrayBacked(AddGuildItemsCallback.class,
             (listeners) -> (storage) -> {
                 storage.freezeModification();
                 for (AddGuildItemsCallback listener : listeners) {
@@ -16,7 +16,7 @@ public class GPItemEvents {
             });
 
     /// Use this event to modify guild item whitelists
-    public static Event<ModifyGuildItemsCallback> MODIFY = EventFactory.createArrayBacked(ModifyGuildItemsCallback.class,
+    public static final Event<ModifyGuildItemsCallback> MODIFY = EventFactory.createArrayBacked(ModifyGuildItemsCallback.class,
             (listeners) -> (storage) -> {
                 for (ModifyGuildItemsCallback listener : listeners) {
                     listener.modify(storage);
