@@ -4,11 +4,12 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.wispforest.endec.Endec;
 import io.wispforest.endec.impl.StructEndecBuilder;
+import org.jetbrains.annotations.NotNull;
 
 /** Rank object, stores it's name and priority (Priority is handled as: 1- = highest perms, 50 = lowest)
  * @see keno.guildedparties.data.player.Member Member
  * @see Guild */
-public record Rank(String name, int priority) {
+public record Rank(String name, int priority) implements Comparable<Rank> {
     public static final Codec<Rank> CODEC = RecordCodecBuilder.create(instance -> instance.group(
        Codec.STRING.stable().fieldOf("rank_name").forGetter(Rank::name),
        Codec.INT.stable().fieldOf("rank_priority").forGetter(Rank::priority)
@@ -21,5 +22,10 @@ public record Rank(String name, int priority) {
 
     public boolean isCoLeader() {
         return priority <= 1;
+    }
+
+    @Override
+    public int compareTo(@NotNull Rank rank) {
+        return Integer.compare(priority(), rank.priority());
     }
 }
