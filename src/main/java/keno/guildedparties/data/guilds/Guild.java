@@ -8,7 +8,7 @@ import io.wispforest.endec.Endec;
 import io.wispforest.endec.impl.StructEndecBuilder;
 import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.player.Member;
-import keno.guildedparties.events.GuildPlayerEvents;
+import keno.guildedparties.api.events.GuildPlayerEvents;
 import keno.guildedparties.networking.GPNetworking;
 import keno.guildedparties.networking.packets.clientbound.KickedFromMenuPacket;
 import net.minecraft.server.MinecraftServer;

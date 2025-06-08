@@ -7,7 +7,7 @@ import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.guilds.GuildSettings;
 import keno.guildedparties.data.player.Invite;
 import keno.guildedparties.data.player.Member;
-import keno.guildedparties.utils.GuildApi;
+import keno.guildedparties.api.GuildApi;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;

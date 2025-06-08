@@ -8,7 +8,7 @@ import keno.guildedparties.data.guilds.Guild;
 import keno.guildedparties.data.guilds.GuildSettings;
 import keno.guildedparties.data.guilds.Rank;
 import keno.guildedparties.data.player.Member;
-import keno.guildedparties.utils.GuildApi;
+import keno.guildedparties.api.GuildApi;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.List;

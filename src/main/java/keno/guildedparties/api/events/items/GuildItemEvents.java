@@ -1,4 +1,4 @@
-package keno.guildedparties.events;
+package keno.guildedparties.api.events.items;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;

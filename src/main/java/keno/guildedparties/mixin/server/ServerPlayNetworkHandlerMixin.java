@@ -5,7 +5,7 @@ import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.guilds.Guild;
 import keno.guildedparties.data.player.Member;
 import keno.guildedparties.server.StateSaverAndLoader;
-import keno.guildedparties.utils.GuildApi;
+import keno.guildedparties.api.GuildApi;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.listener.ServerPlayPacketListener;
 import net.minecraft.network.listener.TickablePacketListener;

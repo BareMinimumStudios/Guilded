@@ -1,9 +1,8 @@
-package keno.guildedparties.utils;
+package keno.guildedparties.api;
 
 import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.player.Member;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.Optional;
 

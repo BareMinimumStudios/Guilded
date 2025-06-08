@@ -1,4 +1,4 @@
-package keno.guildedparties.events;
+package keno.guildedparties.api.events;
 
 
 import keno.guildedparties.data.guilds.Guild;

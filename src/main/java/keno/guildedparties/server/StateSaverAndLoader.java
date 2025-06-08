@@ -6,13 +6,11 @@ import keno.guildedparties.GuildedParties;
 import keno.guildedparties.data.guilds.Guild;
 import keno.guildedparties.data.guilds.GuildBanList;
 import keno.guildedparties.data.guilds.GuildSettings;
-import keno.guildedparties.events.GuildEvents;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.PersistentStateManager;
 import net.minecraft.world.World;
@@ -136,7 +134,7 @@ public class StateSaverAndLoader extends PersistentState {
         return saverAndLoader;
     }
 
-    private static Type<StateSaverAndLoader> type = new Type<>(
+    private static final Type<StateSaverAndLoader> type = new Type<>(
             StateSaverAndLoader::new,
             StateSaverAndLoader::createFromNbt,
             null);

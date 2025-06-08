@@ -1,4 +1,4 @@
-package keno.guildedparties.utils;
+package keno.guildedparties.api;
 
 import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.guilds.Guild;
@@ -6,8 +6,9 @@ import keno.guildedparties.data.guilds.GuildBanList;
 import keno.guildedparties.data.guilds.GuildSettings;
 import keno.guildedparties.data.guilds.items.GuildItemList;
 import keno.guildedparties.data.player.Member;
-import keno.guildedparties.events.GuildItemStorage;
+import keno.guildedparties.api.events.items.GuildItemStorage;
 import keno.guildedparties.server.StateSaverAndLoader;
+import keno.guildedparties.utils.StateHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;

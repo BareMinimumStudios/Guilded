@@ -11,7 +11,7 @@ import keno.guildedparties.data.guilds.GuildBanList;
 import keno.guildedparties.data.guilds.GuildSettings;
 import keno.guildedparties.data.guilds.Rank;
 import keno.guildedparties.data.player.Member;
-import keno.guildedparties.events.GuildEvents;
+import keno.guildedparties.api.events.GuildEvents;
 import keno.guildedparties.server.StateSaverAndLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
