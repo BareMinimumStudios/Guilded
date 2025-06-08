@@ -15,7 +15,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 /** The object that stores a guild's members, name, and ranks */
 @SuppressWarnings("UnstableApiUsage")
@@ -113,14 +112,15 @@ public class Guild {
             Rank originalRank = this.players.get(username);
             Rank demotionRank = null;
             for (Rank rank : this.ranks) {
-                if (rank.priority() > originalRank.priority()) {
-                    if (demotionRank == null || rank.priority() < demotionRank.priority()) {
+                if (rank.compareTo(originalRank) > 0) {
+                    if (demotionRank == null || rank.compareTo(demotionRank) < 0) {
                         demotionRank = rank;
                     }
                 }
             }
 
             if (demotionRank == null) return 0;
+
             final Rank rank = demotionRank;
             return this.changeMemberRank(server, username, rank);
         }
@@ -138,17 +138,18 @@ public class Guild {
 
         if (this.players.containsKey(username)) {
             Rank originalRank = this.players.get(username);
-            final AtomicReference<Rank> promotionRank = new AtomicReference<>();
-            this.ranks.stream().filter(rank -> rank.priority() < originalRank.priority())
-                    .forEach(rank -> {
-                if (promotionRank.get() == null || rank.priority() > promotionRank.get().priority()) {
-                    promotionRank.set(rank);
+            Rank promotionRank = null;
+            for (Rank rank : this.ranks) {
+                if (rank.compareTo(originalRank) < 0) {
+                    if (promotionRank == null || rank.compareTo(promotionRank) > 0) {
+                        promotionRank = rank;
+                    }
                 }
-            });
+            }
 
-            if (promotionRank.get() == null) return 0;
+            if (promotionRank == null) return 0;
 
-            final Rank rank = promotionRank.get();
+            final Rank rank = promotionRank;
             return changeMemberRank(player, rank);
         }
         return 0;
@@ -231,9 +232,7 @@ public class Guild {
 
     private void sortRanks() {
         // To ensure ranks are ordered correctly, this is to be executed whenever a rank is added or removed
-        // Uses pseudocode for the insertion sort, since we aren't working with massive amounts of data.
-        // We do this so finding a guild's ranks later is quicker, since we use a list to store them
-        this.ranks = this.ranks.stream().sorted(Comparator.comparingInt(Rank::priority)).toList();
+        this.ranks = this.ranks.stream().sorted().toList();
     }
 
     public boolean isPlayerInGuild(String username) {
