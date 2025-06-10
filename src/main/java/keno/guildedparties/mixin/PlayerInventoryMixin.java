@@ -26,21 +26,23 @@ public abstract class PlayerInventoryMixin implements Inventory {
     @Inject(method = "insertStack(Lnet/minecraft/item/ItemStack;)Z", at = @At("HEAD"), cancellable = true)
     public void guildedparties$insertStack(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         if (player instanceof ServerPlayerEntity serverPlayer) {
-            Item item = stack.getItem();
-            if (item.getComponents().contains(GPComponents.GUILD_COMPONENT)) {
-                if (serverPlayer.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
-                    List<Identifier> ids = item.getComponents().get(GPComponents.GUILD_COMPONENT);
-                    String guildName = serverPlayer.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT).getGuildKey();
+            if (GuildedParties.CONFIG.enableGuildItems()) {
+                Item item = stack.getItem();
+                if (item.getComponents().contains(GPComponents.GUILD_COMPONENT)) {
+                    if (serverPlayer.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
+                        List<Identifier> ids = item.getComponents().get(GPComponents.GUILD_COMPONENT);
+                        String guildName = serverPlayer.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT).getGuildKey();
 
-                    if (ids != null) {
-                        if (ids.stream().noneMatch(id -> id.getPath().equals(guildName))) {
-                            cir.setReturnValue(false);
+                        if (ids != null) {
+                            if (ids.stream().noneMatch(id -> id.getPath().equals(guildName))) {
+                                cir.setReturnValue(false);
+                            }
+                        } else {
+                            GuildedParties.LOGGER.warn("No guild ids, despite being marked as a guild item. \nItem: {}", item.getName().toString());
                         }
                     } else {
-                        GuildedParties.LOGGER.warn("No guild ids, despite being marked as a guild item. \nItem: {}", item.getName().toString());
+                        cir.setReturnValue(false);
                     }
-                } else {
-                    cir.setReturnValue(false);
                 }
             }
         }

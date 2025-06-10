@@ -82,21 +82,23 @@ public class GuildedParties implements ModInitializer {
 		GuildItemEvents.MODIFY.invoker().modify(GuildItemStorage.instance());
 		LOGGER.info("applying guild item restrictions");
 		GuildItemStorage storage = GuildItemStorage.instance();
+
+
 		List<Pair<Identifier, GuildItemList>> list = storage.getLists();
 
 		final List<Identifier> ids = new ArrayList<>();
 
 		DefaultItemComponentEvents.MODIFY.register((ctx) -> ctx.modify(item -> {
-            list.stream().filter(pair -> pair.getRight().isGuildItem(item))
+			list.stream().filter(pair -> pair.getRight().isGuildItem(item))
 					.distinct().forEach(pair -> ids.add(pair.getLeft()));
-
-            return !ids.isEmpty();
-        }, (builder, item) -> {
+			return !ids.isEmpty();
+			}, (builder, item) -> {
 			final List<Identifier> clone = List.copyOf(ids);
-            builder.add(GPComponents.GUILD_COMPONENT, clone);
-            ids.clear();
-        }));
-	}
+			builder.add(GPComponents.GUILD_COMPONENT, clone);
+			ids.clear();
+		}));
+		LOGGER.info("Item restrictions applied");
+    }
 
 	public void initializeCompatEntrypoint() {
 		GuildedParties.LOGGER.info("Initializing compatibilities");

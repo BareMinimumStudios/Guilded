@@ -1,5 +1,6 @@
 package keno.guildedparties.mixin;
 
+import keno.guildedparties.GuildedParties;
 import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
@@ -15,7 +16,7 @@ public class GPMixinConfigPlugin implements IMixinConfigPlugin {
 
     @Override
     public void onLoad(String mixinPackage) {
-
+        GuildedParties.LOGGER.info("Booting up mixin plugin");
     }
 
     @Override
