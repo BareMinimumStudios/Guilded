@@ -1,10 +1,12 @@
 package keno.guildedparties.mixin.server;
 
+/*? >= 1.21.3 {*/import blue.endless.jankson.annotation.Nullable;/*?}*/
 import com.mojang.authlib.GameProfile;
+import keno.guildedparties.GuildedParties;
 import keno.guildedparties.data.GPAttachmentTypes;
 import keno.guildedparties.data.guilds.items.GPComponents;
 import keno.guildedparties.data.player.Member;
-import net.minecraft.entity.ItemEntity;
+/*? >= 1.21.3 {*/import net.minecraft.entity.ItemEntity;/*?}*/
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -13,7 +15,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -26,6 +27,8 @@ import java.util.stream.Stream;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin extends PlayerEntity implements PlayerTicksImpl {
+
+    //? if >=1.21.3
     @Shadow @Nullable protected abstract ItemEntity dropPlayerItem(ItemStack stack, boolean throwRandomly, boolean retainOwnership);
 
     @Shadow public abstract void sendMessage(Text message, boolean overlay);
@@ -51,22 +54,24 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Pl
             this.guildedparties$invite_ticks = 1800;
         }
 
-        if (--this.guildedparties$item_ticks <= 0) {
-            if (!getInventory().isEmpty()) {
-                Stream<ItemStack> stream = Stream.concat(Stream.concat(getInventory().main.stream(), getInventory().armor.stream()),
-                        getInventory().offHand.stream());
+        if (GuildedParties.CONFIG.enableGuildItems()) {
+            if (--this.guildedparties$item_ticks <= 0) {
+                if (!getInventory().isEmpty()) {
+                    Stream<ItemStack> stream = Stream.concat(Stream.concat(getInventory().main.stream(), getInventory().armor.stream()),
+                            getInventory().offHand.stream());
 
-                stream = stream.filter(itemstack -> itemstack.getItem().getComponents().contains(GPComponents.GUILD_COMPONENT));
+                    stream = stream.filter(itemstack -> itemstack.getItem().getComponents().contains(GPComponents.GUILD_COMPONENT));
 
-                if (!hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
-                    stream.forEach(this::guildedparties$removeItemStack);
-                } else {
-                    Member member = getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
-                    String guildName = member.getGuildKey();
-                    stream.forEach(stack -> guildedparties$canKeepItemStack(stack, guildName));
+                    if (!hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
+                        stream.forEach(this::guildedparties$removeItemStack);
+                    } else {
+                        Member member = getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
+                        String guildName = member.getGuildKey();
+                        stream.forEach(stack -> guildedparties$canKeepItemStack(stack, guildName));
+                    }
                 }
+                this.guildedparties$item_ticks = 36000;
             }
-            this.guildedparties$item_ticks = 36000;
         }
     }
 
@@ -91,7 +96,11 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Pl
     @Unique
     public void guildedparties$removeItemStack(ItemStack stack) {
         int i = getInventory().getSlotWithStack(stack);
+
+        //? if >= 1.21.3
         dropPlayerItem(stack, false ,false);
+        //? if < 1.21.3
+        /*this.dropItem(stack, false, false);*/
         getInventory().removeStack(i);
     }
 
@@ -104,7 +113,10 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Pl
         if (ids.stream().noneMatch(id -> id.getPath().equals(guildName))) {
             int i = getInventory().getSlotWithStack(stack);
             sendMessage(Text.translatable("guildedparties.cannot_use_item"), false);
-            dropPlayerItem(stack, false, false);
+            //? if < 1.21.3
+            /*this.dropItem(stack, false, false);*/
+            //? if >= 1.21.3
+            dropPlayerItem(stack, false ,false);
             getInventory().removeStack(i);
         }
     }
