@@ -5,17 +5,14 @@ import com.google.gson.GsonBuilder;
 import keno.guildedparties.impl.compat.GuildedCompatEntrypoint;
 import keno.guildedparties.api.config.GPConfig;
 import keno.guildedparties.impl.data.GPAttachmentTypes;
-import keno.guildedparties.impl.data.guilds.Guild;
-import keno.guildedparties.impl.data.guilds.GuildBanList;
-import keno.guildedparties.impl.data.guilds.GuildSettings;
+import keno.guildedparties.impl.data.guilds.*;
 import keno.guildedparties.impl.data.guilds.items.GPComponents;
 import keno.guildedparties.impl.data.guilds.items.GuildItemList;
-import keno.guildedparties.impl.data.listeners.GuildResourceListener;
-import keno.guildedparties.impl.data.listeners.GuildSettingsResourceListener;
-import keno.guildedparties.impl.data.listeners.HeardData;
+import keno.guildedparties.impl.data.listeners.*;
 import keno.guildedparties.impl.data.player.Member;
 import keno.guildedparties.api.events.items.GuildItemEvents;
 import keno.guildedparties.api.events.items.GuildItemStorage;
+import keno.guildedparties.impl.integration.Integrations;
 import keno.guildedparties.impl.networking.GPNetworking;
 import keno.guildedparties.impl.server.StateSaverAndLoader;
 import keno.guildedparties.impl.server.commands.GPCommandRegistry;
@@ -55,6 +52,7 @@ public class GuildedParties implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		GPComponents.init();
+		Integrations.initializeIntegrations();
 
 		if (CONFIG.enableGuildItems()) {
 			handleGuildItems();
@@ -101,7 +99,7 @@ public class GuildedParties implements ModInitializer {
     }
 
 	public void initializeCompatEntrypoint() {
-		GuildedParties.LOGGER.info("Initializing compatibilities");
+		GuildedParties.LOGGER.info("Getting compatibilities");
 
 		FabricLoader.getInstance().getEntrypointContainers("guilded", GuildedCompatEntrypoint.class).forEach(container -> {
 			GuildedCompatEntrypoint entrypoint = container.getEntrypoint();

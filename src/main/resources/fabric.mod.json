@@ -5,7 +5,8 @@
 	"name": "Guilded",
 	"description": "A faction mod for the user and developer",
 	"authors": [
-		"Keno"
+		"Keno",
+		"Bare Minimum Studios"
 	],
 	"contact": {
 		"sources": "https://github.com/XeroTheProtogen/GuildedParties"
