@@ -1,7 +1,7 @@
 package keno.guildedparties.api.events.items;
 
 import keno.guildedparties.GuildedParties;
-import keno.guildedparties.data.guilds.items.GuildItemList;
+import keno.guildedparties.impl.data.guilds.items.GuildItemList;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 

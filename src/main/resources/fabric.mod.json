@@ -17,17 +17,14 @@
 		"main": [
 			"keno.guildedparties.GuildedParties"
 		],
-		"fabric-datagen": [
-			"keno.guildedparties.GuildedPartiesDataGenerator"
-		],
 		"server": [
-			"keno.guildedparties.server.GPServer"
+			"keno.guildedparties.impl.server.GPServer"
 		],
 		"client": [
-			"keno.guildedparties.client.GPClient"
+			"keno.guildedparties.impl.client.GPClient"
 		],
 		"guilded": [
-			"keno.guildedparties.compat.GPGuildedCompat"
+			"keno.guildedparties.impl.compat.GPGuildedCompat"
 		]
 	},
 	"mixins": [

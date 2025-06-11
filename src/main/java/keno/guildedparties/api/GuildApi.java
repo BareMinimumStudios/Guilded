@@ -1,14 +1,14 @@
 package keno.guildedparties.api;
 
-import keno.guildedparties.data.GPAttachmentTypes;
-import keno.guildedparties.data.guilds.Guild;
-import keno.guildedparties.data.guilds.GuildBanList;
-import keno.guildedparties.data.guilds.GuildSettings;
-import keno.guildedparties.data.guilds.items.GuildItemList;
-import keno.guildedparties.data.player.Member;
+import keno.guildedparties.impl.data.GPAttachmentTypes;
+import keno.guildedparties.impl.data.guilds.Guild;
+import keno.guildedparties.impl.data.guilds.GuildBanList;
+import keno.guildedparties.impl.data.guilds.GuildSettings;
+import keno.guildedparties.impl.data.guilds.items.GuildItemList;
+import keno.guildedparties.impl.data.player.Member;
 import keno.guildedparties.api.events.items.GuildItemStorage;
-import keno.guildedparties.server.StateSaverAndLoader;
-import keno.guildedparties.utils.StateHandler;
+import keno.guildedparties.impl.server.StateSaverAndLoader;
+import keno.guildedparties.impl.utils.StateHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;

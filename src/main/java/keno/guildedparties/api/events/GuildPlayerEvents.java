@@ -1,8 +1,8 @@
 package keno.guildedparties.api.events;
 
 
-import keno.guildedparties.data.guilds.Guild;
-import keno.guildedparties.data.guilds.Rank;
+import keno.guildedparties.impl.data.guilds.Guild;
+import keno.guildedparties.impl.data.guilds.Rank;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.server.network.ServerPlayerEntity;

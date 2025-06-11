@@ -1,6 +1,6 @@
 package keno.guildedparties.api;
 
-import keno.guildedparties.data.player.Member;
+import keno.guildedparties.impl.data.player.Member;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 
