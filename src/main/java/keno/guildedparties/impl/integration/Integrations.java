@@ -22,8 +22,7 @@ import java.util.Optional;
  */
 public class Integrations {
     public static void initializeIntegrations() {
-        GuildedParties.LOGGER.info("Starting integrations");
-        placeholdersIntegration();
+
     }
 
     /**
@@ -33,7 +32,7 @@ public class Integrations {
      * <p> "%guilded:priority%" - The player's rank priority (If the player is leader, display as "leader" instead)
      * (Invalid if not in a guild).
      */
-    private static void placeholdersIntegration() {
+    public static void placeholdersIntegration() {
         GuildedParties.LOGGER.info("Integrating into placeholders-api");
 
         Placeholders.register(Identifier.of("guilded", "guild"), (ctx, arg) -> {

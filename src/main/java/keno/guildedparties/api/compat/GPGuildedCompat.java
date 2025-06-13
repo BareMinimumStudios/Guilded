@@ -1,4 +1,4 @@
-package keno.guildedparties.impl.compat;
+package keno.guildedparties.api.compat;
 
 import keno.guildedparties.GuildedParties;
 

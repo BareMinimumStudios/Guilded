@@ -21,6 +21,13 @@ repositories {
 		url "https://maven.nucleoid.xyz/"
 		name "Nucleoid"
 	}
+
+	if (stonecutter.current.project == "1.21.1") {
+		maven {
+			url = 'https://maven.blamejared.com'
+			name = 'BlameJared Maven'
+		}
+	}
 }
 
 dependencies {
@@ -34,6 +41,10 @@ dependencies {
 	annotationProcessor(modImplementation "io.wispforest:owo-lib:${property('owo_version')}")
 	include "io.wispforest:owo-sentinel:${property('owo_version')}"
 	modImplementation(include("eu.pb4:placeholder-api:${property('placeholder_version')}"))
+
+	if (stonecutter.current.project == "1.21.1") {
+		modCompileOnlyApi("com.blamejared.crafttweaker:CraftTweaker-fabric-1.21.1:21.0.27")
+	}
 }
 
 loom {

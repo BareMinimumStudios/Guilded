@@ -35,12 +35,13 @@ public class Guild {
             Guild::new);
 
     private String name;
-    private final HashMap<String, Rank> players = new HashMap<>();
+    private final HashMap<String, Rank> players;
     private List<Rank> ranks = new ArrayList<>();
     private String description;
 
     public Guild(String name, List<Pair<String, Rank>> playerList, List<Rank> ranks, String description) {
         this.name = name;
+        this.players = new HashMap<>();
         for (Pair<String, Rank> pair : playerList) {
             String userName = pair.getFirst();
             Rank rank = pair.getSecond();
@@ -54,16 +55,14 @@ public class Guild {
         this.description = description;
     }
 
-    public Guild(String name, Map<String, Rank> playerMap, List<Rank> ranks, String description) {
+    public Guild(String name, Map<String, Rank> players, List<Rank> ranks, String description) {
         this.name = name;
         Rank recruit = new Rank("Recruit", 50);
         if (!ranks.contains(recruit)) {
             this.ranks.add(recruit);
         }
         this.ranks.addAll(ranks);
-        for (String playerName : playerMap.keySet()) {
-            this.players.put(playerName, playerMap.get(playerName));
-        }
+        this.players = new HashMap<>(players);
         this.description = description;
     }
 

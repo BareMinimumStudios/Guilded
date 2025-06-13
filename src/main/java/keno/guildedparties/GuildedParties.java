@@ -2,7 +2,7 @@ package keno.guildedparties;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import keno.guildedparties.impl.compat.GuildedCompatEntrypoint;
+import keno.guildedparties.api.compat.GuildedCompatEntrypoint;
 import keno.guildedparties.api.config.GPConfig;
 import keno.guildedparties.impl.data.GPAttachmentTypes;
 import keno.guildedparties.impl.data.guilds.*;
@@ -18,12 +18,14 @@ import keno.guildedparties.impl.server.StateSaverAndLoader;
 import keno.guildedparties.impl.server.commands.GPCommandRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback;
 import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents;
 import net.fabricmc.fabric.api.message.v1.ServerMessageDecoratorEvent;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -48,10 +50,22 @@ public class GuildedParties implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static final GPConfig CONFIG = GPConfig.createAndLoad();
 	public static final Gson GSON = new GsonBuilder().create();
+	public static boolean COMPAT_LOADED = false;
 
 	@Override
 	public void onInitialize() {
 		GPComponents.init();
+		Integrations.placeholdersIntegration();
+
+
+		// We cheat our way into assuring all mods are loaded, using this event
+		RegistryEntryAddedCallback.allEntries(Registries.POTION, potion -> {
+			if (!COMPAT_LOADED) {
+				Integrations.initializeIntegrations();
+				COMPAT_LOADED = true;
+			}
+		});
+
 		Integrations.initializeIntegrations();
 
 		if (CONFIG.enableGuildItems()) {
