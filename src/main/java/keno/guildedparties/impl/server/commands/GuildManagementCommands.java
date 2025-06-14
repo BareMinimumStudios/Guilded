@@ -120,7 +120,7 @@ public class GuildManagementCommands {
                     }
                 }
             }
-            int status = state.getGuild(senderData.getGuildKey()).removeRank(senderData.getGuildKey());
+            int status = state.getGuild(senderData.getGuildKey()).removeRank(senderData.getRank());
             state.markDirty();
             return status;
         } else {

@@ -270,7 +270,7 @@ public class GPNetworking {
                 Guild guild = GuildApi.getGuild(server, handler.guildName()).orElseThrow();
 
                 GuildApi.modifyGuildPersistentState(server, state -> {
-                    state.getGuild(handler.guildName()).removeRank(handler.rank().name());
+                    state.getGuild(handler.guildName()).removeRank(handler.rank());
 
                     server.getPlayerManager().getPlayerList().forEach(player -> {
                         if (player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
@@ -319,7 +319,7 @@ public class GPNetworking {
                             state.getGuild(handler.guildName()).changeMemberRank(server, username, newRank);
                         }
                     }
-                    state.getGuild(handler.guildName()).removeRank(oldRank.name());
+                    state.getGuild(handler.guildName()).removeRank(oldRank);
                     state.getGuild(handler.guildName()).addRank(newRank);
                 });
 

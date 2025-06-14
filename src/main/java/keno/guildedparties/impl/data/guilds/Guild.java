@@ -34,7 +34,7 @@ public class Guild {
             Endec.STRING.fieldOf("description", Guild::getDescription),
             Guild::new);
 
-    private String name;
+    private final String name;
     private final HashMap<String, Rank> players;
     private List<Rank> ranks = new ArrayList<>();
     private String description;
@@ -98,14 +98,11 @@ public class Guild {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public HashMap<String, Rank> getPlayers() {
         return players;
     }
 
+    //TODO Make promotion and demotion methods consistent
     public int demoteMember(MinecraftServer server, String username) {
         if (this.players.containsKey(username)) {
             Rank originalRank = this.players.get(username);
@@ -127,6 +124,8 @@ public class Guild {
     }
 
     public int demoteMember(ServerPlayerEntity player) {
+        if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) return 0;
+
         return demoteMember(player.getServer(), player.getGameProfile().getName());
     }
 
@@ -152,6 +151,13 @@ public class Guild {
             return changeMemberRank(player, rank);
         }
         return 0;
+    }
+
+    public int promotePlayer(MinecraftServer server, String username) {
+        ServerPlayerEntity player = server.getPlayerManager().getPlayer(username);
+        if (player == null) return 0;
+
+        return promoteMember(player);
     }
 
     public int changeMemberRank(MinecraftServer server, String playerUsername, String rankName) {
@@ -249,6 +255,16 @@ public class Guild {
             return 1;
         }
         return 0;
+    }
+
+    public int removeRank(Rank rank) {
+        if (ranks.contains(rank)) {
+            this.ranks.remove(rank);
+            sortRanks();
+            return 1;
+        }
+        // We keep this as a failsafe
+        return removeRank(rank.name());
     }
 
     public int removeRank(String rankName) {

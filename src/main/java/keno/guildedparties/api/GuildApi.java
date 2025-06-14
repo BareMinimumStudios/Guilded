@@ -41,7 +41,7 @@ public class GuildApi {
 
     /** Send a message to all players in a guild.
      * See the overloads {@link #broadcastToGuildmates(MinecraftServer, Guild, String)} and
-     * {@link #broadcastToGuildmates(MinecraftServer, String, ServerPlayerEntity)}
+     * {@link #broadcastToGuildmates(ServerPlayerEntity, String)}
      * */
     public static void broadcastToGuildmates(MinecraftServer server, Guild guild, Text text) {
         Text message = Text.of("[GC] ").copy().append(text).withColor(0xffffcc00);
@@ -57,8 +57,10 @@ public class GuildApi {
         broadcastToGuildmates(server, guild, Text.of(message));
     }
 
-    public static void broadcastToGuildmates(MinecraftServer server, String message, ServerPlayerEntity sender) {
+    public static void broadcastToGuildmates(ServerPlayerEntity sender, String message) {
         if (sender == null) return;
+
+        MinecraftServer server = sender.getServer();
 
         if (sender.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
             StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
