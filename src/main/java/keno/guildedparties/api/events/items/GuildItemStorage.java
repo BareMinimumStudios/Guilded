@@ -32,7 +32,7 @@ public class GuildItemStorage {
             if (!freezeModification) {
                 if (guildItems.containsKey(guild)) {
                     if (flag == 0) guildItems.get(guild).addIds(list);
-                    else if (flag == 1) guildItems.get(guild).subtractIds(list);
+                    else if (flag == 1) guildItems.get(guild).removeIds(list);
                     else throw new IllegalStateException("Invalid flag: " + flag);
                 }
             }

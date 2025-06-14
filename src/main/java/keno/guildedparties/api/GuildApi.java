@@ -122,6 +122,10 @@ public class GuildApi {
         return state.getSettings(guildName);
     }
 
+    public static GuildSettings getSettings(MinecraftServer server, Guild guild) {
+        return getSettings(server, guild.getName());
+    }
+
     /** Gets a guild's banlist
      * @param guildName guild's name
      * @return the guild's banlist
@@ -130,6 +134,10 @@ public class GuildApi {
         StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
 
         return state.getBanlist(guildName);
+    }
+
+    public static GuildBanList getBanList(MinecraftServer server, Guild guild) {
+        return getBanList(server, guild.getName());
     }
 
     /**

@@ -22,7 +22,7 @@ public record GuildItemList(List<Identifier> ids) {
         this.ids.removeAll(List.of(ids));
     }
 
-    public void subtractIds(GuildItemList list) {
+    public void removeIds(GuildItemList list) {
         removeIds(list.ids().toArray(new Identifier[0]));
     }
 

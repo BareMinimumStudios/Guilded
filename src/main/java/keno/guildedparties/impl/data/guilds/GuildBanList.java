@@ -17,8 +17,8 @@ public class GuildBanList {
         this.bannedPlayers.addAll(list);
     }
 
-    public boolean isPlayerBanned(String userName) {
-        return bannedPlayers.contains(userName);
+    public boolean isPlayerBanned(String username) {
+        return bannedPlayers.contains(username);
     }
 
     public void banPlayer(String username) {
