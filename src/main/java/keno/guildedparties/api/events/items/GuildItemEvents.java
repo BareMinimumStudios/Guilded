@@ -1,35 +1,35 @@
 package keno.guildedparties.api.events.items;
 
+import keno.guildedparties.impl.data.guilds.items.GuildItemList;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
+import net.minecraft.util.Identifier;
 
 public class GuildItemEvents {
     /// Use this event to create item whitelists to specific guilds only
     public static final Event<AddGuildItemsCallback> ADD = EventFactory.createArrayBacked(AddGuildItemsCallback.class,
-            (listeners) -> (storage) -> {
-                storage.freezeModification();
+            (listeners) -> () -> {
+                GuildItemStorage storage = GuildItemStorage.instance();
                 for (AddGuildItemsCallback listener : listeners) {
-                    listener.add(storage);
+                    ItemListContainer container = listener.add();
+                    storage.addGuildTagList(container.guildId(), container.list());
                 }
-                storage.freezeAddition();
-                storage.unfreezeModification();
+                return null;
             });
 
     /// Use this event to modify guild item whitelists
     public static final Event<ModifyGuildItemsCallback> MODIFY = EventFactory.createArrayBacked(ModifyGuildItemsCallback.class,
-            (listeners) -> (storage) -> {
+            (listeners) -> (id, list) -> {
                 for (ModifyGuildItemsCallback listener : listeners) {
-                    listener.modify(storage);
+                    listener.modify(id, list);
                 }
-                storage.freezeModification();
-                storage.lock();
             });
 
     public interface AddGuildItemsCallback {
-        void add(final GuildItemStorage storage);
+        ItemListContainer add();
     }
 
     public interface ModifyGuildItemsCallback {
-        void modify(final GuildItemStorage storage);
+        void modify(Identifier itemListId, GuildItemList list);
     }
 }

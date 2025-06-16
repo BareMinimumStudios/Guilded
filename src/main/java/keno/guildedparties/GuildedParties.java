@@ -10,7 +10,6 @@ import keno.guildedparties.impl.data.guilds.items.GPComponents;
 import keno.guildedparties.impl.data.guilds.items.GuildItemList;
 import keno.guildedparties.impl.data.listeners.*;
 import keno.guildedparties.impl.data.player.Member;
-import keno.guildedparties.api.events.items.GuildItemEvents;
 import keno.guildedparties.api.events.items.GuildItemStorage;
 import keno.guildedparties.impl.integration.Integrations;
 import keno.guildedparties.impl.networking.GPNetworking;
@@ -67,16 +66,16 @@ public class GuildedParties implements ModInitializer {
 		});
 
 		Integrations.initializeIntegrations();
-
-		if (CONFIG.enableGuildItems()) {
-			handleGuildItems();
-		}
+		initializeCompatEntrypoint();
 
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new GuildResourceListener());
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new GuildSettingsResourceListener());
 		
 		GPAttachmentTypes.init();
 		GPCommandRegistry.init();
+		if (CONFIG.enableGuildItems()) {
+			handleGuildItems();
+		}
 
 		GPNetworking.init();
 
@@ -84,17 +83,13 @@ public class GuildedParties implements ModInitializer {
 		ServerPlayConnectionEvents.JOIN.register(GuildedParties::syncAndInitializePlayerData);
 
 		ServerMessageDecoratorEvent.EVENT.register(ServerMessageDecoratorEvent.STYLING_PHASE, GuildedParties::addGuildNote);
-
-		// This lets 3rd-party mods add compatibility to Guilded Parties more simplistically
-		initializeCompatEntrypoint();
 	}
 
 	public void handleGuildItems() {
-		GuildItemEvents.ADD.invoker().add(GuildItemStorage.instance());
-		GuildItemEvents.MODIFY.invoker().modify(GuildItemStorage.instance());
+		GuildItemStorage.instance().handleAddition();
+		GuildItemStorage.instance().handleModification();
 		LOGGER.info("applying guild item restrictions");
 		GuildItemStorage storage = GuildItemStorage.instance();
-
 
 		List<Pair<Identifier, GuildItemList>> list = storage.getLists();
 

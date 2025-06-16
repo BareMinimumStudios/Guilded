@@ -56,13 +56,13 @@ public class GuildItemStorage {
         return list;
     }
 
-    protected void freezeAddition() {
+    private void freezeAddition() {
         if (!this.lockStorage) {
             this.freezeAddition = true;
         }
     }
 
-    protected void freezeModification() {
+    private void freezeModification() {
         if (!this.lockStorage) {
             this.freezeModification = true;
         }
@@ -74,7 +74,7 @@ public class GuildItemStorage {
         }
     }
 
-    protected void lock() {
+    private void lock() {
         this.lockStorage = true;
     }
 
@@ -83,5 +83,23 @@ public class GuildItemStorage {
             INSTANCE = new GuildItemStorage(new HashMap<>());
         }
         return INSTANCE;
+    }
+
+    public void handleAddition() {
+        freezeModification();
+        GuildItemEvents.ADD.invoker().add();
+        freezeAddition();
+        unfreezeModification();
+    }
+
+    public void handleModification() {
+        Set<Identifier> ids = this.guildItems.keySet();
+        for (Identifier id : ids) {
+            final GuildItemList list = this.guildItems.get(id);
+            GuildItemEvents.MODIFY.invoker().modify(id, list);
+            this.guildItems.put(id, list);
+        }
+        freezeModification();
+        lock();
     }
 }
