@@ -443,7 +443,7 @@ public class GPNetworking {
             if (!GuildApi.getSettings(server, handler.guildName()).isPrivate()) {
                 if (!GuildApi.getBanList(server, handler.guildName()).isPlayerBanned(player.getGameProfile().getName())) {
                     GuildApi.modifyGuildPersistentState(server, state
-                            -> state.getGuild(handler.guildName()).addPlayerToGuild(player, "Recruit"));
+                            -> state.getGuild(handler.guildName()).addPlayerToGuild(player));
 
                     player.setAttached(GPAttachmentTypes.MEMBER_ATTACHMENT, new Member(handler.guildName(), new Rank("Recruit", 50)));
 

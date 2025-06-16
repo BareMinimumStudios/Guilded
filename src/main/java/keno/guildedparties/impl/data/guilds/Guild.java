@@ -173,6 +173,8 @@ public class Guild {
     public int changeMemberRank(ServerPlayerEntity player, Rank rank) {
         String username = player.getGameProfile().getName();
 
+        if (!ranks.contains(rank)) return 0;
+
         if (!player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) return 0;
 
         if (this.players.containsKey(username)) {
@@ -185,6 +187,8 @@ public class Guild {
     }
 
     public int changeMemberRank(MinecraftServer server, String playerUsername, Rank rank) {
+        if (!ranks.contains(rank)) return 0;
+
         if (this.players.containsKey(playerUsername)) {
             this.players.put(playerUsername, rank);
 
@@ -195,6 +199,10 @@ public class Guild {
             return 1;
         }
         return 0;
+    }
+
+    public void addPlayerToGuild(ServerPlayerEntity player) {
+        addPlayerToGuild(player, "Recruit");
     }
 
     public void addPlayerToGuild(ServerPlayerEntity player, String rankName) {

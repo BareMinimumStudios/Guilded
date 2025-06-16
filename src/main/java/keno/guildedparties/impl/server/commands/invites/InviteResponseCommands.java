@@ -38,7 +38,7 @@ public class InviteResponseCommands {
                     StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
                     if (state.hasGuild(invite.guildName())) {
                         if (state.getGuild(invite.guildName()).getPlayers().containsKey(invite.inviteSender())) {
-                            state.getGuild(invite.guildName()).addPlayerToGuild(player, "Recruit");
+                            state.getGuild(invite.guildName()).addPlayerToGuild(player);
                             state.markDirty();
                             return 1;
                         } else {

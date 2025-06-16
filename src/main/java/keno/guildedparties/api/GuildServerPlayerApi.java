@@ -1,5 +1,6 @@
 package keno.guildedparties.api;
 
+import keno.guildedparties.impl.data.guilds.Rank;
 import keno.guildedparties.impl.data.player.Member;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -25,7 +26,7 @@ public class GuildServerPlayerApi {
                 removePlayerFromGuild(player);
             }
             GuildApi.modifyGuildPersistentState(player.getServer(), state ->
-                    state.getGuild(guildName).addPlayerToGuild(player, "Recruit"));
+                    state.getGuild(guildName).addPlayerToGuild(player));
             return true;
         }
         return false;
@@ -190,6 +191,30 @@ public class GuildServerPlayerApi {
             return successful.get();
         }
         return false;
+    }
+
+    public static boolean changePlayerRank(ServerPlayerEntity player, Rank rank) {
+        if (player != null && GuildPlayerAPI.isPlayerInGuild(player)) {
+            AtomicBoolean successful = new AtomicBoolean(false);
+            String guildName = GuildPlayerAPI.getPlayerData(player).orElseThrow().getGuildKey();
+            GuildApi.modifyGuildPersistentState(player.getServer(), state -> {
+                if (state.getGuild(guildName).getRanks().contains(rank)) {
+                    successful.set(state.getGuild(guildName).changeMemberRank(player, rank) == 1);
+                }
+            });
+            return successful.get();
+        }
+        return false;
+    }
+
+    public static boolean changePlayerRank(MinecraftServer server, String username, Rank rank) {
+        ServerPlayerEntity player = server.getPlayerManager().getPlayer(username);
+        return changePlayerRank(player, rank);
+    }
+
+    public static boolean changePlayerRank(MinecraftServer server, UUID playerID, Rank rank) {
+        ServerPlayerEntity player = server.getPlayerManager().getPlayer(playerID);
+        return changePlayerRank(player, rank);
     }
 
     /**

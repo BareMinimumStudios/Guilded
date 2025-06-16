@@ -18,8 +18,8 @@ import org.openzen.zencode.java.ZenCodeType;
 import java.util.Optional;
 
 @ZenRegister(loaders = "*")
-@ZenCodeType.Name("guilded.api.GuildApi")
 @Document("guilded/api/GuildApi")
+@ZenCodeType.Name("guilded.api.GuildApi")
 public class CTGuildApi {
     @ZenCodeGlobals.Global("guildApi")
     public static final CTGuildApi API = new CTGuildApi();

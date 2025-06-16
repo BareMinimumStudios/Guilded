@@ -35,7 +35,7 @@ public class JoinGuildCommand implements Command<ServerCommandSource> {
                 GuildedParties.LOGGER.info("Second checkpoint passed");
                 if (!state.getSettings(guildName).isPrivate()) {
                     if (!state.getGuild(guildName).getPlayers().containsKey(player.getGameProfile().getName())) {
-                        state.getGuild(guildName).addPlayerToGuild(player, "Recruit");
+                        state.getGuild(guildName).addPlayerToGuild(player);
                         state.markDirty();
                         player.sendMessageToClient(Text.of("Successfully joined guild!"), true);
                         return 1;
