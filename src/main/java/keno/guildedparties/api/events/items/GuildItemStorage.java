@@ -95,9 +95,7 @@ public class GuildItemStorage {
     public void handleModification() {
         Set<Identifier> ids = this.guildItems.keySet();
         for (Identifier id : ids) {
-            final GuildItemList list = this.guildItems.get(id);
-            GuildItemEvents.MODIFY.invoker().modify(id, list);
-            this.guildItems.put(id, list);
+            GuildItemEvents.MODIFY.invoker().modify(id, this.guildItems.get(id));
         }
         freezeModification();
         lock();
