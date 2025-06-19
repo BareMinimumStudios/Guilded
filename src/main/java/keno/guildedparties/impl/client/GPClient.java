@@ -21,6 +21,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 
+//TODO swap UI positioning to layout for scaling fix
 public class GPClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {

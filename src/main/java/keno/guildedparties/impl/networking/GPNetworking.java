@@ -358,13 +358,10 @@ public class GPNetworking {
             if (player.hasAttached(GPAttachmentTypes.MEMBER_ATTACHMENT)) {
                 if (isSenderLeader(player)) {
                     GuildApi.modifyGuildPersistentState(server, state -> {
-                        for (String username : state.getGuild(handler.guildName()).getPlayers().keySet()) {
-                            ServerPlayerEntity member = server.getPlayerManager().getPlayer(username);
-                            if (member != null) {
-                                member.removeAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
-                            }
-                        }
                         GuildEvents.ON_GUILD_CLOSURE.invoker().onGuildClosure(player, GuildApi.getGuild(player).orElseThrow());
+                        for (String username : state.getGuild(handler.guildName()).getPlayers().keySet()) {
+                            state.getGuild(handler.guildName()).removePlayerFromGuild(server, username);
+                        }
                         state.removeGuild(handler.guildName());
                     });
 

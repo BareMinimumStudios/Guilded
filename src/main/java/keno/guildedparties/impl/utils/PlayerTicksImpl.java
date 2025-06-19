@@ -1,4 +1,4 @@
-package keno.guildedparties.impl.mixin.server;
+package keno.guildedparties.impl.utils;
 
 public interface PlayerTicksImpl {
     int guildedparties$getTick(int flag);
