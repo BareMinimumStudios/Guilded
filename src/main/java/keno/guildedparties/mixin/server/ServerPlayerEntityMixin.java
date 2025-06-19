@@ -1,12 +1,13 @@
-package keno.guildedparties.impl.mixin.server;
+package keno.guildedparties.mixin.server;
 
-/*? >= 1.21.3 {*/import blue.endless.jankson.annotation.Nullable;/*?}*/
+/*? >= 1.21.3 {*//*import blue.endless.jankson.annotation.Nullable;*//*?}*/
 import com.mojang.authlib.GameProfile;
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.impl.data.GPAttachmentTypes;
 import keno.guildedparties.impl.data.guilds.items.GPComponents;
 import keno.guildedparties.impl.data.player.Member;
-/*? >= 1.21.3 {*/import net.minecraft.entity.ItemEntity;/*?}*/
+/*? >= 1.21.3 {*//*import net.minecraft.entity.ItemEntity;*//*?}*/
+import keno.guildedparties.impl.utils.PlayerTicksImpl;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -29,7 +30,7 @@ import java.util.stream.Stream;
 public abstract class ServerPlayerEntityMixin extends PlayerEntity implements PlayerTicksImpl {
 
     //? if >=1.21.3
-    @Shadow @Nullable protected abstract ItemEntity dropPlayerItem(ItemStack stack, boolean throwRandomly, boolean retainOwnership);
+    /*@Shadow @Nullable protected abstract ItemEntity dropPlayerItem(ItemStack stack, boolean throwRandomly, boolean retainOwnership);*/
 
     @Shadow public abstract void sendMessage(Text message, boolean overlay);
 
@@ -98,9 +99,9 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Pl
         int i = getInventory().getSlotWithStack(stack);
 
         //? if >= 1.21.3
-        dropPlayerItem(stack, false ,false);
+        /*dropPlayerItem(stack, false ,false);*/
         //? if < 1.21.3
-        /*this.dropItem(stack, false, false);*/
+        this.dropItem(stack, false, false);
         getInventory().removeStack(i);
     }
 
@@ -114,9 +115,9 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Pl
             int i = getInventory().getSlotWithStack(stack);
             sendMessage(Text.translatable("guildedparties.cannot_use_item"), false);
             //? if < 1.21.3
-            /*this.dropItem(stack, false, false);*/
+            this.dropItem(stack, false, false);
             //? if >= 1.21.3
-            dropPlayerItem(stack, false ,false);
+            /*dropPlayerItem(stack, false ,false);*/
             getInventory().removeStack(i);
         }
     }

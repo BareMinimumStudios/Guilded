@@ -1,8 +1,8 @@
 {
   "required": true,
-  "package": "keno.guildedparties.impl.mixin",
+  "package": "keno.guildedparties.mixin",
   "compatibilityLevel": "JAVA_21",
-  "plugin": "keno.guildedparties.impl.mixin.GPMixinConfigPlugin",
+  "plugin": "keno.guildedparties.mixin.GPMixinConfigPlugin",
   "mixins": [
     "PlayerInventoryMixin",
     "server.ServerPlayerEntityMixin",

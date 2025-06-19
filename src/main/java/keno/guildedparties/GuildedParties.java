@@ -50,12 +50,12 @@ public class GuildedParties implements ModInitializer {
 	public static final GPConfig CONFIG = GPConfig.createAndLoad();
 	public static final Gson GSON = new GsonBuilder().create();
 	public static boolean COMPAT_LOADED = false;
+	public static final boolean DEV_ENV = FabricLoader.getInstance().isDevelopmentEnvironment();
 
 	@Override
 	public void onInitialize() {
 		GPComponents.init();
 		Integrations.placeholdersIntegration();
-
 
 		// We cheat our way into assuring all mods are loaded, using this event
 		RegistryEntryAddedCallback.allEntries(Registries.POTION, potion -> {
@@ -65,17 +65,16 @@ public class GuildedParties implements ModInitializer {
 			}
 		});
 
-		Integrations.initializeIntegrations();
 		initializeCompatEntrypoint();
+		if (CONFIG.enableGuildItems()) {
+			handleGuildItems();
+		}
 
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new GuildResourceListener());
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new GuildSettingsResourceListener());
 		
 		GPAttachmentTypes.init();
 		GPCommandRegistry.init();
-		if (CONFIG.enableGuildItems()) {
-			handleGuildItems();
-		}
 
 		GPNetworking.init();
 
@@ -104,6 +103,7 @@ public class GuildedParties implements ModInitializer {
 			builder.add(GPComponents.GUILD_COMPONENT, clone);
 			ids.clear();
 		}));
+
 		LOGGER.info("Item restrictions applied");
     }
 

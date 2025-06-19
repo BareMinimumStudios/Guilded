@@ -1,4 +1,4 @@
-package keno.guildedparties.impl.mixin;
+package keno.guildedparties.mixin;
 
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.impl.data.GPAttachmentTypes;

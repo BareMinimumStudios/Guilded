@@ -1,8 +1,9 @@
-package keno.guildedparties.impl.mixin;
+package keno.guildedparties.mixin;
 
-import keno.guildedparties.GuildedParties;
 import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
@@ -13,10 +14,11 @@ import java.util.Set;
  * @see GPMixinConfigPlugin#shouldApplyMixin(String, String)
  * **/
 public class GPMixinConfigPlugin implements IMixinConfigPlugin {
+    public static final Logger LOGGER = LoggerFactory.getLogger(GPMixinConfigPlugin.class);
 
     @Override
     public void onLoad(String mixinPackage) {
-        GuildedParties.LOGGER.info("Booting up mixin plugin");
+
     }
 
     @Override
@@ -28,7 +30,9 @@ public class GPMixinConfigPlugin implements IMixinConfigPlugin {
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         /* If Styled Chat is detected, we disable the built-in message note system in favor of it */
         if (areMixinsTheSame(mixinClassName, qualifyServerMixinName("ServerPlayNetworkHandlerMixin"))) {
-            return !isModPresent("styledchat");
+            boolean styledChatPresent = isModPresent("styledchat");
+            if (styledChatPresent) LOGGER.info("Styled-Chat detected! Disabling the guilded note-system in favor of SC");
+            return !styledChatPresent;
         }
         return true;
     }
@@ -61,7 +65,7 @@ public class GPMixinConfigPlugin implements IMixinConfigPlugin {
      * @param mixinClassName the class name to qualify
      * @return the qualified mixin class name **/
     private String qualifyDefaultMixinName(String mixinClassName) {
-        return "keno.guildedparties.impl.mixin." + mixinClassName;
+        return "keno.guildedparties.mixin." + mixinClassName;
     }
 
     /// @see GPMixinConfigPlugin#qualifyDefaultMixinName(String)

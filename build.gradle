@@ -27,6 +27,12 @@ repositories {
 			url = 'https://maven.blamejared.com'
 			name = 'BlameJared Maven'
 		}
+
+		maven {
+			// location of a maven mirror for JEI files, as a fallback
+			name = "ModMaven"
+			url = "https://modmaven.dev"
+		}
 	}
 }
 
@@ -44,6 +50,9 @@ dependencies {
 
 	if (stonecutter.current.project == "1.21.1") {
 		modCompileOnlyApi("com.blamejared.crafttweaker:CraftTweaker-fabric-1.21.1:21.0.27")
+
+		modCompileOnlyApi("mezz.jei:jei-1.21.1-fabric-api:19.20.0.242")
+		modRuntimeOnly("mezz.jei:jei-1.21.1-fabric:19.20.0.242")
 	}
 }
 

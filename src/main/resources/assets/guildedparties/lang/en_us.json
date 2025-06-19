@@ -168,5 +168,7 @@
     "' due to either not existing, or being a mandatory rank"
   ],
   "gui.guildedparties.changes_may_not_show": "Changes such as rank addition or modification won't show up til you reopen this menu.",
-  "guildedparties.cannot_use_item": "Cannot use this item as you aren't in it's corresponding guild"
+  "guildedparties.cannot_use_item": "Cannot use this item as you aren't in it's corresponding guild",
+  "text.config.gp-config.option.enableGuildItems": "Enable Guild Items",
+  "text.config.gp-config.option.enableGuildItems.tooltip": "Can be used by mods and CraftTweaker scripts to make items only usable for members of specific guilds"
 }

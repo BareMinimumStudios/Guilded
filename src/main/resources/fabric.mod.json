@@ -26,6 +26,9 @@
 		],
 		"guilded": [
 			"keno.guildedparties.api.compat.GPGuildedCompat"
+		],
+		"jei_mod_plugin": [
+			"keno.guildedparties.impl.integration.jei.GPJeiPlugin"
 		]
 	},
 	"mixins": [

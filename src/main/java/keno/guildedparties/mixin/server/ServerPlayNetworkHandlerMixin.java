@@ -1,4 +1,4 @@
-package keno.guildedparties.impl.mixin.server;
+package keno.guildedparties.mixin.server;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import keno.guildedparties.impl.data.GPAttachmentTypes;
