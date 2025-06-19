@@ -170,5 +170,6 @@
   "gui.guildedparties.changes_may_not_show": "Changes such as rank addition or modification won't show up til you reopen this menu.",
   "guildedparties.cannot_use_item": "Cannot use this item as you aren't in it's corresponding guild",
   "text.config.gp-config.option.enableGuildItems": "Enable Guild Items",
-  "text.config.gp-config.option.enableGuildItems.tooltip": "Can be used by mods and CraftTweaker scripts to make items only usable for members of specific guilds"
+  "text.config.gp-config.option.enableGuildItems.tooltip": "Can be used by mods and CraftTweaker scripts to make items only usable for members of specific guilds",
+  "guildedparties.jei.guild_item": "Can only be used by the following guilds: "
 }
