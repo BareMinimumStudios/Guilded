@@ -1,13 +1,22 @@
 package keno.guildedparties.api.compat;
 
 import keno.guildedparties.GuildedParties;
+import keno.guildedparties.api.events.items.GuildItemEvents;
+import keno.guildedparties.api.events.items.ItemListContainer;
+import keno.guildedparties.impl.data.guilds.items.GuildItemList;
+import net.minecraft.util.Identifier;
 
+import java.util.List;
 import java.util.Random;
 
 /** Example of using the common-side compat entrypoint */
-public class GPGuildedCompat implements GuildedCompatEntrypoint {
+public class GPGuildedCompat implements GuildedPlugin {
     @Override
     public void init() {
+        //Wrap this in a if statement after testing
+        GuildItemEvents.ADD.register(() -> new ItemListContainer(GuildedParties.GPLoc("miners_guild"),
+                new GuildItemList(List.of(Identifier.ofVanilla("diamond_pickaxe")))));
+
         Random random = new Random();
         int num = random.nextInt(0, 10);
         switch (num) {

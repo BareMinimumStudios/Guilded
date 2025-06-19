@@ -2,7 +2,7 @@ package keno.guildedparties;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import keno.guildedparties.api.compat.GuildedCompatEntrypoint;
+import keno.guildedparties.api.compat.GuildedPlugin;
 import keno.guildedparties.api.config.GPConfig;
 import keno.guildedparties.impl.data.GPAttachmentTypes;
 import keno.guildedparties.impl.data.guilds.*;
@@ -110,8 +110,8 @@ public class GuildedParties implements ModInitializer {
 	public void initializeCompatEntrypoint() {
 		GuildedParties.LOGGER.info("Getting compatibilities");
 
-		FabricLoader.getInstance().getEntrypointContainers("guilded", GuildedCompatEntrypoint.class).forEach(container -> {
-			GuildedCompatEntrypoint entrypoint = container.getEntrypoint();
+		FabricLoader.getInstance().getEntrypointContainers("guilded", GuildedPlugin.class).forEach(container -> {
+			GuildedPlugin entrypoint = container.getEntrypoint();
 			entrypoint.init();
 		});
 	}

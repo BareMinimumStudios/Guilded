@@ -52,7 +52,8 @@ dependencies {
 		modCompileOnlyApi("com.blamejared.crafttweaker:CraftTweaker-fabric-1.21.1:21.0.27")
 
 		modCompileOnlyApi("mezz.jei:jei-1.21.1-fabric-api:19.20.0.242")
-		modRuntimeOnly("mezz.jei:jei-1.21.1-fabric:19.20.0.242")
+		// Commenting this out until Jei fix their maven issue
+		// modRuntimeOnly("mezz.jei:jei-1.21.1-fabric:19.20.0.242")
 	}
 }
 
