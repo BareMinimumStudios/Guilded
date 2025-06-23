@@ -13,12 +13,6 @@ import java.util.Random;
 public class GPGuildedCompat implements GuildedPlugin {
     @Override
     public void init() {
-        //Wrap this in a if statement after testing
-        if (GuildedParties.DEV_ENV) {
-            GuildItemEvents.ADD.register(() -> new ItemListContainer(GuildedParties.GPLoc("miners_guild"),
-                    new GuildItemList(List.of(Identifier.ofVanilla("diamond_pickaxe")))));
-        }
-
         Random random = new Random();
         int num = random.nextInt(0, 9);
         switch (num) {

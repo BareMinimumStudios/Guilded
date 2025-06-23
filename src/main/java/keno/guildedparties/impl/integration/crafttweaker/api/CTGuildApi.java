@@ -72,8 +72,8 @@ public class CTGuildApi {
     }
 
     @ZenCodeType.Method
-    public Optional<GuildItemList> getItemList(MinecraftServer server, Identifier id) {
-        return GuildApi.getGuildItems(server, id);
+    public Optional<GuildItemList> getItemList(MinecraftServer server, String guildName) {
+        return GuildApi.getGuildItems(server, guildName);
     }
 }
 *///?}

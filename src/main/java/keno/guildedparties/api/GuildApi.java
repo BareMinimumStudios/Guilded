@@ -12,7 +12,6 @@ import keno.guildedparties.impl.utils.StateHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -142,13 +141,13 @@ public class GuildApi {
 
     /**
      * Returns an optional containing a guild's item list, which defines what items are whitelisted to that guild
-     * @param guildId The guild's id
+     * @param guildName The guild's name
      * @return the guild's taglist, containing the guild-specific
      */
-    public static Optional<GuildItemList> getGuildItems(@Nullable MinecraftServer server, Identifier guildId) {
+    public static Optional<GuildItemList> getGuildItems(@Nullable MinecraftServer server, String guildName) {
         if (server != null) {
             GuildItemStorage storage = GuildItemStorage.instance();
-            GuildItemList list = storage.getGuildTagList(guildId);
+            GuildItemList list = storage.getGuildTagList(guildName);
             if (list != null) {
                 return Optional.of(list);
             }

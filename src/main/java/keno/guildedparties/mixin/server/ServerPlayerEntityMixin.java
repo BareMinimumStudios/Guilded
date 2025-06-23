@@ -12,7 +12,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -107,11 +106,11 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Pl
 
     @Unique
     public void guildedparties$canKeepItemStack(ItemStack stack, String guildName) {
-        List<Identifier> ids = stack.get(GPComponents.GUILD_COMPONENT);
+        List<String> guildNames = stack.get(GPComponents.GUILD_COMPONENT);
 
-        if (ids == null || ids.isEmpty()) throw new InvalidIdentifierException("No ids found, despite being a guild item. Item: " + stack.getItem());
+        if (guildNames == null || guildNames.isEmpty()) throw new InvalidIdentifierException("No guild names found, despite being a guild item. Item: " + stack.getItem());
 
-        if (ids.stream().noneMatch(id -> id.getPath().equals(guildName))) {
+        if (guildNames.stream().noneMatch(id -> id.equals(guildName))) {
             int i = getInventory().getSlotWithStack(stack);
             sendMessage(Text.translatable("guildedparties.cannot_use_item"), false);
             //? if < 1.21.3

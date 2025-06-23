@@ -9,7 +9,6 @@ import com.blamejared.crafttweaker.api.event.bus.IEventBus;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import keno.guildedparties.api.events.items.GuildItemEvents;
 import keno.guildedparties.impl.data.guilds.items.GuildItemList;
-import net.minecraft.util.Identifier;
 import org.openzen.zencode.java.ZenCodeType;
 
 @ZenRegister
@@ -21,22 +20,22 @@ public final class ModifyGuildItemsEvent {
     public static final IEventBus<ModifyGuildItemsEvent> BUS = IEventBus.direct(ModifyGuildItemsEvent.class,
             FabricEventBusWire.of(GuildItemEvents.MODIFY, GuildItemEvents.ModifyGuildItemsCallback.class, ModifyGuildItemsEvent.class));
 
-    private final Identifier guildId;
+    private final String guildName;
     private final GuildItemList list;
 
-    private ModifyGuildItemsEvent(Identifier guildId, GuildItemList list) {
-        this.guildId = guildId;
+    private ModifyGuildItemsEvent(String guildName, GuildItemList list) {
+        this.guildName = guildName;
         this.list = list;
     }
 
     @FabricWiredWrap
-    public static ModifyGuildItemsEvent of(final Identifier guildId, final GuildItemList list) {
-        return new ModifyGuildItemsEvent(guildId, list);
+    public static ModifyGuildItemsEvent of(final String guildName, final GuildItemList list) {
+        return new ModifyGuildItemsEvent(guildName, list);
     }
 
-    @ZenCodeType.Getter("guildId")
-    public Identifier getGuildId() {
-        return guildId;
+    @ZenCodeType.Getter("guildName")
+    public String getGuildId() {
+        return guildName;
     }
 
     @ZenCodeType.Getter("itemList")

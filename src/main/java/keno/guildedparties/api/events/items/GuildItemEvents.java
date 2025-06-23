@@ -3,10 +3,6 @@ package keno.guildedparties.api.events.items;
 import keno.guildedparties.impl.data.guilds.items.GuildItemList;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.item.Item;
-import net.minecraft.util.Identifier;
-
-import java.util.List;
 
 public class GuildItemEvents {
     /// Use this event to create item whitelists to specific guilds only
@@ -15,7 +11,7 @@ public class GuildItemEvents {
                 GuildItemStorage storage = GuildItemStorage.instance();
                 for (AddGuildItemsCallback listener : listeners) {
                     ItemListContainer container = listener.add();
-                    storage.addGuildTagList(container.guildId(), container.list());
+                    storage.addGuildTagList(container.guildName(), container.list());
                 }
                 return null;
             });
@@ -33,6 +29,6 @@ public class GuildItemEvents {
     }
 
     public interface ModifyGuildItemsCallback {
-        void modify(Identifier guildId, GuildItemList list);
+        void modify(final String guildId, final GuildItemList list);
     }
 }

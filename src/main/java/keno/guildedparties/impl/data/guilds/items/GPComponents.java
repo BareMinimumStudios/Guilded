@@ -1,5 +1,6 @@
 package keno.guildedparties.impl.data.guilds.items;
 
+import com.mojang.serialization.Codec;
 import keno.guildedparties.GuildedParties;
 import net.minecraft.component.ComponentType;
 import net.minecraft.registry.Registries;
@@ -9,8 +10,8 @@ import net.minecraft.util.Identifier;
 import java.util.List;
 
 public class GPComponents {
-    public static final ComponentType<List<Identifier>> GUILD_COMPONENT =
-            register("guild_component", ComponentType.<List<Identifier>>builder().codec(Identifier.CODEC.listOf()).build());
+    public static final ComponentType<List<String>> GUILD_COMPONENT =
+            register("guild_component", ComponentType.<List<String>>builder().codec(Codec.STRING.listOf()).build());
 
     public static void init() {
 

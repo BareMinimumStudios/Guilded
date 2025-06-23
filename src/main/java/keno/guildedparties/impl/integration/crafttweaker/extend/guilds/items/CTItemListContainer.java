@@ -7,13 +7,12 @@ import com.blamejared.crafttweaker_annotations.annotations.NativeConstructor;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import keno.guildedparties.api.events.items.ItemListContainer;
 import keno.guildedparties.impl.data.guilds.items.GuildItemList;
-import net.minecraft.util.Identifier;
 
 @ZenRegister
 @Document("guilded/guilds/items/ItemListContainer")
 @NativeTypeRegistration(value = ItemListContainer.class, zenCodeName = "guilded.guilds.items.ItemListContainer",
 constructors = @NativeConstructor(value = {
-        @NativeConstructor.ConstructorParameter(type = Identifier.class, name = "guildId"),
+        @NativeConstructor.ConstructorParameter(type = String.class, name = "guildName"),
         @NativeConstructor.ConstructorParameter(type = GuildItemList.class, name = "guildItemList")
 }))
 *///?}

@@ -54,20 +54,20 @@ public class GPJeiPlugin implements IModPlugin {
         List<IJeiIngredientInfoRecipe> recipes = new ArrayList<>();
         for (ItemStack stack : stacks) {
             if (stack.getComponents().contains(GPComponents.GUILD_COMPONENT)) {
-                List<Identifier> ids = stack.get(GPComponents.GUILD_COMPONENT);
-                recipes.add(createGuildItemInfo(manager, stack, ids));
+                List<String> guildNames = stack.get(GPComponents.GUILD_COMPONENT);
+                recipes.add(createGuildItemInfo(manager, stack, guildNames));
             }
         }
         return recipes;
     }
 
-    private static IJeiIngredientInfoRecipe createGuildItemInfo(IIngredientManager manager, ItemStack item, List<Identifier> ids) {
+    private static IJeiIngredientInfoRecipe createGuildItemInfo(IIngredientManager manager, ItemStack item, List<String> guildNames) {
         ITypedIngredient<ItemStack> ingredient = manager.createTypedIngredient(VanillaTypes.ITEM_STACK, item).orElseThrow();
 
         MutableText text = Text.translatable("guildedparties.jei.guild_item").copy();
-        for (Identifier id : ids) {
-            text.append(id.getPath());
-            if (!id.equals(ids.getLast())) {
+        for (String guildName : guildNames) {
+            text.append(guildName);
+            if (!guildName.equals(guildNames.getLast())) {
                 text.append(", ");
             }
         }

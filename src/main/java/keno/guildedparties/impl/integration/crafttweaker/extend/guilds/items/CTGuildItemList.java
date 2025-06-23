@@ -4,22 +4,24 @@ package keno.guildedparties.impl.integration.crafttweaker.extend.guilds.items;
 /*import com.blamejared.crafttweaker.api.annotation.ZenRegister;
 import com.blamejared.crafttweaker_annotations.annotations.Document;
 import com.blamejared.crafttweaker_annotations.annotations.NativeConstructor;
+import com.blamejared.crafttweaker_annotations.annotations.NativeConstructor.ConstructorParameter;
 import com.blamejared.crafttweaker_annotations.annotations.NativeTypeRegistration;
 import keno.guildedparties.impl.data.guilds.items.GuildItemList;
 import net.minecraft.util.Identifier;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.List;
+import java.util.UUID;
 
 @ZenRegister(loaders = "*")
 @Document("guilded/guilds/items/GuildItemList")
 @NativeTypeRegistration(value = GuildItemList.class, zenCodeName = "guilded.guilds.items.GuildItemList",
     constructors = @NativeConstructor(value = {
-            @NativeConstructor.ConstructorParameter(type = List.class, name = "ids")
+            @ConstructorParameter(type = List.class, name = "itemIds")
     }))
 public class CTGuildItemList {
     @ZenCodeType.Method
-    public static void addIds(GuildItemList internal, Identifier... ids) {
+    public static void addIds(GuildItemList internal, List<Identifier> ids) {
         internal.addIds(ids);
     }
 
@@ -29,7 +31,7 @@ public class CTGuildItemList {
     }
 
     @ZenCodeType.Method
-    public static void removeIds(GuildItemList internal, Identifier... ids) {
+    public static void removeIds(GuildItemList internal, List<Identifier> ids) {
         internal.removeIds(ids);
     }
 
