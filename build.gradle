@@ -49,15 +49,21 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${property('fabric_version')}"
+	// OwOLib
 	annotationProcessor(modImplementation "io.wispforest:owo-lib:${property('owo_version')}")
 	include "io.wispforest:owo-sentinel:${property('owo_version')}"
+	// PlaceHolder
 	modImplementation(include("eu.pb4:placeholder-api:${property('placeholder_version')}"))
 
+	// ModMenu
 	modRuntimeOnly("com.terraformersmc:modmenu:${property('modmenu_version')}")
 
+	// 1.21.1 dependencies
 	if (stonecutter.current.project == "1.21.1") {
+		// CraftTweaker
 		modCompileOnlyApi("com.blamejared.crafttweaker:CraftTweaker-fabric-1.21.1:21.0.27")
 
+		// JEI
 		modCompileOnlyApi("mezz.jei:jei-1.21.1-fabric-api:19.20.0.242")
 		// Commenting this out until Jei fix their maven issue
 		// modRuntimeOnly("mezz.jei:jei-1.21.1-fabric:19.20.0.242")
