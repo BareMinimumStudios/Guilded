@@ -117,7 +117,7 @@
     {"text": "disbanded", "color": "red"}
   ],
   "text.config.gp-config.option.guildToQuickJoin": "Guild To quick-join",
-  "text.config.gp-config.option.guildToQuickJoin.tooltip": "Lets you quick-join a guild on a server, if present. \nOnce set, press the quick-join button in the guilded menu(You will be a recruit)",
+  "text.config.gp-config.option.guildToQuickJoin.tooltip": "Lets you quick-join a guild on a server, if present. \nOnce set, press the quick-join button in the guilded menu (You will be a recruit)",
   "guildedparties.guild_was_created": [
     "The guild '",
     {"index": 0},

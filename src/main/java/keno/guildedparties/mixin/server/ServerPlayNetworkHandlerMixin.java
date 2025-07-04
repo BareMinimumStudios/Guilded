@@ -20,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(ServerPlayNetworkHandler.class)
 public abstract class ServerPlayNetworkHandlerMixin extends ServerCommonNetworkHandler implements ServerPlayPacketListener, PlayerAssociatedNetworkHandler, TickablePacketListener {
+
     public ServerPlayNetworkHandlerMixin(MinecraftServer server, ClientConnection connection, ConnectedClientData clientData) {
         super(server, connection, clientData);
     }
@@ -33,8 +34,7 @@ public abstract class ServerPlayNetworkHandlerMixin extends ServerCommonNetworkH
                 StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(this.server);
                 Member member = sender.getAttached(GPAttachmentTypes.MEMBER_ATTACHMENT);
                 Guild senderGuild = state.getGuild(member.getGuildKey());
-                Text newMessage = Text.of("[%s][%s]: ".formatted(sender.getGameProfile().getName(),
-                        member.getRank().name())).copy().append(message.getContent());
+                Text newMessage = Text.of("[%s][%s]: ".formatted(sender.getGameProfile().getName(), member.getRank().name())).copy().append(message.getContent());
                 GuildApi.broadcastToGuildmates(this.server, senderGuild, newMessage);
                 return false;
             }
