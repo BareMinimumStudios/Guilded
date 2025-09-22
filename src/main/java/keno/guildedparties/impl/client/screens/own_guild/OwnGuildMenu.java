@@ -4,6 +4,7 @@ import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
+import io.wispforest.owo.ui.container.ScrollContainer;
 import io.wispforest.owo.ui.core.*;
 import io.wispforest.owo.ui.parsing.UIModel;
 import keno.guildedparties.GuildedParties;
@@ -36,7 +37,7 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
     private final FlowLayout container = Containers
             .horizontalFlow(Sizing.content(), Sizing.content());
 
-    private FlowLayout playerContainer = Containers.verticalFlow(Sizing.content(), Sizing.content());
+    private final FlowLayout playerContainer = Containers.verticalFlow(Sizing.content(), Sizing.content());
 
     public OwnGuildMenu(Member member, Map<String, Rank> players,
                         List<Rank> ranks, String description,
@@ -63,10 +64,6 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
         flowLayout.surface(Surface.VANILLA_TRANSLUCENT)
                 .alignment(HorizontalAlignment.CENTER, VerticalAlignment.CENTER)
                 .sizing(Sizing.fill(100));
-
-        this.container.child(Containers.verticalScroll(Sizing.fill(50), Sizing.fill(100), this.playerContainer)
-                .surface(this.customTextures ? Surface.BLANK : Surface.VANILLA_TRANSLUCENT).alignment(HorizontalAlignment.RIGHT, VerticalAlignment.CENTER)
-                .positioning(Positioning.relative(100, 100)));
     }
 
     @Override
@@ -79,10 +76,17 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
             this.uiAdapter.rootComponent.child(this.container
                     .surface(surface)
                     .alignment(HorizontalAlignment.CENTER, VerticalAlignment.CENTER)
-                    .padding(Insets.of(4))
-                    .sizing(Sizing.fill(90)));
+                    .padding(Insets.of(3)));
 
-            this.container.child(getGuildDescriptionElement(this.model).surface(surface));
+            this.container.child(getGuildDescriptionElement(this.model).surface(this.customTextures ? surface : Surface.outline(Color.BLACK.argb())));
+
+            Size size = this.container.childById(FlowLayout.class, "guild_description").fullSize();
+
+            this.container.child(Containers.verticalScroll(Sizing.content(), Sizing.fixed(size.height()), this.playerContainer.id("player_container"))
+                    .surface(this.customTextures ? Surface.BLANK : Surface.outline(Color.BLACK.argb()))
+                    .alignment(HorizontalAlignment.CENTER, VerticalAlignment.CENTER)
+                    .padding(Insets.of(2))
+                    .positioning(Positioning.layout()));
 
             for (String username : this.players.keySet()) {
                 this.playerContainer.child(getGuildmateElement(this.model, username, this.players.get(username)));
@@ -97,6 +101,9 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
                         Map.of("guild-name", this.member.getGuildKey(),
                                 "your-rank", this.member.getRank().name(),
                                 "description", this.summary));
+
+        layout.childById(ScrollContainer.class, "description-container")
+                .sizing(Sizing.content(), Sizing.expand(20));
 
         layout.childById(ButtonComponent.class, "leave-button").onPress(button
                 -> this.client.setScreen(new ActionConfirmScreen<>("leave the guild",
