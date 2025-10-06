@@ -52,6 +52,9 @@ public class GuildedParties implements ModInitializer {
 	public static boolean COMPAT_LOADED = false;
 	public static final boolean DEV_ENV = FabricLoader.getInstance().isDevelopmentEnvironment();
 
+	// Used for testing guilds in a dev environment
+	private static final HashMap<String, GuildContainer> DEV_GUILD_CONTAINERS = new HashMap<>();
+
 	@Override
 	public void onInitialize() {
 		GPComponents.init();
@@ -129,6 +132,17 @@ public class GuildedParties implements ModInitializer {
 		return text;
 	}
 
+	/**
+	 * Should you, for any reason, wish to implement guilds only through the developer environment, this function
+	 * allows you to register guild-data manually.
+	 * @param guildId Used for compatibility with pre-existing data
+	 * @param container Contains all the data regarding the guild you want to register
+	 * @see GuildContainer
+	 */
+	public static void registerDevEnvGuild(String guildId, GuildContainer container) {
+		DEV_GUILD_CONTAINERS.put(guildId, container);
+	}
+
 	/** Ensures data-driven objects are in the persistent state */
 	public static void fillPersistentState(MinecraftServer server) {
 		// Add any data-registered guilds to the state
@@ -136,13 +150,22 @@ public class GuildedParties implements ModInitializer {
 		StateSaverAndLoader state = StateSaverAndLoader.getStateFromServer(server);
 		final HashMap<String, Guild> guilds = HeardData.getGuilds();
 		final HashMap<String, GuildSettings> guildSettings = HeardData.getGuildSettings();
+
+		if (DEV_ENV) {
+			for (String devGuildId : DEV_GUILD_CONTAINERS.keySet()) {
+				GuildContainer container = DEV_GUILD_CONTAINERS.get(devGuildId);
+				guilds.put(devGuildId, container.getGuild());
+				guildSettings.put(devGuildId, container.getSettings());
+			}
+		}
+
 		guilds.keySet().iterator().forEachRemaining(file_name -> {
 			Guild guild = guilds.get(file_name);
 			if (!state.hasGuild(guild.getName())) {
 				if (!guild.getName().contains(Character.toString(','))) {
 					state.addGuild(guild);
 				} else {
-					GuildedParties.LOGGER.warn("Could not add '{}' due to containing an illegal character \nThe guild's name cannot contain a ','", guild.getName());
+					GuildedParties.LOGGER.warn("Could not add '{}' due to containing an illegal character \nThe guild's name cannot contain a ',' symbol", guild.getName());
 					return;
 				}
 			}
