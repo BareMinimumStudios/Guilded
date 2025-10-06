@@ -74,6 +74,7 @@
             </sizing>
         </flow-layout>
     </components>
+
     <templates>
         <template name="guild-description">
             <flow-layout direction="horizontal">

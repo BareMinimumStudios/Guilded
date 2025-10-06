@@ -56,6 +56,7 @@
                                 </label>
 
                                 <surface>
+                                    <flat>gray</flat>
                                     <outline>black</outline>
                                 </surface>
 

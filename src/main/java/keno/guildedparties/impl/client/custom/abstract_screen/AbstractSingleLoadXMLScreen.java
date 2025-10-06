@@ -1,11 +1,20 @@
-package keno.guildedparties.impl.client.screens.abstract_screen;
+package keno.guildedparties.impl.client.custom.abstract_screen;
 
-import io.wispforest.owo.ui.base.BaseOwoScreen;
+import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.core.OwoUIAdapter;
 import io.wispforest.owo.ui.core.ParentComponent;
 
-public abstract class AbstractSingleLoadCodeScreen<R extends ParentComponent> extends BaseOwoScreen<R> {
+/***
+ * We often want to handle element loading once, to prevent duplicate elements.
+ * This class provides a handling for that towards xml Screens; if you want to
+ * have this handling for code-defined, see {@link AbstractSingleLoadCodeScreen}
+ */
+public abstract class AbstractSingleLoadXMLScreen<R extends ParentComponent> extends BaseUIModelScreen<R> {
     private boolean elementsLoaded = false;
+
+    protected AbstractSingleLoadXMLScreen(Class<R> rootComponentClass, DataSource source) {
+        super(rootComponentClass, source);
+    }
 
     @Override
     protected void init() {
