@@ -10,13 +10,17 @@ import keno.guildedparties.impl.networking.GPNetworking;
 import keno.guildedparties.impl.networking.packets.clientbound.*;
 import keno.guildedparties.impl.networking.packets.serverbound.DoesPlayerHaveGuildPacket;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
@@ -39,6 +43,10 @@ public class GPClient implements ClientModInitializer {
 
         handleClientNetworking();
         initializeCompatHelpers();
+
+        ClientPlayConnectionEvents.JOIN.register((clientPlayNetworkHandler, packetSender, minecraftClient) -> {
+            minecraftClient.player.sendMessage(Text.translatable("guildedparties.welcome"), false);
+        });
     }
 
     public void initializeCompatHelpers() {

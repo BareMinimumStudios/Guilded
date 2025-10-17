@@ -5,6 +5,7 @@ import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.impl.client.screens.ActionConfirmScreen;
+import keno.guildedparties.impl.client.screens.view_guilds.ViewGuildsMenu.GuildDisplayInfo;
 import keno.guildedparties.impl.networking.GPNetworking;
 import keno.guildedparties.impl.networking.packets.serverbound.GetGuildInfosPacket;
 import keno.guildedparties.impl.networking.packets.serverbound.JoinGuildPacket;
@@ -30,6 +31,10 @@ public class ViewGuildMenu extends BaseUIModelScreen<FlowLayout> {
         this.description = description;
         this.isInGuild = isInGuild;
         this.isPrivate = isPrivate;
+    }
+
+    protected ViewGuildMenu(GuildDisplayInfo info, boolean isInGuild) {
+        this(info.guildName(), info.leaderName(), info.members(), info.description(), isInGuild, info.isPrivate());
     }
 
     @Override

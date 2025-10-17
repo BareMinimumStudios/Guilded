@@ -24,10 +24,11 @@ public class GPGuildedCompat implements GuildedPlugin {
             case 4 -> GuildedParties.LOGGER.info("GALLOP FORTH, ROCINANTE!!!");
             case 5 -> GuildedParties.LOGGER.info("Godspeed, you magnificent bastard");
             case 6 -> GuildedParties.LOGGER.info("A genuine thank you to those who brought me here");
-            case 7 -> GuildedParties.LOGGER.info("'This world's order shall be perfected' - unknown");
+            case 7 -> GuildedParties.LOGGER.info("Answer me, Steve: 'what does The Overworld need?'");
             case 8 -> GuildedParties.LOGGER.info("I will make you suffer, just as I have (from arthritis)");
         }
 
+        // A more practical example of using this entrypoint, the dev-env guilds here are used to test experimental features
         GuildedParties.registerDevEnvGuild("miners_guild_senmonten", new GuildContainer(
                 () -> new Guild(
                         "Miners Guild",
@@ -43,6 +44,21 @@ public class GPGuildedCompat implements GuildedPlugin {
                 () -> new GuildSettings(true,
                         10, 10, 1, 30,
                         false)
+        ));
+
+        GuildedParties.registerDevEnvGuild("warriors_guild_senmonten", new GuildContainer(
+                () -> new Guild(
+                        "Warriors Guild",
+                        Map.of("Dr0g0nSl4yer", new Rank("Netherite Sword", 1)),
+                        List.of(new Rank("Netherite Sword", 1),
+                                new Rank("Diamond Sword", 10),
+                                new Rank("Golden Sword", 20),
+                                new Rank("Iron Sword", 30),
+                                new Rank("Copper Sword", 40),
+                                new Rank("Stone Sword", 45),
+                                new Rank("Wooden Sword", 49)),
+                        "'Fight, Kill, Win' is our motto. If you wish to fight for glory and honor, join the Warriors Guild for training, tournaments, and total-combat."),
+                GuildSettings::getDefaultSettings
         ));
     }
 }

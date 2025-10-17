@@ -425,9 +425,10 @@ public class GPNetworking {
                 int members = guild.getPlayers().size();
 
                 String description = guild.getDescription();
+                boolean isPrivate = GuildApi.getSettings(server, guildName).isPrivate();
 
                 displayInfos.add(new ViewGuildsMenu.GuildDisplayInfo(guildName, leaderName,
-                        members, description));
+                        members, description, isPrivate));
             });
 
             GP_CHANNEL.serverHandle(player).send(new ViewGuildsPacket(displayInfos, playerIsInGuild));

@@ -121,11 +121,11 @@
 
                     <scroll direction="vertical">
                         <label>
-                            <text>Description: {{description}}</text>
+                            <text>{{description}}</text>
 
                             <color>black</color>
 
-                            <horizontal-text-alignment>left</horizontal-text-alignment>
+                            <horizontal-text-alignment>center</horizontal-text-alignment>
 
                             <sizing>
                                 <horizontal method="fill">100</horizontal>
@@ -134,6 +134,11 @@
 
                             <positioning type="relative">0,0</positioning>
                         </label>
+
+                        <surface>
+                            <flat>gray</flat>
+                            <outline>black</outline>
+                        </surface>
 
                         <sizing>
                             <horizontal method="fill">50</horizontal>
