@@ -4,7 +4,7 @@ import io.wispforest.owo.ui.base.BaseOwoScreen;
 import io.wispforest.owo.ui.core.OwoUIAdapter;
 import io.wispforest.owo.ui.core.ParentComponent;
 
-public abstract class AbstractSingleLoadCodeScreen<R extends ParentComponent> extends BaseOwoScreen<R> {
+public abstract class AbstractSingleLoadCodeScreen<R extends ParentComponent> extends BaseOwoScreen<R> implements DefaultSurfaceRetriever {
     private boolean elementsLoaded = false;
 
     @Override

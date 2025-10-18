@@ -177,5 +177,7 @@
   "text.config.gp-config.section.guildItems": "Guild Items",
   "text.config.gp-config.option.guildsWithItems": "Guilds with items",
   "text.config.gp-config.option.guildItems": "Guild Items",
-  "guildedparties.welcome": "Thanks for downloading Guilded! Press 'g' or the default guild-menu key-bind to get started!\nNote: as the mod is in the earlier stages of development, please report any bugs found to the github issue-board or to the BMS discord"
+  "guildedparties.welcome": "Thanks for downloading Guilded! Press 'g' or the default guild-menu key-bind to get started!\nNote: as the mod is in the earlier stages of development, please report any bugs found to the github issue-board or to the BMS discord",
+  "text.config.gp-config.option.defaultUIStyle": "Default UI-Style",
+  "text.config.gp-config.option.defaultUIStyle.tooltip": "Determines the normal appearance of the UI for Guilded; if a guild has a custom UI-style, it will be prioritized"
 }

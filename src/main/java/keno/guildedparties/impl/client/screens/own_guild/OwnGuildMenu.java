@@ -17,7 +17,6 @@ import keno.guildedparties.impl.networking.GPNetworking;
 import keno.guildedparties.impl.networking.packets.serverbound.GetGuildSettingsPacket;
 import keno.guildedparties.impl.networking.packets.serverbound.GetInvitablePlayersPacket;
 import keno.guildedparties.impl.networking.packets.serverbound.LeaveGuildPacket;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -49,9 +48,7 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
         this.summary = description;
 
         this.customTextures = customTextures;
-        Identifier textureId = this.customTextures ? GuildedParties.GPLoc(member.getGuildKey()
-                .strip().toLowerCase().replace(" ", "_")): Identifier.of("");
-        this.surface = customTextures ? GPSurfaces.createCustomSurface(textureId) : Surface.PANEL;
+        this.surface = customTextures ? GPSurfaces.getGuildSurface(member.getGuildKey(), 0, true) : GuildedParties.CONFIG.defaultUIStyle().getSurface();
     }
 
     @Override
