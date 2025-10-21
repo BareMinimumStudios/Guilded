@@ -6,11 +6,12 @@ import io.wispforest.owo.ui.component.DiscreteSliderComponent;
 import io.wispforest.owo.ui.component.SmallCheckboxComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
 import keno.guildedparties.GuildedParties;
+import keno.guildedparties.impl.client.custom.abstract_screen.DefaultSurfaceRetriever;
 import keno.guildedparties.impl.client.screens.ActionConfirmScreen;
 import keno.guildedparties.impl.data.guilds.GuildSettings;
 import keno.guildedparties.impl.networking.packets.serverbound.ChangeGuildSettingsPacket;
 
-public class GuildSettingsMenu extends BaseUIModelScreen<FlowLayout> {
+public class GuildSettingsMenu extends BaseUIModelScreen<FlowLayout> implements DefaultSurfaceRetriever {
     private final String guildName;
     private boolean isGuildPrivate;
     private double managePlayerRankPriority;
@@ -33,6 +34,8 @@ public class GuildSettingsMenu extends BaseUIModelScreen<FlowLayout> {
 
     @Override
     protected void build(FlowLayout flowLayout) {
+        flowLayout.childById(FlowLayout.class, "main").surface(getDefaultSurface());
+
         flowLayout.childById(SmallCheckboxComponent.class, "is-private-checkbox")
                 .checked(this.isGuildPrivate).onChanged()
                 .subscribe(changed -> this.isGuildPrivate = !this.isGuildPrivate);

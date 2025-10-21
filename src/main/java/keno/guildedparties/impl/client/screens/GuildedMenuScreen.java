@@ -4,12 +4,13 @@ import io.wispforest.owo.ui.base.BaseUIModelScreen;
 import io.wispforest.owo.ui.component.ButtonComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
 import keno.guildedparties.GuildedParties;
+import keno.guildedparties.impl.client.custom.abstract_screen.DefaultSurfaceRetriever;
 import keno.guildedparties.impl.networking.GPNetworking;
 import keno.guildedparties.impl.networking.packets.serverbound.GetGuildInfosPacket;
 import keno.guildedparties.impl.networking.packets.serverbound.GetOwnGuildPacket;
 import keno.guildedparties.impl.networking.packets.serverbound.QuickJoinPacket;
 
-public class GuildedMenuScreen extends BaseUIModelScreen<FlowLayout> {
+public class GuildedMenuScreen extends BaseUIModelScreen<FlowLayout> implements DefaultSurfaceRetriever {
     public boolean isInGuild;
 
     public GuildedMenuScreen(boolean isInGuild) {
@@ -19,6 +20,8 @@ public class GuildedMenuScreen extends BaseUIModelScreen<FlowLayout> {
 
     @Override
     protected void build(FlowLayout flowLayout) {
+        flowLayout.childById(FlowLayout.class, "main").surface(getDefaultSurface());
+
         flowLayout.childById(ButtonComponent.class, "quick-join").onPress(button
                 -> GPNetworking.GP_CHANNEL.clientHandle().send(new QuickJoinPacket()));
 

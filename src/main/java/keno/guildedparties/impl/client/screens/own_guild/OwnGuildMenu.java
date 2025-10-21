@@ -9,6 +9,7 @@ import io.wispforest.owo.ui.core.*;
 import io.wispforest.owo.ui.parsing.UIModel;
 import keno.guildedparties.GuildedParties;
 import keno.guildedparties.impl.client.custom.GPSurfaces;
+import keno.guildedparties.impl.client.custom.abstract_screen.DefaultSurfaceRetriever;
 import keno.guildedparties.impl.client.screens.ActionConfirmScreen;
 import keno.guildedparties.impl.client.screens.own_guild.management.GuildManagementMenu;
 import keno.guildedparties.impl.data.guilds.Rank;
@@ -22,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 
-public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
+public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> implements DefaultSurfaceRetriever {
     private final Member member;
     private final Map<String, Rank> players;
     private final List<Rank> ranks;
@@ -46,7 +47,7 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
         this.ranks = ranks;
         this.summary = description;
 
-        this.surface = customTextures ? GPSurfaces.getGuildSurface(member.getGuildKey(), 0, true) : GuildedParties.CONFIG.defaultUIStyle().getSurface();
+        this.surface = customTextures ? GPSurfaces.getGuildSurface(member.getGuildKey(), 0, true) : getDefaultSurface();
         this.playerContainer.surface(this.surface);
     }
 

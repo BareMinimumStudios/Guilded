@@ -4,7 +4,7 @@
         <flow-layout direction="vertical">
             <children>
                 <scroll direction="vertical">
-                    <flow-layout direction="vertical">
+                    <flow-layout direction="vertical" id="main">
                         <children>
                             <label>
                                 <text translate="true">gui.guildedparties.is_guild_private</text>
@@ -139,10 +139,6 @@
                             <vertical method="content">1</vertical>
                             <horizontal method="content">1</horizontal>
                         </sizing>
-
-                        <surface>
-                            <panel dark="false"/>
-                        </surface>
                     </flow-layout>
 
                     <sizing>

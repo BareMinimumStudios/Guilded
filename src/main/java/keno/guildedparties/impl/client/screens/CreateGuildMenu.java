@@ -6,10 +6,11 @@ import io.wispforest.owo.ui.component.TextAreaComponent;
 import io.wispforest.owo.ui.component.TextBoxComponent;
 import io.wispforest.owo.ui.container.FlowLayout;
 import keno.guildedparties.GuildedParties;
+import keno.guildedparties.impl.client.custom.abstract_screen.DefaultSurfaceRetriever;
 import keno.guildedparties.impl.networking.packets.serverbound.CreateGuildPacket;
 import net.minecraft.client.resource.language.I18n;
 
-public class CreateGuildMenu extends BaseUIModelScreen<FlowLayout> {
+public class CreateGuildMenu extends BaseUIModelScreen<FlowLayout> implements DefaultSurfaceRetriever {
     private String guildName = "";
     private String leaderRankName = "";
     private String description = "";
@@ -25,6 +26,8 @@ public class CreateGuildMenu extends BaseUIModelScreen<FlowLayout> {
 
     @Override
     protected void build(FlowLayout layout) {
+        layout.childById(FlowLayout.class, "main").surface(getDefaultSurface());
+
         layout.childById(ButtonComponent.class, "back")
                 .onPress(button -> this.client.setScreen(new GuildedMenuScreen(false)));
 
