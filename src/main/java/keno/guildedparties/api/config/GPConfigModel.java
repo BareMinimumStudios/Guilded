@@ -14,6 +14,7 @@ import java.util.Map;
 public class GPConfigModel {
     @SectionHeader("server")
     @RestartRequired
+    @ExcludeFromScreen
     @Sync(Option.SyncMode.OVERRIDE_CLIENT)
     public boolean enableServerCommands = false;
 
@@ -22,7 +23,7 @@ public class GPConfigModel {
     public String guildToQuickJoin = "";
 
     @Sync(SyncMode.NONE)
-    public DefaultSurface defaultUIStyle = DefaultSurface.MINECRAFT;
+    public DefaultSurface defaultUIStyle = DefaultSurface.CLASSIC;
 
     @SectionHeader("guildItems")
     @RestartRequired

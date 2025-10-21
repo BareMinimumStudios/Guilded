@@ -2,11 +2,13 @@ package keno.guildedparties.impl.client.custom;
 
 import io.wispforest.owo.ui.core.Color;
 import io.wispforest.owo.ui.core.Surface;
-import net.minecraft.util.DyeColor;
+import keno.guildedparties.GuildedParties;
 
+//TODO fix the Boxed default-style
 public enum DefaultSurface {
-    BOXES(Surface.flat(Color.ofDye(DyeColor.GRAY).rgb()).and(Surface.outline(0))),
-    MINECRAFT(Surface.PANEL);
+    CLASSIC(Surface.PANEL),
+    BOXED(Surface.outline(0x77000000)),
+    SYNTH_WAVE(GPSurfaces.createCustomSurface(GuildedParties.GPLoc("synth_wave")));
 
     private final Surface surface;
 

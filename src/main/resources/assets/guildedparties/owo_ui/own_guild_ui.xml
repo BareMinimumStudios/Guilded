@@ -176,6 +176,11 @@
                     <vertical method="content">1</vertical>
                 </sizing>
 
+                <surface>
+                    <flat>gray</flat>
+                    <outline>black</outline>
+                </surface>
+
                 <vertical-alignment>bottom</vertical-alignment>
                 <horizontal-alignment>left</horizontal-alignment>
             </flow-layout>
@@ -246,7 +251,6 @@
                         </sizing>
 
                         <positioning type="layout">1,1</positioning>
-
                     </button>
                 </children>
 
@@ -254,14 +258,15 @@
                     <all>2</all>
                 </padding>
 
+                <surface>
+                    <flat>gray</flat>
+                    <outline>black</outline>
+                </surface>
+
                 <sizing>
                     <horizontal method="content">1</horizontal>
                     <vertical method="content">1</vertical>
                 </sizing>
-
-                <surface>
-                    <outline>black</outline>
-                </surface>
             </flow-layout>
         </template>
     </templates>

@@ -27,7 +27,6 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
     private final Map<String, Rank> players;
     private final List<Rank> ranks;
     private final String summary;
-    private final boolean customTextures;
 
     // Setup surface
     private final Surface surface;
@@ -47,8 +46,8 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
         this.ranks = ranks;
         this.summary = description;
 
-        this.customTextures = customTextures;
         this.surface = customTextures ? GPSurfaces.getGuildSurface(member.getGuildKey(), 0, true) : GuildedParties.CONFIG.defaultUIStyle().getSurface();
+        this.playerContainer.surface(this.surface);
     }
 
     @Override
@@ -75,12 +74,12 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
                     .alignment(HorizontalAlignment.CENTER, VerticalAlignment.CENTER)
                     .padding(Insets.of(3)));
 
-            this.container.child(getGuildDescriptionElement(this.model).surface(this.customTextures ? surface : Surface.outline(Color.BLACK.argb())));
+            this.container.child(getGuildDescriptionElement(this.model));
 
             Size size = this.container.childById(FlowLayout.class, "guild_description").fullSize();
 
             this.container.child(Containers.verticalScroll(Sizing.content(), Sizing.fixed(size.height()), this.playerContainer.id("player_container"))
-                    .surface(this.customTextures ? Surface.BLANK : Surface.outline(Color.BLACK.argb()))
+                    .surface(this.surface.and(Surface.outline(0x808080)))
                     .alignment(HorizontalAlignment.CENTER, VerticalAlignment.CENTER)
                     .padding(Insets.of(2))
                     .positioning(Positioning.layout()));
@@ -120,6 +119,8 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
                         -> this.client.setScreen(new GuildManagementMenu(this.member.getGuildKey(), this.players,
                         this.ranks, this.summary)));
 
+        layout.surface(this.surface);
+
         return layout;
     }
 
@@ -131,6 +132,8 @@ public class OwnGuildMenu extends BaseUIModelScreen<FlowLayout> {
                 .onPress(button -> this.client.setScreen(new ViewGuildmateScreen(this.ranks,
                         this.member.getGuildKey(),
                         username, playerRank)));
+
+        guildmateElement.surface(this.surface);
 
         return guildmateElement;
     }
