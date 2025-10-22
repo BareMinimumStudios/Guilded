@@ -7,6 +7,7 @@ import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
 import keno.guildedparties.GuildedParties;
+import keno.guildedparties.impl.client.custom.abstract_screen.DefaultSurfaceRetriever;
 import keno.guildedparties.impl.client.screens.ActionConfirmScreen;
 import keno.guildedparties.impl.data.guilds.Rank;
 import keno.guildedparties.impl.networking.packets.serverbound.BanGuildmatePacket;
@@ -17,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 
-public class ViewGuildmateScreen extends BaseUIModelScreen<FlowLayout> {
+public class ViewGuildmateScreen extends BaseUIModelScreen<FlowLayout> implements DefaultSurfaceRetriever {
     private final String guildName;
     private final String username;
     private final Rank rank;

@@ -1,6 +1,7 @@
 package keno.guildedparties.mixin;
 
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
 import org.objectweb.asm.tree.ClassNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,7 @@ public class GPMixinConfigPlugin implements IMixinConfigPlugin {
             if (styledChatPresent) LOGGER.info("Styled-Chat detected! Disabling the guilded note-system in favor of SC");
             return !styledChatPresent;
         }
+
         return true;
     }
 
@@ -73,8 +75,17 @@ public class GPMixinConfigPlugin implements IMixinConfigPlugin {
         return qualifyDefaultMixinName("server." + mixinClassName);
     }
 
+    /// @see GPMixinConfigPlugin#qualifyDefaultMixinName(String)
+    private String qualifyClientMixinName(String mixinClassName) {
+        return qualifyDefaultMixinName("client." + mixinClassName);
+    }
+
     /// Used in checking if a mixin should apply
     private boolean isModPresent(String modId) {
         return FabricLoader.getInstance().getModContainer(modId).isPresent();
+    }
+
+    private ModContainer getModContainer(String modId) {
+        return FabricLoader.getInstance().getModContainer(modId).get();
     }
 }

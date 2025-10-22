@@ -1,6 +1,7 @@
 package keno.guildedparties.impl.client.utils;
 
 import io.wispforest.owo.ui.core.OwoUIDrawContext;
+import keno.guildedparties.mixin.client.DrawContextInvoker;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
@@ -13,8 +14,8 @@ public class RenderingHelper {
     /**
      * {@link DrawContext#fillGradient(int, int, int, int, int, int)} but sideways
      */
-    public static void fillSidewaysGradient(OwoUIDrawContext context, int startX, int startY, int endX, int endY, int colorStart, int colorEnd) {
-        filLSidewaysGradient(context, context.vertexConsumers().getBuffer(RenderLayer.getGui()), startX, startY, endX, endY, colorStart, colorEnd);
+    public static void fillSidewaysGradient(DrawContext context, int startX, int startY, int endX, int endY, int colorStart, int colorEnd) {
+        filLSidewaysGradient(context, ((DrawContextInvoker)context).getVertexConsumers().getBuffer(RenderLayer.getGui()), startX, startY, endX, endY, colorStart, colorEnd);
     }
 
     public static void filLSidewaysGradient(DrawContext context, VertexConsumer vertexConsumer, int startX, int startY, int endX, int endY, int colorStart, int colorEnd) {
