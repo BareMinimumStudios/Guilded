@@ -1,4 +1,4 @@
-package keno.guildedparties.impl.client.custom;
+package keno.guildedparties.impl.client.custom.surface;
 
 import io.wispforest.owo.ui.core.OwoUIDrawContext;
 import io.wispforest.owo.ui.core.Surface;

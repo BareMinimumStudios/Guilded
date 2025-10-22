@@ -8,7 +8,7 @@ import io.wispforest.owo.ui.container.ScrollContainer;
 import io.wispforest.owo.ui.core.*;
 import io.wispforest.owo.ui.parsing.UIModel;
 import keno.guildedparties.GuildedParties;
-import keno.guildedparties.impl.client.custom.GPSurfaces;
+import keno.guildedparties.impl.client.custom.surface.GPSurfaces;
 import keno.guildedparties.impl.client.custom.abstract_screen.DefaultSurfaceRetriever;
 import keno.guildedparties.impl.client.screens.ActionConfirmScreen;
 import keno.guildedparties.impl.client.screens.own_guild.management.GuildManagementMenu;

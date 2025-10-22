@@ -3,11 +3,10 @@ package keno.guildedparties.api.config;
 import io.wispforest.owo.config.Option;
 import io.wispforest.owo.config.Option.SyncMode;
 import io.wispforest.owo.config.annotation.*;
-import keno.guildedparties.impl.client.custom.DefaultSurface;
+import keno.guildedparties.impl.client.custom.surface.DefaultSurface;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Modmenu(modId = "guildedparties")
 @Config(name = "gp-config", wrapperName = "GPConfig")
