@@ -54,7 +54,7 @@ public class CreateGuildMenu extends BaseUIModelScreen<FlowLayout> implements De
 
         layout.childById(ButtonComponent.class, "confirm-button")
                 .active(false)
-                .onPress(button -> this.client.setScreen(new ActionConfirmScreen<>("create a guild",
+                .onPress(button -> this.client.setScreen(new ActionConfirmScreen<>(I18n.translate("guildedparties.confirm.create_guild"),
                         new CreateGuildPacket(this.guildName, this.leaderRankName, this.description))));
     }
 

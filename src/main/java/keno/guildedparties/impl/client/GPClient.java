@@ -1,6 +1,8 @@
 package keno.guildedparties.impl.client;
 
 import keno.guildedparties.impl.client.compat.GuildedClientCompatEntrypoint;
+import keno.guildedparties.impl.client.custom.renderlayer.GPRenderLayers;
+import keno.guildedparties.impl.client.custom.shader.GPShaders;
 import keno.guildedparties.impl.client.screens.GuildedMenuScreen;
 import keno.guildedparties.impl.client.screens.own_guild.InvitablePlayersScreen;
 import keno.guildedparties.impl.client.screens.own_guild.OwnGuildMenu;
@@ -10,9 +12,7 @@ import keno.guildedparties.impl.networking.GPNetworking;
 import keno.guildedparties.impl.networking.packets.clientbound.*;
 import keno.guildedparties.impl.networking.packets.serverbound.DoesPlayerHaveGuildPacket;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
@@ -25,10 +25,12 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 
-//TODO swap UI positioning to layout for scaling fix
 public class GPClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        GPShaders.init();
+        GPRenderLayers.init();
+
         KeyBinding openGuildMenu = KeyBindingHelper
                 .registerKeyBinding(new KeyBinding("key.guildedparties.openGuildMenu",
                         InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_G, "category.guildedparties"));

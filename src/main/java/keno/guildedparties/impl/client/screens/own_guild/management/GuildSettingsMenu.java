@@ -10,6 +10,7 @@ import keno.guildedparties.impl.client.custom.abstract_screen.DefaultSurfaceRetr
 import keno.guildedparties.impl.client.screens.ActionConfirmScreen;
 import keno.guildedparties.impl.data.guilds.GuildSettings;
 import keno.guildedparties.impl.networking.packets.serverbound.ChangeGuildSettingsPacket;
+import net.minecraft.client.resource.language.I18n;
 
 public class GuildSettingsMenu extends BaseUIModelScreen<FlowLayout> implements DefaultSurfaceRetriever {
     private final String guildName;
@@ -63,7 +64,7 @@ public class GuildSettingsMenu extends BaseUIModelScreen<FlowLayout> implements 
                             (int) this.manageGuildPriority, (int) this.invitePlayersPriority,
                             this.hasCustomTextures);
 
-                    this.client.setScreen(new ActionConfirmScreen<>("change the guild's settings",
+                    this.client.setScreen(new ActionConfirmScreen<>(I18n.translate("guildedparties.confirm.change_settings"),
                             new ChangeGuildSettingsPacket(this.guildName, newSettings)));
                 });
     }

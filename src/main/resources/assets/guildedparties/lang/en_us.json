@@ -182,5 +182,8 @@
   "text.config.gp-config.option.defaultUIStyle.tooltip": "Determines the normal appearance of the UI for Guilded; if a guild has a custom UI-style, it will be prioritized",
   "text.config.gp-config.enum.defaultSurface.classic": "Classic",
   "text.config.gp-config.enum.defaultSurface.azure": "Azure",
-  "text.config.gp-config.enum.defaultSurface.synth_wave": "Synth-wave"
+  "text.config.gp-config.enum.defaultSurface.synth_wave": "Synth-wave",
+  "text.config.gp-config.enum.defaultSurface.classic_dark": "Classic (Dark)",
+  "guildedparties.confirm.change_settings": "change settings",
+  "guildedparties.confirm.create_guild": "create a guild"
 }

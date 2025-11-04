@@ -1,10 +1,14 @@
 package keno.guildedparties.impl.client.utils;
 
+import io.wispforest.owo.shader.GlProgram;
 import keno.guildedparties.mixin.client.DrawContextInvoker;
+import keno.guildedparties.mixin.client.GlProgramAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.RenderPhase;
+import net.minecraft.client.render.RenderPhase.ShaderProgram;
 import net.minecraft.client.render.VertexConsumer;
 import org.joml.Matrix4f;
 
@@ -28,5 +32,15 @@ public class RenderingHelper {
 
     public static VertexConsumer getBufferFromContext(DrawContext context, RenderLayer layer) {
         return ((DrawContextInvoker)context).getVertexConsumers().getBuffer(layer);
+    }
+
+    public static RenderPhase.ShaderProgram getBackingProgram(GlProgram program) {
+        //? if >= 1.21.3 {
+        return program.renderPhaseProgram();
+        //?}
+
+        //? if < 1.21.3 {
+        /*return new ShaderProgram(() -> ((GlProgramAccessor)program).getBackingProgram());
+        *///?}
     }
 }
